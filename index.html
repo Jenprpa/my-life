@@ -177,7 +177,39 @@
         async function deleteTask(id) { if (!confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) return; const { error } = await db.from('tasks').delete().eq('id', id); if (error) { console.error('Error deleting task:', error); } else { fetchTasks(); fetchDataForCalendar(); } }
 
         // --- BUDGET TRACKER ---
-        function openBudgetModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-budget-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มรายการงบประมาณ</h3><div class="space-y-4"><div><label class="text-sm font-medium">รายการ</label><input name="item" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">จำนวนเงิน</label><input name="amount" type="number" step="0.01" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">วันที่</label><input name="transaction_date" type="date" value="${getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option></select></div><div><label class="text-sm font-medium">หมวดหมู่</label><input name="category" type="text" placeholder="เช่น อาหาร, เดินทาง" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-budget-form').addEventListener('submit', addBudgetItem); }
+        function openBudgetModal() {
+            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <form id="add-budget-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                    <h3 class="text-lg font-semibold mb-4">เพิ่มรายการงบประมาณ</h3>
+                    <div class="space-y-4">
+                        <div><label class="text-sm font-medium">รายการ</label><input name="item" type="text" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        <div><label class="text-sm font-medium">จำนวนเงิน</label><input name="amount" type="number" step="0.01" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        <div><label class="text-sm font-medium">วันที่</label><input name="transaction_date" type="date" value="${getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        <div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income">รายรับ</option><option value="Expense">รายจ่าย</option></select></div>
+                        <div>
+                            <label class="text-sm font-medium">หมวดหมู่</label>
+                            <select name="category" class="w-full mt-1 p-2 border rounded-md">
+                                <option>อาหาร</option>
+                                <option>การเดินทาง</option>
+                                <option>บิล & ค่าใช้จ่าย</option>
+                                <option>ช้อปปิ้ง</option>
+                                <option>บันเทิง</option>
+                                <option>สุขภาพ</option>
+                                <option>การศึกษา</option>
+                                <option>เงินเดือน</option>
+                                <option>ธุรกิจ</option>
+                                <option>อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-2">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-md">บันทึก</button>
+                    </div>
+                </form>
+            </div>`;
+            document.getElementById('add-budget-form').addEventListener('submit', addBudgetItem);
+        }
         async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); alert('ไม่สามารถเพิ่มรายการได้: ' + error.message); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
         async function fetchBudget() { const { data: budgetItems, error } = await db.from('budget').select('*').order('transaction_date', { ascending: false }); if (error) { console.error('Error fetching budget:', error); return; } renderBudgetTable(budgetItems); updateBudgetSummary(budgetItems); }
         function renderBudgetTable(items) { const tableBody = document.getElementById('budget-table-body'); tableBody.innerHTML = items.map(item => `<tr class="border-b"><td class="p-3 font-medium">${item.item}</td><td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td><td class="p-3 text-slate-500">${formatDate(item.transaction_date)}</td><td class="p-3"><span class="bg-slate-200 text-slate-800 px-2 py-1 text-xs rounded-full">${item.category}</span></td><td class="p-3 text-xs font-semibold">${item.transaction_type}</td><td class="p-3"><button onclick="deleteBudgetItem(${item.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
@@ -199,7 +231,45 @@
         async function deleteJournal(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('journal_entries').delete().eq('id', id); if (error) console.error('Error deleting journal entry:', error); else fetchJournal(); }
 
         // --- SCHEDULE / CALENDAR ---
-        function openScheduleModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3><div class="space-y-4"><div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="event_type" class="w-full mt-1 p-2 border rounded-md"><option>Personal</option><option>Work</option><option>Health</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem); }
+        function openScheduleModal() {
+            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                    <h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-sm font-medium">ชื่อกิจกรรม</label>
+                            <input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium">ประเภท</label>
+                            <select name="event_type" class="w-full mt-1 p-2 border rounded-md">
+                                <option>Personal</option>
+                                <option>Work</option>
+                                <option>Health</option>
+                                <option>Learning</option>
+                                <option>Family</option>
+                                <option>Errands</option>
+                                <option>Social</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end space-x-2">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                        <button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button>
+                    </div>
+                </form>
+            </div>`;
+            document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem);
+        }
         async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } else { fetchDataForCalendar(); closeModal(); } }
         async function fetchDataForCalendar() {
             const [eventsRes, tasksRes, budgetRes] = await Promise.all([ db.from('schedule').select('*'), db.from('tasks').select('*'), db.from('budget').select('amount, transaction_date, transaction_type') ]);
