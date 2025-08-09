@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        html { scroll-behavior: smooth; }
         body { font-family: 'Sarabun', sans-serif; }
         .modal { display: none; }
         .modal.is-open { display: flex; }
@@ -19,163 +20,170 @@
         .calendar-day.today { background-color: #ebf8ff; border: 1px solid #90cdf4; }
         .calendar-day:hover { background-color: #f7fafc; }
         .habit-checkbox:checked + label { text-decoration: line-through; color: #a0aec0; }
+        .sidebar-link.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #E59572; color: white; }
     </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-slate-100">
 
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <h1 class="text-3xl font-bold text-slate-800">My Life Dashboard - แดชบอร์ดจัดการชีวิต</h1>
-            <p class="text-slate-500">แดชบอร์ดของคุณที่เชื่อมต่อกับ Supabase</p>
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-slate-800 text-slate-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+            <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
+            <nav id="sidebar-nav" class="flex flex-col space-y-1">
+                <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
+                <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
+                <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> การจัดการงาน</a>
+                <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
+                <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
+                <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
+                <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
+                <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
+                <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
+                <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> ระบบบันทึกการเงิน</a>
+            </nav>
+        </aside>
+        
+        <!-- Overlay for mobile -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 lg:ml-64">
+            <header class="bg-white shadow-sm sticky top-0 z-30">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
+                    <button id="menu-btn" class="lg:hidden mr-4 p-2 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100" onclick="toggleSidebar()">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-800">My Life Dashboard - แดชบอร์ดจัดการชีวิต</h1>
+                        <p class="text-sm text-slate-500">แดชบอร์ดของคุณที่เชื่อมต่อกับ Supabase</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    <section id="website" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🌐</span>
+                                <h2 class="text-xl font-semibold text-gray-900">เว็บไซต์ของฉัน</h2>
+                            </div>
+                            <a href="https://jenprpa.github.io/TM/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เยี่ยมชมเว็บไซต์ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
+                        </div>
+                        <div class="w-full h-96 border border-slate-200 rounded-lg overflow-hidden">
+                            <iframe src="https://jenprpa.github.io/TM/" class="w-full h-full" title="My Embedded Website"></iframe>
+                        </div>
+                    </section>
+
+                    <section id="weekly-agenda" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div id="weekly-agenda-container"></div>
+                    </section>
+
+                    <section id="tasks" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🗂️</span>
+                                <h2 class="text-xl font-semibold text-gray-900">การจัดการงาน</h2>
+                            </div>
+                            <button onclick="openTaskModal()" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors">+ เพิ่มงาน</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="task-board"></div>
+                    </section>
+
+                    <section id="ideas" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">💡</span>
+                                <h2 class="text-xl font-semibold text-gray-900">กระดานไอเดีย</h2>
+                            </div>
+                            <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
+                        </div>
+                        <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+                    </section>
+
+                    <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                         <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📅</span>
+                                <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                            </div>
+                             <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
+                        </div>
+                        <div id="calendar-container"></div>
+                    </section>
+
+                    <section id="habits" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🎯</span>
+                                <h2 class="text-xl font-semibold text-gray-900">กิจวัตร</h2>
+                            </div>
+                            <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
+                        </div>
+                        <div id="habit-tracker-container"></div>
+                    </section>
+
+                    <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                         <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📓</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                            </div>
+                            <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                        </div>
+                        <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                    </section>
+                    
+                    <section id="knowledge" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                               <span class="text-2xl mr-3">📚</span>
+                               <h2 class="text-xl font-semibold text-gray-900">คลังความรู้</h2>
+                            </div>
+                            <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
+                        </div>
+                        <div id="knowledge-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto"></div>
+                    </section>
+
+                    <section id="budget" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">💰</span>
+                                <h2 class="text-xl font-semibold text-gray-900">การจัดการงบประมาณ</h2>
+                            </div>
+                            <button onclick="openBudgetModal()" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-emerald-700 transition-colors">+ เพิ่มรายการ</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 text-center">
+                            <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">รายรับทั้งหมด</p><p id="total-income" class="text-xl font-bold text-green-600">฿0.00</p></div>
+                            <div class="bg-red-100 p-3 rounded-lg"><p class="text-sm text-red-800">รายจ่ายทั้งหมด</p><p id="total-expense" class="text-xl font-bold text-red-600">฿0.00</p></div>
+                            <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือ</p><p id="balance" class="text-xl font-bold text-blue-600">฿0.00</p></div>
+                        </div>
+                        <div class="overflow-x-auto max-h-96">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-100 sticky top-0"><tr><th class="p-3">รายการ</th><th class="p-3">จำนวนเงิน</th><th class="p-3">วันที่</th><th class="p-3">หมวดหมู่</th><th class="p-3">ประเภท</th><th class="p-3"></th></tr></thead>
+                                <tbody id="budget-table-body"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="finance-app" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">💸</span>
+                                <h2 class="text-xl font-semibold text-gray-900">ระบบบันทึกการเงินส่วนตัว</h2>
+                            </div>
+                            <a href="https://jenprpa.github.io/budget/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
+                        </div>
+                        <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
+                            <iframe src="https://jenprpa.github.io/budget/" class="w-full h-full" title="Personal Finance System"></iframe>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
         </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Row 1: My Website -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">🌐</span>
-                        <h2 class="text-xl font-semibold text-gray-900">เว็บไซต์ของฉัน</h2>
-                    </div>
-                    <a href="https://jenprpa.github.io/TM/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เยี่ยมชมเว็บไซต์ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-                </div>
-                <div class="w-full h-96 border border-slate-200 rounded-lg overflow-hidden">
-                    <iframe src="https://jenprpa.github.io/TM/" class="w-full h-full" title="My Embedded Website"></iframe>
-                </div>
-            </div>
-
-            <!-- Row 2: Weekly Agenda -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div id="weekly-agenda-container">
-                    <!-- Weekly Agenda will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 3: Task Management -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">🗂️</span>
-                        <h2 class="text-xl font-semibold text-gray-900">การจัดการงาน</h2>
-                    </div>
-                    <button onclick="openTaskModal()" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors">+ เพิ่มงาน</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="task-board">
-                    <!-- Columns will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 4: Idea Board -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">💡</span>
-                        <h2 class="text-xl font-semibold text-gray-900">กระดานไอเดีย</h2>
-                    </div>
-                    <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
-                </div>
-                <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Ideas will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 5: Planner -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                 <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">📅</span>
-                        <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                    </div>
-                     <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
-                </div>
-                <div id="calendar-container">
-                    <!-- Calendar will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 6: Habit Tracker -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">🎯</span>
-                        <h2 class="text-xl font-semibold text-gray-900">กิจวัตร</h2>
-                    </div>
-                    <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
-                </div>
-                <div id="habit-tracker-container">
-                    <!-- Habits will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 7: Daily Journal -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                 <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">📓</span>
-                        <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                    </div>
-                    <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
-                </div>
-                <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto">
-                    <!-- Entries will be generated by JS -->
-                </div>
-            </div>
-            
-            <!-- Row 8: Knowledge Hub -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                       <span class="text-2xl mr-3">📚</span>
-                       <h2 class="text-xl font-semibold text-gray-900">คลังความรู้</h2>
-                    </div>
-                    <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
-                </div>
-                <div id="knowledge-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
-                    <!-- Knowledge cards will be generated by JS -->
-                </div>
-            </div>
-
-            <!-- Row 9: Budget Tracker -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">💰</span>
-                        <h2 class="text-xl font-semibold text-gray-900">การจัดการงบประมาณ</h2>
-                    </div>
-                    <button onclick="openBudgetModal()" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-emerald-700 transition-colors">+ เพิ่มรายการ</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 text-center">
-                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">รายรับทั้งหมด</p><p id="total-income" class="text-xl font-bold text-green-600">฿0.00</p></div>
-                    <div class="bg-red-100 p-3 rounded-lg"><p class="text-sm text-red-800">รายจ่ายทั้งหมด</p><p id="total-expense" class="text-xl font-bold text-red-600">฿0.00</p></div>
-                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือ</p><p id="balance" class="text-xl font-bold text-blue-600">฿0.00</p></div>
-                </div>
-                <div class="overflow-x-auto max-h-96">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-slate-100 sticky top-0"><tr><th class="p-3">รายการ</th><th class="p-3">จำนวนเงิน</th><th class="p-3">วันที่</th><th class="p-3">หมวดหมู่</th><th class="p-3">ประเภท</th><th class="p-3"></th></tr></thead>
-                        <tbody id="budget-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Row 10: Personal Finance System -->
-            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">💸</span>
-                        <h2 class="text-xl font-semibold text-gray-900">ระบบบันทึกการเงินส่วนตัว</h2>
-                    </div>
-                    <a href="https://jenprpa.github.io/budget/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-                </div>
-                <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
-                    <iframe src="https://jenprpa.github.io/budget/" class="w-full h-full" title="Personal Finance System"></iframe>
-                </div>
-            </div>
-
-        </div>
-    </main>
+    </div>
     
     <!-- Modals -->
     <div id="modal-container"></div>
@@ -715,7 +723,33 @@
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
+
+            // Sidebar active link logic
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
     </script>
 
 </body>
