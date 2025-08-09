@@ -161,7 +161,7 @@
         // --- GLOBAL STATE ---
         let currentViewDate = new Date();
         let currentCalendarView = 'month'; // 'month', 'week', 'day'
-        let scheduleEvents = [];
+        let allCalendarItems = []; // Will hold both events and tasks
 
         // --- UTILITY FUNCTIONS ---
         const formatCurrency = (amount) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount);
@@ -203,7 +203,11 @@
             const taskData = Object.fromEntries(formData.entries());
             const { error } = await db.from('tasks').insert([taskData]);
             if (error) { console.error('Error adding task:', error); alert('ไม่สามารถเพิ่มงานได้: ' + error.message); } 
-            else { fetchTasks(); closeModal(); }
+            else { 
+                fetchTasks(); // Refresh task board
+                fetchAllCalendarItems(); // Refresh calendar with new task
+                closeModal(); 
+            }
         }
         async function fetchTasks() {
             const { data: tasks, error } = await db.from('tasks').select('*').order('created_at', { ascending: false });
@@ -234,7 +238,11 @@
         async function deleteTask(id) {
             if (!confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) return;
             const { error } = await db.from('tasks').delete().eq('id', id);
-            if (error) console.error('Error deleting task:', error); else fetchTasks();
+            if (error) { console.error('Error deleting task:', error); }
+            else {
+                fetchTasks();
+                fetchAllCalendarItems(); // Refresh calendar after deleting task
+            }
         }
 
         // --- BUDGET TRACKER ---
@@ -445,22 +453,36 @@
                 end_date: end_date
             }]);
 
-            if (error) {
-                console.error('Error adding schedule item:', error);
-                alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message);
-            } else {
-                fetchSchedule();
-                closeModal();
-            }
+            if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } 
+            else { fetchAllCalendarItems(); closeModal(); }
         }
 
-        async function fetchSchedule() {
-            const { data, error } = await db.from('schedule').select('*');
-            if (error) {
-                console.error('Error fetching schedule:', error);
-                return;
-            }
-            scheduleEvents = data;
+        async function fetchAllCalendarItems() {
+            const { data: events, error: eventsError } = await db.from('schedule').select('*');
+            const { data: tasks, error: tasksError } = await db.from('tasks').select('*');
+
+            if (eventsError) { console.error('Error fetching schedule:', eventsError); return; }
+            if (tasksError) { console.error('Error fetching tasks for calendar:', tasksError); return; }
+
+            const formattedEvents = events.map(e => ({
+                id: `event-${e.id}`,
+                date: new Date(e.event_date),
+                endDate: e.end_date ? new Date(e.end_date) : null,
+                title: e.title,
+                type: 'event',
+                originalData: e
+            }));
+
+            const formattedTasks = tasks.map(t => ({
+                id: `task-${t.id}`,
+                date: new Date(t.due_date + 'T00:00:00'),
+                endDate: null,
+                title: t.title,
+                type: 'task',
+                originalData: t
+            }));
+
+            allCalendarItems = [...formattedEvents, ...formattedTasks];
             renderCalendar();
         }
 
@@ -468,7 +490,7 @@
             if (!confirm('คุณต้องการลบกิจกรรมนี้ใช่หรือไม่?')) return;
             const { error } = await db.from('schedule').delete().eq('id', id);
             if (error) console.error('Error deleting schedule item:', error);
-            else fetchSchedule();
+            else fetchAllCalendarItems();
         }
 
         function switchCalendarView(view) {
@@ -539,13 +561,15 @@
             for (let i = 1; i <= lastDay.getDate(); i++) {
                 const dayDate = new Date(year, month, i);
                 const isToday = dayDate.toDateString() === new Date().toDateString() ? 'today' : '';
-                const eventsOnDay = scheduleEvents.filter(e => new Date(e.event_date).toDateString() === dayDate.toDateString());
+                const eventsOnDay = allCalendarItems.filter(e => new Date(e.date).toDateString() === dayDate.toDateString() && e.type === 'event');
+                const tasksOnDay = allCalendarItems.filter(e => new Date(e.date).toDateString() === dayDate.toDateString() && e.type === 'task');
                 
                 daysHtml += `
                     <div class="calendar-day p-2 rounded-lg cursor-pointer h-16 border ${isToday}">
                         <div class="font-semibold">${i}</div>
-                        <div class="flex justify-center mt-1 space-x-1">
-                            ${eventsOnDay.slice(0, 3).map(() => `<div class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>`).join('')}
+                        <div class="flex justify-start mt-1 space-x-1">
+                            ${eventsOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>`).join('')}
+                            ${tasksOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>`).join('')}
                         </div>
                     </div>`;
             }
@@ -561,15 +585,21 @@
             for (let i = 0; i < 7; i++) {
                 const day = new Date(startOfWeek);
                 day.setDate(day.getDate() + i);
-                const eventsOnDay = scheduleEvents.filter(e => new Date(e.event_date).toDateString() === day.toDateString());
+                const itemsOnDay = allCalendarItems
+                    .filter(e => new Date(e.date).toDateString() === day.toDateString())
+                    .sort((a, b) => a.date - b.date);
+
                 weekHtml += `
                     <div class="p-2 border rounded-lg">
                         <div class="text-center font-bold">${day.toLocaleDateString('th-TH', { weekday: 'short' })} ${day.getDate()}</div>
                         <div class="mt-2 space-y-1">
-                        ${eventsOnDay.map(e => `
-                            <div class="bg-cyan-100 text-cyan-800 p-1 rounded text-xs truncate">
-                                ${formatTime(e.event_date)} ${e.title}
-                            </div>`).join('') || '<div class="h-10"></div>'}
+                        ${itemsOnDay.map(item => {
+                            if (item.type === 'event') {
+                                return `<div class="bg-cyan-100 text-cyan-800 p-1 rounded text-xs truncate">${formatTime(item.date)} ${item.title}</div>`;
+                            } else { // task
+                                return `<div class="bg-blue-100 text-blue-800 p-1 rounded text-xs truncate"><i class="fa-solid fa-check-square mr-1"></i>${item.title}</div>`;
+                            }
+                        }).join('') || '<div class="h-10"></div>'}
                         </div>
                     </div>`;
             }
@@ -578,28 +608,52 @@
         }
 
         function renderDailyView(container) {
-            const eventsOnDay = scheduleEvents
-                .filter(e => new Date(e.event_date).toDateString() === currentViewDate.toDateString())
-                .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+            const eventsOnDay = allCalendarItems
+                .filter(e => new Date(e.date).toDateString() === currentViewDate.toDateString() && e.type === 'event')
+                .sort((a, b) => a.date - b.date);
+                
+            const tasksOnDay = allCalendarItems
+                .filter(e => new Date(e.date).toDateString() === currentViewDate.toDateString() && e.type === 'task');
 
-            let dayHtml = `<div class="space-y-3">`;
+            let dayHtml = `<div class="space-y-4">`;
+
+            // Render Events
             if (eventsOnDay.length > 0) {
+                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจกรรม</h4><div class="space-y-3">`;
                 dayHtml += eventsOnDay.map(e => `
                     <div class="p-3 rounded-lg bg-slate-100 flex items-start space-x-4">
                         <div class="text-sm text-cyan-600 font-semibold w-24">
-                            <div>${formatTime(e.event_date)}</div>
-                            ${e.end_date ? `<div class="text-xs">ถึง ${formatTime(e.end_date)}</div>` : ''}
+                            <div>${formatTime(e.date)}</div>
+                            ${e.endDate ? `<div class="text-xs">ถึง ${formatTime(e.endDate)}</div>` : ''}
                         </div>
                         <div class="flex-grow">
                             <p class="font-semibold text-slate-800">${e.title}</p>
-                            <p class="text-xs text-slate-500">${e.event_type}</p>
+                            <p class="text-xs text-slate-500">${e.originalData.event_type}</p>
                         </div>
-                        <button onclick="deleteScheduleItem(${e.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteScheduleItem(${e.originalData.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `).join('');
-            } else {
-                dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีกิจกรรมสำหรับวันนี้</p></div>`;
+                dayHtml += `</div></div>`;
             }
+
+            // Render Tasks
+            if (tasksOnDay.length > 0) {
+                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">งานที่ครบกำหนดวันนี้</h4><div class="space-y-3">`;
+                dayHtml += tasksOnDay.map(t => `
+                    <div class="p-3 rounded-lg bg-slate-100 flex items-center space-x-4">
+                        <div class="flex-grow">
+                            <p class="font-semibold text-slate-800">${t.title}</p>
+                        </div>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full priority-${t.originalData.priority}">${t.originalData.priority}</span>
+                    </div>
+                `).join('');
+                dayHtml += `</div></div>`;
+            }
+
+            if (eventsOnDay.length === 0 && tasksOnDay.length === 0) {
+                dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีกิจกรรมหรืองานสำหรับวันนี้</p></div>`;
+            }
+            
             dayHtml += `</div>`;
             container.innerHTML = dayHtml;
         }
@@ -612,7 +666,7 @@
                 fetchBudget();
                 fetchKnowledge();
                 fetchJournal();
-                fetchSchedule();
+                fetchAllCalendarItems();
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
