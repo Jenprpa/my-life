@@ -92,7 +92,7 @@
                             </div>
                             <button onclick="openTaskModal()" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors">+ เพิ่มงาน</button>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="task-board"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1" id="task-board"></div>
                     </section>
 
                     <section id="ideas" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -103,7 +103,7 @@
                             </div>
                             <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
                         </div>
-                        <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+                        <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1"></div>
                     </section>
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -125,7 +125,7 @@
                             </div>
                             <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
                         </div>
-                        <div id="habit-tracker-container"></div>
+                        <div id="habit-tracker-container" class="max-h-96 overflow-y-auto p-1"></div>
                     </section>
 
                     <section id="health-tracker" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -136,7 +136,7 @@
                             </div>
                             <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
-                        <div id="health-tracker-container"></div>
+                        <div id="health-tracker-container" class="max-h-96 overflow-y-auto p-1"></div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -158,7 +158,7 @@
                             </div>
                             <button onclick="openPersonalGrowthModal()" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors">+ เพิ่มเป้าหมาย</button>
                         </div>
-                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1"></div>
                     </section>
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -196,7 +196,7 @@
                             <div class="bg-red-100 p-3 rounded-lg"><p class="text-sm text-red-800">รายจ่ายทั้งหมด</p><p id="total-expense" class="text-xl font-bold text-red-600">฿0.00</p></div>
                             <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือ</p><p id="balance" class="text-xl font-bold text-blue-600">฿0.00</p></div>
                         </div>
-                        <div class="overflow-x-auto max-h-96">
+                        <div class="overflow-x-auto overflow-y-auto max-h-96">
                             <table class="w-full text-sm text-left">
                                 <thead class="bg-slate-100 sticky top-0"><tr><th class="p-3">รายการ</th><th class="p-3">จำนวนเงิน</th><th class="p-3">วันที่</th><th class="p-3">หมวดหมู่</th><th class="p-3">ประเภท</th><th class="p-3"></th></tr></thead>
                                 <tbody id="budget-table-body"></tbody>
