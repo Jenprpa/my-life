@@ -36,6 +36,7 @@
                 <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
                 <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
                 <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
+                <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
                 <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
                 <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
                 <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
@@ -125,6 +126,17 @@
                         <div id="habit-tracker-container"></div>
                     </section>
 
+                    <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                         <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📌</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                            </div>
+                            <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                        </div>
+                        <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                    </section>
+
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
@@ -178,6 +190,19 @@
                         </div>
                         <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
                             <iframe src="https://jenprpa.github.io/budget/" class="w-full h-full" title="Personal Finance System"></iframe>
+                        </div>
+                    </section>
+                    
+                    <section id="financial-forecast" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📈</span>
+                                <h2 class="text-xl font-semibold text-gray-900">ประมาณการทางการเงิน (Excel)</h2>
+                            </div>
+                             <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
+                        </div>
+                        <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
+                            <iframe src="https://onedrive.live.com/embed?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&action=embedview" class="w-full h-full" title="Financial Forecast Excel"></iframe>
                         </div>
                     </section>
 
@@ -771,6 +796,7 @@
                 fetchDataForCalendar();
                 fetchHabits();
                 fetchIdeas();
+                fetchEventLog();
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
@@ -801,6 +827,34 @@
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
+
+        // --- EVENT LOG ---
+        function openEventLogModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์ใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? entry.event_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลา (ไม่บังคับ)</label><input name="event_time" type="time" value="${isEdit ? entry.event_time || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">รายละเอียดเหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? entry.description : ''}</textarea></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('event-log-form').addEventListener('submit', isEdit ? handleEditEventLog : addEventLogEntry);
+        }
+        async function addEventLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); delete eventData.id; if (!eventData.event_time) { delete eventData.event_time; } const { error } = await db.from('event_log').insert([eventData]); if (error) { console.error('Error adding event log:', error); } else { fetchEventLog(); closeModal(); } }
+        async function handleEditEventLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); if (!eventData.event_time) { eventData.event_time = null; } const { error } = await db.from('event_log').update({ event_date: eventData.event_date, event_time: eventData.event_time, description: eventData.description }).eq('id', eventData.id); if (error) { console.error('Error updating event log:', error); } else { fetchEventLog(); closeModal(); } }
+        async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
+        function renderEventLog(items) { const container = document.getElementById('event-log-container'); if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
+        async function deleteEventLog(id) { if (!confirm('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?')) return; const { error } = await db.from('event_log').delete().eq('id', id); if (error) console.error('Error deleting event log:', error); else fetchEventLog(); }
+
     </script>
 
 </body>
