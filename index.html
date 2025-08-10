@@ -21,6 +21,9 @@
         .calendar-day:hover { background-color: #f7fafc; }
         .habit-checkbox:checked + label { text-decoration: line-through; color: #a0aec0; }
         .sidebar-link.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #E59572; color: white; }
+        .progress-bar { background-color: #e2e8f0; }
+        .progress-bar-inner { background-color: #4299e1; }
+        .mood-btn.selected { transform: scale(1.2); border-color: #4299e1; }
     </style>
 </head>
 <body class="bg-slate-100">
@@ -30,13 +33,17 @@
         <aside id="sidebar" class="bg-slate-800 text-slate-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
             <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
             <nav id="sidebar-nav" class="flex flex-col space-y-1">
+                <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
                 <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
                 <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
+                <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย (OKRs)</a>
                 <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> การจัดการงาน</a>
                 <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
                 <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
                 <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
                 <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
+                <a href="#mood-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">😊</span> บันทึกอารมณ์</a>
+                <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกการอ่าน/ดู/ฟัง</a>
                 <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
                 <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
                 <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
@@ -67,6 +74,14 @@
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
+                    <section id="overview" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🏠</span>
+                            <h2 class="text-xl font-semibold text-gray-900">ภาพรวมวันนี้</h2>
+                        </div>
+                        <div id="overview-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+                    </section>
+                    
                     <section id="website" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
@@ -82,6 +97,17 @@
 
                     <section id="weekly-agenda" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div id="weekly-agenda-container"></div>
+                    </section>
+
+                    <section id="okrs" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🚀</span>
+                                <h2 class="text-xl font-semibold text-gray-900">เป้าหมาย (OKRs)</h2>
+                            </div>
+                            <button onclick="openOkrModal()" class="bg-blue-800 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-900 transition-colors">+ เพิ่ม Objective</button>
+                        </div>
+                        <div id="okrs-container" class="space-y-4"></div>
                     </section>
 
                     <section id="tasks" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -137,6 +163,27 @@
                             <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
                         <div id="health-tracker-container" class="max-h-96 overflow-y-auto p-1"></div>
+                    </section>
+
+                    <section id="mood-tracker" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">😊</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกอารมณ์</h2>
+                            </div>
+                        </div>
+                        <div id="mood-tracker-container"></div>
+                    </section>
+
+                    <section id="media-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🎬</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกการอ่าน/ดู/ฟัง</h2>
+                            </div>
+                            <button onclick="openMediaLogModal()" class="bg-gray-700 text-white px-3 py-1 rounded-lg text-sm hover:bg-gray-800 transition-colors">+ เพิ่มรายการ</button>
+                        </div>
+                        <div id="media-log-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1"></div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -216,19 +263,6 @@
                             <iframe src="https://jenprpa.github.io/budget/" class="w-full h-full" title="Personal Finance System"></iframe>
                         </div>
                     </section>
-                    
-                    <section id="financial-forecast" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📈</span>
-                                <h2 class="text-xl font-semibold text-gray-900">ประมาณการทางการเงิน (Excel)</h2>
-                            </div>
-                             <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-                        </div>
-                        <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
-                            <iframe src="https://onedrive.live.com/embed?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&action=embedview" class="w-full h-full" title="Financial Forecast Excel"></iframe>
-                        </div>
-                    </section>
 
                 </div>
             </main>
@@ -253,8 +287,8 @@
         let allCalendarItems = [];
         let dailyExpenses = new Map();
         let dailyIncomes = new Map();
-        let dailyCaloriesIn = new Map(); // ADDED: For health summary
-        let dailyCaloriesOut = new Map(); // ADDED: For health summary
+        let dailyCaloriesIn = new Map();
+        let dailyCaloriesOut = new Map();
         let allTasks = [];
         let allHabits = [];
         let allHabitLogs = [];
@@ -311,7 +345,7 @@
             if (error) { console.error('Error updating task:', error); } 
             else { fetchTasks(); fetchDataForCalendar(); closeModal(); }
         }
-        async function fetchTasks() { const { data: tasks, error } = await db.from('tasks').select('*, idea_task_links(idea_id, ideas(title))').order('created_at', { ascending: false }); if (error) { console.error('Error fetching tasks:', error); return; } allTasks = tasks; renderTaskBoard(tasks); renderWeeklyAgenda(); }
+        async function fetchTasks() { const { data: tasks, error } = await db.from('tasks').select('*, idea_task_links(idea_id, ideas(title))').order('created_at', { ascending: false }); if (error) { console.error('Error fetching tasks:', error); return; } allTasks = tasks; renderTaskBoard(tasks); renderWeeklyAgenda(); fetchDashboardOverview(); }
         function renderTaskBoard(tasks) { const board = document.getElementById('task-board'); board.innerHTML = ''; const statuses = ['To-Do', 'In Progress', 'Done']; statuses.forEach(status => { const column = document.createElement('div'); column.className = 'bg-slate-100 rounded-lg p-3'; const tasksInStatus = tasks.filter(t => t.status === status); let tasksHTML = tasksInStatus.map(task => { const linkedIdeas = task.idea_task_links.map(link => link.ideas.title).join(', '); return `<div class="bg-white p-3 rounded-md shadow-sm border border-slate-200 mb-2"><div class="flex justify-between items-start"><p class="font-semibold text-slate-800">${task.title}</p><div class="flex items-center space-x-2">${task.idea_task_links.length > 0 ? `<span class="text-yellow-500" title="เชื่อมกับไอเดีย: ${linkedIdeas}">💡</span>` : ''}<button onclick='openTaskModal(${JSON.stringify(task)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button></div></div><div class="text-xs text-slate-500 mt-2">ถึงกำหนด: ${formatDate(task.due_date)}</div><div class="mt-2 flex justify-between items-center"><span class="text-xs font-medium px-2 py-1 rounded-full priority-${task.priority}">${task.priority}</span><button onclick="deleteTask(${task.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div>`}).join(''); column.innerHTML = `<h3 class="font-semibold text-slate-700 mb-3">${status} (${tasksInStatus.length})</h3><div class="space-y-2 min-h-[100px]">${tasksHTML}</div>`; board.appendChild(column); }); }
         async function deleteTask(id) { if (!confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) return; const { error } = await db.from('tasks').delete().eq('id', id); if (error) { console.error('Error deleting task:', error); } else { fetchTasks(); fetchDataForCalendar(); } }
 
@@ -403,7 +437,6 @@
         function openScheduleModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3><div class="space-y-4"><div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="event_type" class="w-full mt-1 p-2 border rounded-md"><option>Personal</option><option>Work</option><option>Health</option><option>Learning</option><option>Family</option><option>Errands</option><option>Social</option><option>Other</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem); }
         async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } else { fetchDataForCalendar(); closeModal(); } }
         async function fetchDataForCalendar() {
-            // UPDATED: Added health_log to the promise
             const [eventsRes, tasksRes, budgetRes, healthRes] = await Promise.all([
                 db.from('schedule').select('*'),
                 db.from('tasks').select('*'),
@@ -433,7 +466,6 @@
                 }
             });
 
-            // ADDED: Process health data for calendar summary
             dailyCaloriesIn.clear();
             dailyCaloriesOut.clear();
             healthRes.data.forEach(item => {
@@ -467,23 +499,16 @@
                 const dayDate = new Date(year, month, i); const dateStr = toYYYYMMDD(dayDate); const isToday = dateStr === getToday() ? 'today' : '';
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
-                
-                // Get financial and health data for the day
                 const expenseTotal = dailyExpenses.get(dateStr);
                 const incomeTotal = dailyIncomes.get(dateStr);
                 const caloriesInTotal = dailyCaloriesIn.get(dateStr);
                 const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
-
                 let financialHtml = '';
                 if (incomeTotal) { financialHtml += `<div class="text-xs text-green-500 truncate">+${formatNumber(incomeTotal)}</div>`; }
                 if (expenseTotal) { financialHtml += `<div class="text-xs text-red-500 truncate">-${formatNumber(expenseTotal)}</div>`; }
-
-                // ADDED: HTML for health summary
                 let healthHtml = '';
                 if (caloriesInTotal) { healthHtml += `<div class="text-xs text-green-600 truncate">🍔 ${formatNumber(caloriesInTotal)}</div>`; }
                 if (caloriesOutTotal) { healthHtml += `<div class="text-xs text-orange-500 truncate">🔥 ${formatNumber(caloriesOutTotal)}</div>`; }
-
-                // UPDATED: Increased height to h-28 and added healthHtml
                 daysHtml += `<div class="calendar-day p-1 rounded-lg cursor-pointer h-28 border ${isToday} flex flex-col" onclick="currentViewDate = new Date('${dateStr}T00:00:00'); switchCalendarView('day')">
                                 <div class="font-semibold text-left">${i}</div>
                                 <div class="flex-grow overflow-hidden text-right">
@@ -505,34 +530,50 @@
         }
         function renderDailyView(container) {
             const dateStr = toYYYYMMDD(currentViewDate);
+            const dayOfWeek = currentViewDate.getDay();
             const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event').sort((a, b) => a.date - b.date);
             const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
             const expenseTotal = dailyExpenses.get(dateStr);
             const incomeTotal = dailyIncomes.get(dateStr);
-            // ADDED: Get health data for daily view
             const caloriesInTotal = dailyCaloriesIn.get(dateStr);
             const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
+            const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
+            const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == dayOfWeek);
 
             let dayHtml = `<div class="space-y-4">`;
-            
             if (incomeTotal || expenseTotal) { 
                 dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปการเงิน</h4><div class="space-y-1">`;
                 if(incomeTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-600 font-bold">รายรับ: ${formatCurrency(incomeTotal)}</div>`;
                 if(expenseTotal) dayHtml += `<div class="p-3 rounded-lg bg-red-50 text-red-600 font-bold">รายจ่าย: ${formatCurrency(expenseTotal)}</div>`;
                 dayHtml += `</div></div>`;
             }
-
-            // ADDED: Health summary section for daily view
             if (caloriesInTotal || caloriesOutTotal) {
                 dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปสุขภาพ</h4><div class="space-y-1">`;
                 if(caloriesInTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-700 font-bold">🍔 ได้รับ: ${formatNumber(caloriesInTotal)} แคล</div>`;
                 if(caloriesOutTotal) dayHtml += `<div class="p-3 rounded-lg bg-orange-50 text-orange-700 font-bold">🔥 เผาผลาญ: ${formatNumber(caloriesOutTotal)} แคล</div>`;
                 dayHtml += `</div></div>`;
             }
-
             if (eventsOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจกรรม</h4><div class="space-y-3">${eventsOnDay.map(e => `<div class="p-3 rounded-lg bg-slate-100 flex items-start space-x-4"><div class="text-sm text-cyan-600 font-semibold w-24"><div>${formatTime(e.date)}</div>${e.endDate ? `<div class="text-xs">ถึง ${formatTime(e.endDate)}</div>` : ''}</div><div class="flex-grow"><p class="font-semibold text-slate-800">${e.title}</p><p class="text-xs text-slate-500">${e.originalData.event_type}</p></div><button onclick="deleteScheduleItem(${e.originalData.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>`).join('')}</div></div>`; }
             if (tasksOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">งานที่ครบกำหนดวันนี้</h4><div class="space-y-3">${tasksOnDay.map(t => `<div class="p-3 rounded-lg bg-slate-100 flex items-center space-x-4"><div class="flex-grow"><p class="font-semibold text-slate-800">${t.title}</p></div><span class="text-xs font-medium px-2 py-1 rounded-full priority-${t.originalData.priority}">${t.originalData.priority}</span></div>`).join('')}</div></div>`; }
-            if (eventsOnDay.length === 0 && tasksOnDay.length === 0 && !incomeTotal && !expenseTotal && !caloriesInTotal && !caloriesOutTotal) { dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีกิจกรรมหรืองานสำหรับวันนี้</p></div>`; }
+            
+            if (dailyHabitsOnDay.length > 0 || weeklyHabitsOnDay.length > 0) {
+                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจวัตรสำหรับวันนี้</h4><div class="space-y-2">`;
+                if (dailyHabitsOnDay.length > 0) {
+                    dayHtml += dailyHabitsOnDay.map(h => {
+                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
+                        return `<div class="flex items-center space-x-2 text-sm p-2 bg-slate-100 rounded-md"><input type="checkbox" id="daily-view-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="daily" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="daily-view-habit-${h.id}-${dateStr}" class="${isChecked ? 'line-through text-slate-400' : ''}">${h.name}</label></div>`;
+                    }).join('');
+                }
+                if (weeklyHabitsOnDay.length > 0) {
+                     dayHtml += weeklyHabitsOnDay.map(h => {
+                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
+                        return `<div class="flex items-center space-x-2 text-sm p-2 bg-slate-100 rounded-md"><input type="checkbox" id="daily-view-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="weekly" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="daily-view-habit-${h.id}-${dateStr}" class="${isChecked ? 'line-through text-slate-400' : ''}">${h.name}</label></div>`;
+                    }).join('');
+                }
+                dayHtml += `</div></div>`;
+            }
+
+            if (eventsOnDay.length === 0 && tasksOnDay.length === 0 && !incomeTotal && !expenseTotal && !caloriesInTotal && !caloriesOutTotal && dailyHabitsOnDay.length === 0 && weeklyHabitsOnDay.length === 0) { dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีรายการสำหรับวันนี้</p></div>`; }
             dayHtml += `</div>`; container.innerHTML = dayHtml;
         }
 
@@ -574,6 +615,7 @@
             const habitStats = calculateHabitStats(habits, log);
             renderHabitTracker(habitStats, log);
             renderWeeklyAgenda();
+            fetchDashboardOverview();
         }
         function calculateHabitStats(habits, log) {
             const today = new Date();
@@ -841,7 +883,7 @@
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allTasks.filter(t => t.due_date === dateStr);
                 const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == i); // Use == for loose comparison of number and string
+                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == i);
                 
                 let itemsHTML = '';
                 
@@ -872,11 +914,10 @@
                     </div>`;
             }
             weekHtml += `</div>`;
-            container.innerHTML = headerHTML + weekHtml;
+            container.innerHTML = headerHTML + `<div class="max-h-96 overflow-y-auto p-1">${weekHtml}</div>`;
         }
 
-
-        // --- INITIAL LOAD ---
+        // --- INITIAL LOAD & NAVIGATION ---
         document.addEventListener('DOMContentLoaded', () => {
             if (db) {
                 fetchTasks();
@@ -889,6 +930,9 @@
                 fetchEventLog();
                 fetchHealthLog();
                 fetchPersonalGrowth();
+                fetchOkrs();
+                fetchMediaLogs();
+                fetchMoodLogs();
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
@@ -911,6 +955,14 @@
             }, { rootMargin: "-50% 0px -50% 0px" });
 
             sections.forEach(section => observer.observe(section));
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) { // 1024px is lg breakpoint in Tailwind
+                        toggleSidebar();
+                    }
+                });
+            });
         });
 
         function toggleSidebar() {
@@ -1022,7 +1074,7 @@
         }
         async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
         async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); fetchDataForCalendar(); /* ADDED: Refresh calendar data */ }
+        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); fetchDataForCalendar(); fetchDashboardOverview(); }
         function renderHealthTracker(items) {
             const container = document.getElementById('health-tracker-container');
             const foodItems = items.filter(i => i.type === 'food');
@@ -1070,6 +1122,70 @@
             `;
         }
         async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
+
+        // --- NEW SECTIONS ---
+
+        // 1. Dashboard Overview
+        async function fetchDashboardOverview() {
+            const today = getToday();
+            const { data: tasks, error: tasksError } = await db.from('tasks').select('*').eq('due_date', today).not('status', 'eq', 'Done').limit(3);
+            const { data: habits, error: habitsError } = await db.from('habits').select('*');
+            const { data: habitLogs, error: habitLogsError } = await db.from('habit_log').select('habit_id').eq('completed_date', today);
+            const { data: health, error: healthError } = await db.from('health_log').select('type, calories').eq('log_date', today);
+            const { data: schedule, error: scheduleError } = await db.from('schedule').select('*').gte('event_date', new Date().toISOString()).order('event_date').limit(1);
+
+            const container = document.getElementById('overview-container');
+            let html = '';
+
+            // Tasks Card
+            html += `<div class="bg-blue-50 p-4 rounded-lg"><h3 class="font-bold text-blue-800 mb-2">🎯 งานสำหรับวันนี้</h3><div class="space-y-1 text-sm">`;
+            if (tasks && tasks.length > 0) {
+                html += tasks.map(t => `<p>${t.title}</p>`).join('');
+            } else {
+                html += `<p class="text-slate-500">ไม่มีงานสำหรับวันนี้</p>`;
+            }
+            html += `</div></div>`;
+
+            // Habits Card
+            const loggedHabitIds = new Set((habitLogs || []).map(l => l.habit_id));
+            const habitsToday = (habits || []).filter(h => h.frequency === 'daily' || h.weekly_day == new Date().getDay());
+            const completedHabits = habitsToday.filter(h => loggedHabitIds.has(h.id)).length;
+            html += `<div class="bg-teal-50 p-4 rounded-lg"><h3 class="font-bold text-teal-800 mb-2">💪 กิจวัตร</h3><div class="text-center"><p class="text-3xl font-bold">${completedHabits}/${habitsToday.length}</p><p class="text-sm">ที่ทำสำเร็จแล้ว</p></div></div>`;
+            
+            // Health Card
+            const caloriesIn = (health || []).filter(h => h.type === 'food').reduce((sum, h) => sum + h.calories, 0);
+            const caloriesOut = (health || []).filter(h => h.type === 'exercise').reduce((sum, h) => sum + h.calories, 0);
+            const remaining = CALORIE_GOAL - (caloriesIn - caloriesOut);
+            html += `<div class="bg-red-50 p-4 rounded-lg"><h3 class="font-bold text-red-800 mb-2">❤️ สุขภาพ</h3><div class="text-center"><p class="text-3xl font-bold">${remaining.toLocaleString()}</p><p class="text-sm">แคลอรี่คงเหลือ</p></div></div>`;
+
+            // Schedule Card
+            html += `<div class="bg-cyan-50 p-4 rounded-lg"><h3 class="font-bold text-cyan-800 mb-2">🗓️ นัดหมายถัดไป</h3><div class="space-y-1 text-sm">`;
+            if (schedule && schedule.length > 0) {
+                const nextEvent = schedule[0];
+                html += `<p class="font-semibold">${nextEvent.title}</p><p class="text-xs">${formatDate(nextEvent.event_date)} ${formatTime(nextEvent.event_date)}</p>`;
+            } else {
+                html += `<p class="text-slate-500">ไม่มีนัดหมายเร็วๆ นี้</p>`;
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+        }
+
+        // 2. OKRs
+        async function fetchOkrs() { /* Implement */ }
+        function renderOkrs(data) { /* Implement */ }
+        function openOkrModal(okr = null) { /* Implement */ }
+        
+        // 3. Media Log
+        async function fetchMediaLogs() { /* Implement */ }
+        function renderMediaLogs(data) { /* Implement */ }
+        function openMediaLogModal(item = null) { /* Implement */ }
+
+        // 4. Mood Tracker
+        async function fetchMoodLogs() { /* Implement */ }
+        function renderMoodTracker(data) { /* Implement */ }
+        async function logMood(mood) { /* Implement */ }
+
 
     </script>
 
