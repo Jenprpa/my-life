@@ -36,6 +36,7 @@
                 <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
                 <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
                 <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
+                <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
                 <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
                 <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
                 <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
@@ -124,6 +125,17 @@
                             <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
                         </div>
                         <div id="habit-tracker-container"></div>
+                    </section>
+
+                    <section id="health-tracker" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">❤️</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ (วันนี้)</h2>
+                            </div>
+                            <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
+                        </div>
+                        <div id="health-tracker-container"></div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -797,6 +809,7 @@
                 fetchHabits();
                 fetchIdeas();
                 fetchEventLog();
+                fetchHealthLog();
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
@@ -854,6 +867,79 @@
         async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
         function renderEventLog(items) { const container = document.getElementById('event-log-container'); if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
         async function deleteEventLog(id) { if (!confirm('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?')) return; const { error } = await db.from('event_log').delete().eq('id', id); if (error) console.error('Error deleting event log:', error); else fetchEventLog(); }
+
+        // --- HEALTH TRACKER ---
+        const CALORIE_GOAL = 1850;
+        function openHealthLogModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ประเภท</label><select name="type" class="w-full mt-1 p-2 border rounded-md"><option value="food" ${isEdit && entry.type === 'food' ? 'selected' : ''}>🍔 อาหาร</option><option value="exercise" ${isEdit && entry.type === 'exercise' ? 'selected' : ''}>🏃 ออกกำลังกาย</option></select></div>
+                            <div><label class="text-sm font-medium">รายการ</label><input name="item_name" type="text" value="${isEdit ? entry.item_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">แคลอรี่</label><input name="calories" type="number" value="${isEdit ? entry.calories : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('health-log-form').addEventListener('submit', isEdit ? handleEditHealthLog : addHealthLogEntry);
+        }
+        async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); }
+        function renderHealthTracker(items) {
+            const container = document.getElementById('health-tracker-container');
+            const foodItems = items.filter(i => i.type === 'food');
+            const exerciseItems = items.filter(i => i.type === 'exercise');
+            const totalCaloriesIn = foodItems.reduce((sum, i) => sum + i.calories, 0);
+            const totalCaloriesOut = exerciseItems.reduce((sum, i) => sum + i.calories, 0);
+            const netCalories = totalCaloriesIn - totalCaloriesOut;
+            const remainingCalories = CALORIE_GOAL - netCalories;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-center">
+                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">เป้าหมาย</p><p class="text-xl font-bold text-blue-600">${CALORIE_GOAL.toLocaleString()} แคล</p></div>
+                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ</p><p class="text-xl font-bold text-green-600">${totalCaloriesIn.toLocaleString()} แคล</p></div>
+                    <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">เผาผลาญ</p><p class="text-xl font-bold text-orange-600">${totalCaloriesOut.toLocaleString()} แคล</p></div>
+                    <div class="${remainingCalories >= 0 ? 'bg-purple-100' : 'bg-red-200'} p-3 rounded-lg"><p class="text-sm ${remainingCalories >= 0 ? 'text-purple-800' : 'text-red-800'}">คงเหลือ</p><p class="text-xl font-bold ${remainingCalories >= 0 ? 'text-purple-600' : 'text-red-600'}">${remainingCalories.toLocaleString()} แคล</p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🍔 อาหารที่ทาน</h3>
+                        <div class="space-y-2">${foodItems.map(item => `
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
+                                <span>${item.item_name}</span>
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-medium text-green-600">${item.calories.toLocaleString()} แคล</span>
+                                    <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการอาหาร</p>'}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🏃 การออกกำลังกาย</h3>
+                         <div class="space-y-2">${exerciseItems.map(item => `
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
+                                <span>${item.item_name}</span>
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-medium text-orange-600">${item.calories.toLocaleString()} แคล</span>
+                                     <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการออกกำลังกาย</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
 
     </script>
 
