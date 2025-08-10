@@ -21,25 +21,6 @@
         .calendar-day:hover { background-color: #f7fafc; }
         .habit-checkbox:checked + label { text-decoration: line-through; color: #a0aec0; }
         .sidebar-link.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #E59572; color: white; }
-        /* Custom styles for notifications */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            color: white;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .notification-success { background-color: #2f855a; }
-        .notification-error { background-color: #c53030; }
     </style>
 </head>
 <body class="bg-slate-100">
@@ -127,12 +108,12 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📅</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                             </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📅</span>
+                                <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                            </div>
                              <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
-                         </div>
+                        </div>
                         <div id="calendar-container"></div>
                     </section>
 
@@ -153,19 +134,19 @@
                                 <span class="text-2xl mr-3">❤️</span>
                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ (วันนี้)</h2>
                             </div>
-                            <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่ม/แก้ไขบันทึก</button>
+                            <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
-                        <div id="health-log-today-container"></div>
+                        <div id="health-tracker-container"></div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📌</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                             </div>
-                             <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
-                         </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📌</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                            </div>
+                            <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                        </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
 
@@ -182,12 +163,12 @@
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📓</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                             </div>
-                             <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
-                         </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📓</span>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                            </div>
+                            <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                        </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
                     
@@ -235,16 +216,27 @@
                             <iframe src="https://jenprpa.github.io/budget/" class="w-full h-full" title="Personal Finance System"></iframe>
                         </div>
                     </section>
+                    
+                    <section id="financial-forecast" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📈</span>
+                                <h2 class="text-xl font-semibold text-gray-900">ประมาณการทางการเงิน (Excel)</h2>
+                            </div>
+                             <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
+                        </div>
+                        <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
+                            <iframe src="https://onedrive.live.com/embed?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&action=embedview" class="w-full h-full" title="Financial Forecast Excel"></iframe>
+                        </div>
+                    </section>
 
                 </div>
             </main>
         </div>
     </div>
     
-    <!-- Modals and Notifications Container -->
+    <!-- Modals -->
     <div id="modal-container"></div>
-    <div id="notification-container"></div>
-
 
     <script>
         // --- SUPABASE SETUP ---
@@ -258,24 +250,12 @@
         let currentViewDate = new Date();
         let currentCalendarView = 'month';
         let weeklyAgendaDate = new Date(); 
-        
-        // Data stores
-        let allTasks = [];
-        let allBudgetItems = [];
-        let allKnowledgeItems = [];
-        let allJournalEntries = [];
-        let allScheduleEvents = [];
-        let allHabits = [];
-        let allHabitLogs = [];
-        let allIdeas = [];
-        let allEventLogs = [];
-        let allHealthLogs = [];
-        let allPersonalGrowthItems = [];
-
-        // Derived state for calendar
         let allCalendarItems = [];
         let dailyExpenses = new Map();
         let dailyIncomes = new Map();
+        let allTasks = [];
+        let allHabits = [];
+        let allHabitLogs = [];
 
 
         // --- UTILITY FUNCTIONS ---
@@ -292,45 +272,9 @@
         };
 
 
-        // --- UI & MODAL HANDLING ---
+        // --- MODAL HANDLING ---
         const modalContainer = document.getElementById('modal-container');
-        const notificationContainer = document.getElementById('notification-container');
-
         function closeModal() { modalContainer.innerHTML = ''; }
-        
-        function showNotification(message, type = 'success') {
-            const notif = document.createElement('div');
-            notif.className = `notification notification-${type}`;
-            notif.textContent = message;
-            notificationContainer.appendChild(notif);
-
-            // Trigger the animation
-            setTimeout(() => notif.classList.add('show'), 10);
-
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notif.classList.remove('show');
-                notif.addEventListener('transitionend', () => notif.remove());
-            }, 3000);
-        }
-
-        function showConfirmationModal(message, onConfirm) {
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
-                        <p class="text-lg mb-4">${message}</p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="confirm-cancel" class="px-6 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button id="confirm-ok" class="px-6 py-2 bg-red-600 text-white rounded-md">ยืนยัน</button>
-                        </div>
-                    </div>
-                </div>`;
-            document.getElementById('confirm-ok').onclick = () => {
-                onConfirm();
-                closeModal();
-            };
-            document.getElementById('confirm-cancel').onclick = closeModal;
-        }
         
         // --- TASK MANAGEMENT ---
         function openTaskModal(task = null) {
@@ -354,18 +298,19 @@
                 </div>`;
             document.getElementById('task-form').addEventListener('submit', isEdit ? handleEditTask : addTask);
         }
-        async function addTask(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const taskData = Object.fromEntries(formData.entries()); delete taskData.id; const { error } = await db.from('tasks').insert([taskData]); if (error) { console.error('Error adding task:', error); showNotification('ไม่สามารถเพิ่มงานได้: ' + error.message, 'error'); } else { showNotification('เพิ่มงานสำเร็จ'); fetchAllData(); closeModal(); } }
+        async function addTask(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const taskData = Object.fromEntries(formData.entries()); delete taskData.id; const { error } = await db.from('tasks').insert([taskData]); if (error) { console.error('Error adding task:', error); alert('ไม่สามารถเพิ่มงานได้: ' + error.message); } else { fetchTasks(); fetchDataForCalendar(); closeModal(); } }
         async function handleEditTask(e) {
             e.preventDefault();
             const form = e.target;
             const formData = new FormData(form);
             const taskData = Object.fromEntries(formData.entries());
             const { error } = await db.from('tasks').update({ title: taskData.title, due_date: taskData.due_date, priority: taskData.priority, status: taskData.status }).eq('id', taskData.id);
-            if (error) { console.error('Error updating task:', error); showNotification('เกิดข้อผิดพลาดในการอัปเดตงาน', 'error'); } 
-            else { showNotification('อัปเดตงานเรียบร้อย'); fetchAllData(); closeModal(); }
+            if (error) { console.error('Error updating task:', error); } 
+            else { fetchTasks(); fetchDataForCalendar(); closeModal(); }
         }
-        function renderTaskBoard() { const board = document.getElementById('task-board'); board.innerHTML = ''; const statuses = ['To-Do', 'In Progress', 'Done']; statuses.forEach(status => { const column = document.createElement('div'); column.className = 'bg-slate-100 rounded-lg p-3'; const tasksInStatus = allTasks.filter(t => t.status === status); let tasksHTML = tasksInStatus.map(task => { const linkedIdeas = task.idea_task_links.map(link => link.ideas.title).join(', '); return `<div class="bg-white p-3 rounded-md shadow-sm border border-slate-200 mb-2"><div class="flex justify-between items-start"><p class="font-semibold text-slate-800">${task.title}</p><div class="flex items-center space-x-2">${task.idea_task_links.length > 0 ? `<span class="text-yellow-500" title="เชื่อมกับไอเดีย: ${linkedIdeas}">💡</span>` : ''}<button onclick='openTaskModal(${JSON.stringify(task)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button></div></div><div class="text-xs text-slate-500 mt-2">ถึงกำหนด: ${formatDate(task.due_date)}</div><div class="mt-2 flex justify-between items-center"><span class="text-xs font-medium px-2 py-1 rounded-full priority-${task.priority}">${task.priority}</span><button onclick="deleteTask(${task.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div>`}).join(''); column.innerHTML = `<h3 class="font-semibold text-slate-700 mb-3">${status} (${tasksInStatus.length})</h3><div class="space-y-2 min-h-[100px]">${tasksHTML}</div>`; board.appendChild(column); }); }
-        async function deleteTask(id) { showConfirmationModal('คุณต้องการลบงานนี้ใช่หรือไม่?', async () => { const { error } = await db.from('tasks').delete().eq('id', id); if (error) { console.error('Error deleting task:', error); showNotification('เกิดข้อผิดพลาดในการลบ', 'error'); } else { showNotification('ลบงานเรียบร้อย'); fetchAllData(); } }); }
+        async function fetchTasks() { const { data: tasks, error } = await db.from('tasks').select('*, idea_task_links(idea_id, ideas(title))').order('created_at', { ascending: false }); if (error) { console.error('Error fetching tasks:', error); return; } allTasks = tasks; renderTaskBoard(tasks); renderWeeklyAgenda(); }
+        function renderTaskBoard(tasks) { const board = document.getElementById('task-board'); board.innerHTML = ''; const statuses = ['To-Do', 'In Progress', 'Done']; statuses.forEach(status => { const column = document.createElement('div'); column.className = 'bg-slate-100 rounded-lg p-3'; const tasksInStatus = tasks.filter(t => t.status === status); let tasksHTML = tasksInStatus.map(task => { const linkedIdeas = task.idea_task_links.map(link => link.ideas.title).join(', '); return `<div class="bg-white p-3 rounded-md shadow-sm border border-slate-200 mb-2"><div class="flex justify-between items-start"><p class="font-semibold text-slate-800">${task.title}</p><div class="flex items-center space-x-2">${task.idea_task_links.length > 0 ? `<span class="text-yellow-500" title="เชื่อมกับไอเดีย: ${linkedIdeas}">💡</span>` : ''}<button onclick='openTaskModal(${JSON.stringify(task)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button></div></div><div class="text-xs text-slate-500 mt-2">ถึงกำหนด: ${formatDate(task.due_date)}</div><div class="mt-2 flex justify-between items-center"><span class="text-xs font-medium px-2 py-1 rounded-full priority-${task.priority}">${task.priority}</span><button onclick="deleteTask(${task.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div>`}).join(''); column.innerHTML = `<h3 class="font-semibold text-slate-700 mb-3">${status} (${tasksInStatus.length})</h3><div class="space-y-2 min-h-[100px]">${tasksHTML}</div>`; board.appendChild(column); }); }
+        async function deleteTask(id) { if (!confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) return; const { error } = await db.from('tasks').delete().eq('id', id); if (error) { console.error('Error deleting task:', error); } else { fetchTasks(); fetchDataForCalendar(); } }
 
         // --- BUDGET TRACKER ---
         function openBudgetModal(item = null) {
@@ -390,11 +335,12 @@
             if(isEdit) { document.querySelector('#budget-form select[name="category"]').value = item.category; }
             document.getElementById('budget-form').addEventListener('submit', isEdit ? handleEditBudget : addBudgetItem);
         }
-        async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.id = Date.now(); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); showNotification('ไม่สามารถเพิ่มรายการได้: ' + error.message, 'error'); } else { showNotification('เพิ่มรายการสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditBudget(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').update(budgetData).eq('id', budgetData.id); if (error) { console.error('Error updating budget item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
-        function renderBudgetTable() { const tableBody = document.getElementById('budget-table-body'); tableBody.innerHTML = allBudgetItems.map(item => `<tr class="border-b"><td class="p-3 font-medium">${item.item}</td><td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td><td class="p-3 text-slate-500">${formatDate(item.transaction_date)}</td><td class="p-3"><span class="bg-slate-200 text-slate-800 px-2 py-1 text-xs rounded-full">${item.category}</span></td><td class="p-3 text-xs font-semibold">${item.transaction_type}</td><td class="p-3 flex space-x-2"><button onclick='openBudgetModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600">✏️</button><button onclick="deleteBudgetItem(${item.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
-        function updateBudgetSummary() { const totalIncome = allBudgetItems.filter(i => i.transaction_type === 'Income').reduce((sum, i) => sum + i.amount, 0); const totalExpense = allBudgetItems.filter(i => i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('total-income').textContent = formatCurrency(totalIncome); document.getElementById('total-expense').textContent = formatCurrency(totalExpense); document.getElementById('balance').textContent = formatCurrency(balance); }
-        async function deleteBudgetItem(id) { showConfirmationModal('คุณต้องการลบรายการนี้ใช่หรือไม่?', async () => { const { error } = await db.from('budget').delete().eq('id', id); if (error) { console.error('Error deleting budget item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบรายการสำเร็จ'); fetchAllData(); } }); }
+        async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.id = Date.now(); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); alert('ไม่สามารถเพิ่มรายการได้: ' + error.message); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
+        async function handleEditBudget(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').update(budgetData).eq('id', budgetData.id); if (error) { console.error('Error updating budget item:', error); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
+        async function fetchBudget() { const { data: budgetItems, error } = await db.from('budget').select('*').order('transaction_date', { ascending: false }); if (error) { console.error('Error fetching budget:', error); return; } renderBudgetTable(budgetItems); updateBudgetSummary(budgetItems); }
+        function renderBudgetTable(items) { const tableBody = document.getElementById('budget-table-body'); tableBody.innerHTML = items.map(item => `<tr class="border-b"><td class="p-3 font-medium">${item.item}</td><td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td><td class="p-3 text-slate-500">${formatDate(item.transaction_date)}</td><td class="p-3"><span class="bg-slate-200 text-slate-800 px-2 py-1 text-xs rounded-full">${item.category}</span></td><td class="p-3 text-xs font-semibold">${item.transaction_type}</td><td class="p-3 flex space-x-2"><button onclick='openBudgetModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600">✏️</button><button onclick="deleteBudgetItem(${item.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
+        function updateBudgetSummary(items) { const totalIncome = items.filter(i => i.transaction_type === 'Income').reduce((sum, i) => sum + i.amount, 0); const totalExpense = items.filter(i => i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('total-income').textContent = formatCurrency(totalIncome); document.getElementById('total-expense').textContent = formatCurrency(totalExpense); document.getElementById('balance').textContent = formatCurrency(balance); }
+        async function deleteBudgetItem(id) { if (!confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) return; const { error } = await db.from('budget').delete().eq('id', id); if (error) console.error('Error deleting budget item:', error); else { fetchBudget(); fetchDataForCalendar(); } }
         
         // --- KNOWLEDGE HUB ---
         function openKnowledgeModal(item = null) {
@@ -417,10 +363,11 @@
             </div>`;
             document.getElementById('knowledge-form').addEventListener('submit', isEdit ? handleEditKnowledge : addKnowledgeItem);
         }
-        async function addKnowledgeItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); delete knowledgeData.id; knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').insert([knowledgeData]); if (error) { console.error('Error adding knowledge item:', error); showNotification('ไม่สามารถเพิ่มข้อมูลได้: ' + error.message, 'error'); } else { showNotification('เพิ่มข้อมูลสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditKnowledge(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').update(knowledgeData).eq('id', knowledgeData.id); if (error) { console.error('Error updating knowledge item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
-        function renderKnowledgeGallery() { const gallery = document.getElementById('knowledge-gallery'); gallery.innerHTML = allKnowledgeItems.map(item => `<div class="bg-slate-50 border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-start"><h4 class="font-semibold text-slate-800 mb-2">${item.topic}</h4><div class="flex space-x-2"><button onclick='openKnowledgeModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteKnowledge(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-600 mb-3">${item.summary || ''}</p><div class="flex flex-wrap gap-1 mb-3">${(item.tags || []).map(tag => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>${item.url ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:underline">ไปที่แหล่งข้อมูล <i class="fa-solid fa-link text-xs"></i></a>` : ''}</div>`).join(''); }
-        async function deleteKnowledge(id) { showConfirmationModal('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?', async () => { const { error } = await db.from('knowledge_base').delete().eq('id', id); if (error) { console.error('Error deleting knowledge item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบข้อมูลสำเร็จ'); fetchAllData(); } }); }
+        async function addKnowledgeItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); delete knowledgeData.id; knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').insert([knowledgeData]); if (error) { console.error('Error adding knowledge item:', error); alert('ไม่สามารถเพิ่มข้อมูลได้: ' + error.message); } else { fetchKnowledge(); closeModal(); } }
+        async function handleEditKnowledge(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').update(knowledgeData).eq('id', knowledgeData.id); if (error) { console.error('Error updating knowledge item:', error); } else { fetchKnowledge(); closeModal(); } }
+        async function fetchKnowledge() { const { data, error } = await db.from('knowledge_base').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching knowledge base:', error); return; } renderKnowledgeGallery(data); }
+        function renderKnowledgeGallery(items) { const gallery = document.getElementById('knowledge-gallery'); gallery.innerHTML = items.map(item => `<div class="bg-slate-50 border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-start"><h4 class="font-semibold text-slate-800 mb-2">${item.topic}</h4><div class="flex space-x-2"><button onclick='openKnowledgeModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteKnowledge(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-600 mb-3">${item.summary || ''}</p><div class="flex flex-wrap gap-1 mb-3">${(item.tags || []).map(tag => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>${item.url ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:underline">ไปที่แหล่งข้อมูล <i class="fa-solid fa-link text-xs"></i></a>` : ''}</div>`).join(''); }
+        async function deleteKnowledge(id) { if (!confirm('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?')) return; const { error } = await db.from('knowledge_base').delete().eq('id', id); if (error) console.error('Error deleting knowledge item:', error); else fetchKnowledge(); }
         
         // --- JOURNAL ---
         function openJournalModal(entry = null) {
@@ -443,15 +390,37 @@
             </div>`;
             document.getElementById('journal-form').addEventListener('submit', isEdit ? handleEditJournal : addJournalEntry);
         }
-        async function addJournalEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); delete journalData.id; const { error } = await db.from('journal_entries').insert([journalData]); if (error) { console.error('Error adding journal entry:', error); showNotification('ไม่สามารถเพิ่มบันทึกได้: ' + error.message, 'error'); } else { showNotification('เพิ่มบันทึกสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditJournal(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); const { error } = await db.from('journal_entries').update(journalData).eq('id', journalData.id); if (error) { console.error('Error updating journal:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
-        function renderJournal() { const container = document.getElementById('journal-entries'); container.innerHTML = allJournalEntries.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-purple-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.entry_date)}</h4><div class="flex space-x-2"><button onclick='openJournalModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteJournal(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><div class="space-y-2 text-sm text-slate-700">${entry.gratitude ? `<div><strong>ขอบคุณ:</strong> ${entry.gratitude}</div>` : ''}${entry.small_wins ? `<div><strong>ความสำเร็จ:</strong> ${entry.small_wins}</div>` : ''}${entry.mood_check_in ? `<div><strong>ความรู้สึก:</strong> ${entry.mood_check_in}</div>` : ''}</div></div>`).join(''); }
-        async function deleteJournal(id) { showConfirmationModal('คุณต้องการลบบันทึกนี้ใช่หรือไม่?', async () => { const { error } = await db.from('journal_entries').delete().eq('id', id); if (error) { console.error('Error deleting journal entry:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบสำเร็จ'); fetchAllData(); } }); }
+        async function addJournalEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); delete journalData.id; const { error } = await db.from('journal_entries').insert([journalData]); if (error) { console.error('Error adding journal entry:', error); alert('ไม่สามารถเพิ่มบันทึกได้: ' + error.message); } else { fetchJournal(); closeModal(); } }
+        async function handleEditJournal(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); const { error } = await db.from('journal_entries').update(journalData).eq('id', journalData.id); if (error) { console.error('Error updating journal:', error); } else { fetchJournal(); closeModal(); } }
+        async function fetchJournal() { const { data, error } = await db.from('journal_entries').select('*').order('entry_date', { ascending: false }); if (error) { console.error('Error fetching journal entries:', error); return; } renderJournal(data); }
+        function renderJournal(items) { const container = document.getElementById('journal-entries'); container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-purple-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.entry_date)}</h4><div class="flex space-x-2"><button onclick='openJournalModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteJournal(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><div class="space-y-2 text-sm text-slate-700">${entry.gratitude ? `<div><strong>ขอบคุณ:</strong> ${entry.gratitude}</div>` : ''}${entry.small_wins ? `<div><strong>ความสำเร็จ:</strong> ${entry.small_wins}</div>` : ''}${entry.mood_check_in ? `<div><strong>ความรู้สึก:</strong> ${entry.mood_check_in}</div>` : ''}</div></div>`).join(''); }
+        async function deleteJournal(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('journal_entries').delete().eq('id', id); if (error) console.error('Error deleting journal entry:', error); else fetchJournal(); }
 
         // --- SCHEDULE / CALENDAR ---
         function openScheduleModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3><div class="space-y-4"><div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="event_type" class="w-full mt-1 p-2 border rounded-md"><option>Personal</option><option>Work</option><option>Health</option><option>Learning</option><option>Family</option><option>Errands</option><option>Social</option><option>Other</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem); }
-        async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); showNotification('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message, 'error'); } else { showNotification('เพิ่มกิจกรรมสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function deleteScheduleItem(id) { showConfirmationModal('คุณต้องการลบกิจกรรมนี้ใช่หรือไม่?', async () => { const { error } = await db.from('schedule').delete().eq('id', id); if (error) { console.error('Error deleting schedule item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบกิจกรรมสำเร็จ'); fetchAllData(); } }); }
+        async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } else { fetchDataForCalendar(); closeModal(); } }
+        async function fetchDataForCalendar() {
+            const [eventsRes, tasksRes, budgetRes] = await Promise.all([ db.from('schedule').select('*'), db.from('tasks').select('*'), db.from('budget').select('amount, transaction_date, transaction_type') ]);
+            if (eventsRes.error || tasksRes.error || budgetRes.error) { console.error('Error fetching calendar data:', eventsRes.error || tasksRes.error || budgetRes.error); return; }
+            const formattedEvents = eventsRes.data.map(e => ({ id: `event-${e.id}`, date: new Date(e.event_date), endDate: e.end_date ? new Date(e.end_date) : null, title: e.title, type: 'event', originalData: e }));
+            const formattedTasks = tasksRes.data.map(t => ({ id: `task-${t.id}`, date: new Date(t.due_date + 'T00:00:00'), endDate: null, title: t.title, type: 'task', originalData: t }));
+            allCalendarItems = [...formattedEvents, ...formattedTasks];
+            dailyExpenses.clear();
+            dailyIncomes.clear();
+            budgetRes.data.forEach(item => { 
+                const dateStr = item.transaction_date;
+                if (item.transaction_type === 'Expense') {
+                    const currentTotal = dailyExpenses.get(dateStr) || 0;
+                    dailyExpenses.set(dateStr, currentTotal + item.amount);
+                } else if (item.transaction_type === 'Income') {
+                    const currentTotal = dailyIncomes.get(dateStr) || 0;
+                    dailyIncomes.set(dateStr, currentTotal + item.amount);
+                }
+            });
+            renderCalendar();
+            renderWeeklyAgenda();
+        }
+        async function deleteScheduleItem(id) { if (!confirm('คุณต้องการลบกิจกรรมนี้ใช่หรือไม่?')) return; const { error } = await db.from('schedule').delete().eq('id', id); if (error) console.error('Error deleting schedule item:', error); else fetchDataForCalendar(); }
         function switchCalendarView(view) { currentCalendarView = view; renderCalendar(); }
         function navigateCalendar(amount) { if (currentCalendarView === 'month') { currentViewDate.setMonth(currentViewDate.getMonth() + amount); } else if (currentCalendarView === 'week') { currentViewDate.setDate(currentViewDate.getDate() + (amount * 7)); } else { currentViewDate.setDate(currentViewDate.getDate() + amount); } renderCalendar(); }
         function renderCalendar() {
@@ -526,8 +495,20 @@
             }
             document.getElementById('habit-form').addEventListener('submit', isEdit ? handleEditHabit : addHabit);
         }
-        async function addHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); delete habitData.id; if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').insert([habitData]); if (error) { console.error('Error adding habit:', error); showNotification('ไม่สามารถเพิ่มกิจวัตรได้: ' + error.message, 'error'); } else { showNotification('เพิ่มกิจวัตรสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').update({ name: habitData.name, frequency: habitData.frequency, weekly_day: habitData.weekly_day }).eq('id', habitData.id); if (error) { console.error('Error updating habit:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
+        async function addHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); delete habitData.id; if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').insert([habitData]); if (error) { console.error('Error adding habit:', error); alert('ไม่สามารถเพิ่มกิจวัตรได้: ' + error.message); } else { fetchHabits(); closeModal(); } }
+        async function handleEditHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').update({ name: habitData.name, frequency: habitData.frequency, weekly_day: habitData.weekly_day }).eq('id', habitData.id); if (error) { console.error('Error updating habit:', error); } else { fetchHabits(); closeModal(); } }
+        async function fetchHabits() {
+            const today = new Date();
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+            const { data: habits, error: habitsError } = await db.from('habits').select('*').order('created_at');
+            const { data: log, error: logError } = await db.from('habit_log').select('*').gte('completed_date', startOfMonth);
+            if (habitsError || logError) { console.error('Error fetching habits:', habitsError || logError); return; }
+            allHabits = habits;
+            allHabitLogs = log;
+            const habitStats = calculateHabitStats(habits, log);
+            renderHabitTracker(habitStats, log);
+            renderWeeklyAgenda();
+        }
         function calculateHabitStats(habits, log) {
             const today = new Date();
             const todayStr = getToday();
@@ -535,86 +516,79 @@
                 const habitLogs = log.filter(l => l.habit_id === habit.id);
                 const logDates = new Set(habitLogs.map(l => l.completed_date));
                 let streak = 0;
-                let lastLogDate = null;
-                for(const d of Array.from(logDates).sort().reverse()){
-                    if(!lastLogDate){
-                        if(d === todayStr || d === toYYYYMMDD(new Date(today.setDate(today.getDate()-1)))) {
-                           lastLogDate = new Date(d + 'T00:00:00');
-                           streak = 1;
-                        } else {
-                            break;
-                        }
-                    } else {
-                        const nextDate = new Date(lastLogDate);
-                        nextDate.setDate(nextDate.getDate() - 1);
-                        if(toYYYYMMDD(nextDate) === d){
+                if (logDates.has(todayStr)) {
+                    streak = 1;
+                    let currentDate = new Date(today);
+                    currentDate.setDate(currentDate.getDate() - 1);
+                    while (logDates.has(toYYYYMMDD(currentDate))) {
+                        streak++;
+                        currentDate.setDate(currentDate.getDate() - 1);
+                    }
+                } else {
+                    let yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    if (logDates.has(toYYYYMMDD(yesterday))) {
+                         let currentDate = yesterday;
+                         while (logDates.has(toYYYYMMDD(currentDate))) {
                             streak++;
-                            lastLogDate = new Date(d + 'T00:00:00');
-                        } else {
-                            break;
+                            currentDate.setDate(currentDate.getDate() - 1);
                         }
                     }
                 }
-                today.setDate(today.getDate() + streak); // Reset today date
-
-                const startOfWeek = new Date();
-                startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay());
                 let weekCompleted = 0;
-                for (let i = 0; i <= new Date().getDay(); i++) {
+                for (let i = 0; i <= today.getDay(); i++) {
                     const day = new Date(startOfWeek);
                     day.setDate(day.getDate() + i);
                     if (logDates.has(toYYYYMMDD(day))) { weekCompleted++; }
                 }
-                const weekPercent = Math.round((weekCompleted / (new Date().getDay() + 1)) * 100);
+                const weekPercent = Math.round((weekCompleted / (today.getDay() + 1)) * 100);
                 const monthCompleted = habitLogs.length;
-                const monthPercent = Math.round((monthCompleted / new Date().getDate()) * 100);
+                const monthPercent = Math.round((monthCompleted / today.getDate()) * 100);
                 let graphData = [];
                 for (let i = 6; i >= 0; i--) {
-                    const day = new Date();
+                    const day = new Date(today);
                     day.setDate(day.getDate() - i);
                     graphData.push(logDates.has(toYYYYMMDD(day)));
                 }
                 return { ...habit, stats: { streak, weekPercent, monthPercent, graphData } };
             });
         }
-        function renderHabitTracker() {
+        function renderHabitTracker(habitsWithStats, log) {
             const container = document.getElementById('habit-tracker-container');
-            const habitStats = calculateHabitStats(allHabits, allHabitLogs);
-            const dailyHabits = habitStats.filter(h => h.frequency === 'daily');
-            const weeklyHabits = habitStats.filter(h => h.frequency === 'weekly');
+            const dailyHabits = habitsWithStats.filter(h => h.frequency === 'daily');
+            const weeklyHabits = habitsWithStats.filter(h => h.frequency === 'weekly');
             let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">';
             if (dailyHabits.length > 0) {
                 html += '<div class="col-span-full"><h3 class="text-lg font-semibold text-slate-600 mb-2">รายวัน</h3></div>';
-                html += dailyHabits.map(habit => renderHabitCard(habit)).join('');
+                html += dailyHabits.map(habit => renderHabitCard(habit, log)).join('');
             }
             if (weeklyHabits.length > 0) {
                 html += '<div class="col-span-full mt-4"><h3 class="text-lg font-semibold text-slate-600 mb-2">รายสัปดาห์</h3></div>';
-                html += weeklyHabits.map(habit => renderHabitCard(habit)).join('');
+                html += weeklyHabits.map(habit => renderHabitCard(habit, log)).join('');
             }
             html += '</div>';
-            container.innerHTML = html || '<p class="text-slate-400 text-center py-4">ยังไม่มีกิจวัตร</p>';
+            container.innerHTML = html;
         }
-        function renderHabitCard(habit) {
+        function renderHabitCard(habit, log) {
             const today = new Date();
-            const todayStr = getToday();
             let isChecked = false;
             if (habit.frequency === 'daily') {
-                isChecked = allHabitLogs.some(l => l.habit_id === habit.id && l.completed_date === todayStr);
-            } else { // weekly
-                const dayOfWeek = today.getDay();
-                if (dayOfWeek == habit.weekly_day) {
-                    isChecked = allHabitLogs.some(l => l.habit_id === habit.id && l.completed_date === todayStr);
-                }
+                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === getToday());
+            } else {
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay());
+                const startOfWeekStr = toYYYYMMDD(startOfWeek);
+                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === startOfWeekStr);
             }
-            
-            const isDisabled = habit.frequency === 'weekly' && today.getDay() != habit.weekly_day;
             const { streak, weekPercent, monthPercent, graphData } = habit.stats;
             const graphHTML = graphData.map(completed => `<div class="w-full h-6 ${completed ? 'bg-teal-500' : 'bg-slate-200'} rounded-sm"></div>`).join('');
             return `
-            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 ${isDisabled ? 'opacity-60' : ''}">
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input type="checkbox" id="habit-${habit.id}" data-habit-id="${habit.id}" onchange="toggleHabit(this)" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+                        <input type="checkbox" id="habit-${habit.id}" data-habit-id="${habit.id}" data-frequency="${habit.frequency}" onchange="toggleHabit(this)" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}>
                         <label for="habit-${habit.id}" class="ml-3 text-slate-800 font-semibold">${habit.name}</label>
                     </div>
                     <div class="flex space-x-2"><button onclick='openHabitModal(${JSON.stringify(habit)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteHabit(${habit.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>
@@ -634,19 +608,27 @@
         }
         async function toggleHabit(checkbox, dateOverride = null) { 
             const habitId = checkbox.dataset.habitId; 
+            const frequency = checkbox.dataset.frequency;
             const completed = checkbox.checked; 
-            const completionDate = dateOverride || getToday();
+            
+            let completionDate = dateOverride || getToday();
+            if (frequency === 'weekly' && !dateOverride) {
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay());
+                completionDate = toYYYYMMDD(startOfWeek);
+            }
             
             if (completed) { 
                 const { error } = await db.from('habit_log').insert([{ habit_id: habitId, completed_date: completionDate }]); 
-                if (error) { console.error('Error logging habit:', error); showNotification('เกิดข้อผิดพลาด', 'error'); checkbox.checked = false; }
+                if (error) console.error('Error logging habit:', error);
             } else { 
                 const { error } = await db.from('habit_log').delete().match({ habit_id: habitId, completed_date: completionDate }); 
-                if (error) { console.error('Error un-logging habit:', error); showNotification('เกิดข้อผิดพลาด', 'error'); checkbox.checked = true; }
+                if (error) console.error('Error un-logging habit:', error);
             }
-            fetchAllData();
+            fetchHabits();
         }
-        async function deleteHabit(id) { showConfirmationModal('คุณต้องการลบกิจวัตรนี้ใช่หรือไม่? (การบันทึกที่ผ่านมาจะถูกลบด้วย)', async () => { const { error } = await db.from('habits').delete().eq('id', id); if (error) { console.error('Error deleting habit:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบกิจวัตรสำเร็จ'); fetchAllData(); } }); }
+        async function deleteHabit(id) { if (!confirm('คุณต้องการลบกิจวัตรนี้ใช่หรือไม่? (การบันทึกที่ผ่านมาจะถูกลบด้วย)')) return; const { error } = await db.from('habits').delete().eq('id', id); if (error) console.error('Error deleting habit:', error); else fetchHabits(); }
 
         // --- IDEA BOARD ---
         async function openIdeaModal(idea = null) {
@@ -693,15 +675,16 @@
             const linkedTaskIds = formData.getAll('linked_tasks');
 
             const { data: newIdea, error: ideaError } = await db.from('ideas').insert(ideaData).select().single();
-            if (ideaError) { console.error('Error adding idea:', ideaError); showNotification('เกิดข้อผิดพลาด', 'error'); return; }
+            if (ideaError) { console.error('Error adding idea:', ideaError); return; }
 
             if (linkedTaskIds.length > 0) {
                 const links = linkedTaskIds.map(taskId => ({ idea_id: newIdea.id, task_id: taskId }));
                 const { error: linkError } = await db.from('idea_task_links').insert(links);
                 if (linkError) { console.error('Error linking idea to tasks:', linkError); }
             }
-            showNotification('เพิ่มไอเดียสำเร็จ');
-            fetchAllData();
+            
+            fetchIdeas();
+            fetchTasks();
             closeModal();
         }
         async function handleEditIdea(e) {
@@ -712,20 +695,26 @@
             const linkedTaskIds = formData.getAll('linked_tasks');
 
             const { error: updateError } = await db.from('ideas').update({ title: ideaData.title, description: ideaData.description, tags: ideaData.tags }).eq('id', ideaData.id);
-            if (updateError) { console.error('Error updating idea:', updateError); showNotification('เกิดข้อผิดพลาด', 'error'); return; }
+            if (updateError) { console.error('Error updating idea:', updateError); return; }
 
             await db.from('idea_task_links').delete().eq('idea_id', ideaData.id);
             if (linkedTaskIds.length > 0) {
                 const links = linkedTaskIds.map(taskId => ({ idea_id: ideaData.id, task_id: taskId }));
                 await db.from('idea_task_links').insert(links);
             }
-            showNotification('อัปเดตไอเดียสำเร็จ');
-            fetchAllData();
+            
+            fetchIdeas();
+            fetchTasks();
             closeModal();
         }
-        function renderIdeaBoard() {
+        async function fetchIdeas() {
+            const { data, error } = await db.from('ideas').select('*, idea_task_links(tasks(title))').order('created_at', { ascending: false });
+            if (error) { console.error('Error fetching ideas:', error); return; }
+            renderIdeaBoard(data);
+        }
+        function renderIdeaBoard(ideas) {
             const container = document.getElementById('idea-board-container');
-            container.innerHTML = allIdeas.map(idea => {
+            container.innerHTML = ideas.map(idea => {
                 const linkedTasks = idea.idea_task_links.map(link => link.tasks.title).join(', ');
                 return `
                 <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
@@ -743,11 +732,10 @@
             }).join('');
         }
         async function deleteIdea(id) {
-            showConfirmationModal('คุณต้องการลบไอเดียนี้ใช่หรือไม่?', async () => {
-                const { error } = await db.from('ideas').delete().eq('id', id);
-                if (error) { console.error('Error deleting idea:', error); showNotification('เกิดข้อผิดพลาด', 'error'); }
-                else { showNotification('ลบไอเดียสำเร็จ'); fetchAllData(); }
-            });
+            if (!confirm('คุณต้องการลบไอเดียนี้ใช่หรือไม่?')) return;
+            const { error } = await db.from('ideas').delete().eq('id', id);
+            if (error) { console.error('Error deleting idea:', error); }
+            else { fetchIdeas(); fetchTasks(); }
         }
 
         // --- WEEKLY AGENDA ---
@@ -755,6 +743,7 @@
             weeklyAgendaDate.setDate(weeklyAgendaDate.getDate() + (amount * 7));
             renderWeeklyAgenda();
         }
+
         function renderWeeklyAgenda() {
             const container = document.getElementById('weekly-agenda-container');
             const startOfWeek = new Date(weeklyAgendaDate);
@@ -786,7 +775,7 @@
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allTasks.filter(t => t.due_date === dateStr);
                 const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == i);
+                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day === i);
                 
                 let itemsHTML = '';
                 
@@ -799,15 +788,16 @@
                 if (dailyHabitsOnDay.length > 0) {
                     itemsHTML += `<h4 class="font-bold text-teal-600 mt-2 mb-1">กิจวัตรรายวัน</h4>` + dailyHabitsOnDay.map(h => {
                         const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
+                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="daily" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
                     }).join('');
                 }
                  if (weeklyHabitsOnDay.length > 0) {
                     itemsHTML += `<h4 class="font-bold text-purple-600 mt-2 mb-1">กิจวัตรรายสัปดาห์</h4>` + weeklyHabitsOnDay.map(h => {
                         const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
+                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="weekly" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
                     }).join('');
                 }
+
 
                 weekHtml += `
                     <div class="p-3 bg-slate-50 rounded-lg">
@@ -818,247 +808,22 @@
             weekHtml += `</div>`;
             container.innerHTML = headerHTML + weekHtml;
         }
-        
-        // --- EVENT LOG ---
-        function openEventLogModal(entry = null) {
-            const isEdit = entry !== null;
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์ใหม่'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? entry.event_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เวลา (ไม่บังคับ)</label><input name="event_time" type="time" value="${isEdit ? entry.event_time || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">รายละเอียดเหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? entry.description : ''}</textarea></div>
-                        </div>
-                        <div class="mt-6 flex justify-end space-x-2">
-                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md">บันทึก</button>
-                        </div>
-                    </form>
-                </div>`;
-            document.getElementById('event-log-form').addEventListener('submit', isEdit ? handleEditEventLog : addEventLogEntry);
-        }
-        async function addEventLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); delete eventData.id; if (!eventData.event_time) { delete eventData.event_time; } const { error } = await db.from('event_log').insert([eventData]); if (error) { console.error('Error adding event log:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('บันทึกเหตุการณ์สำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditEventLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); if (!eventData.event_time) { eventData.event_time = null; } const { error } = await db.from('event_log').update({ event_date: eventData.event_date, event_time: eventData.event_time, description: eventData.description }).eq('id', eventData.id); if (error) { console.error('Error updating event log:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
-        function renderEventLog() { const container = document.getElementById('event-log-container'); if (allEventLogs.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = allEventLogs.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
-        async function deleteEventLog(id) { showConfirmationModal('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?', async () => { const { error } = await db.from('event_log').delete().eq('id', id); if (error) { console.error('Error deleting event log:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบสำเร็จ'); fetchAllData(); } }); }
-
-        // --- PERSONAL GROWTH ---
-        function openPersonalGrowthModal(item = null) {
-            const isEdit = item !== null;
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="personal-growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายใหม่'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium">ทักษะ/เรื่องที่ต้องการพัฒนา</label><input name="skill_name" type="text" value="${isEdit ? item.skill_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เป้าหมาย</label><textarea name="goal" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? item.goal || '' : ''}</textarea></div>
-                            <div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${isEdit ? item.start_date : getToday()}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md">
-                                <option value="Not Started" ${isEdit && item.status === 'Not Started' ? 'selected' : ''}>ยังไม่เริ่ม</option>
-                                <option value="In Progress" ${isEdit && item.status === 'In Progress' ? 'selected' : ''}>กำลังดำเนินการ</option>
-                                <option value="Completed" ${isEdit && item.status === 'Completed' ? 'selected' : ''}>สำเร็จ</option>
-                            </select></div>
-                        </div>
-                        <div class="mt-6 flex justify-end space-x-2">
-                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">บันทึก</button>
-                        </div>
-                    </form>
-                </div>`;
-            document.getElementById('personal-growth-form').addEventListener('submit', isEdit ? handleEditPersonalGrowth : addPersonalGrowth);
-        }
-        async function addPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); delete growthData.id; const { error } = await db.from('personal_growth').insert([growthData]); if (error) { console.error('Error adding personal growth item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('เพิ่มเป้าหมายสำเร็จ'); fetchAllData(); closeModal(); } }
-        async function handleEditPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); const { error } = await db.from('personal_growth').update({ skill_name: growthData.skill_name, goal: growthData.goal, start_date: growthData.start_date, status: growthData.status }).eq('id', growthData.id); if (error) { console.error('Error updating personal growth item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('อัปเดตสำเร็จ'); fetchAllData(); closeModal(); } }
-        function renderPersonalGrowth() {
-            const container = document.getElementById('personal-growth-container');
-            if (allPersonalGrowthItems.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4 col-span-full">ยังไม่มีเป้าหมายการพัฒนาตนเอง</p>'; return; }
-            container.innerHTML = allPersonalGrowthItems.map(item => {
-                const statusColors = { 'Not Started': 'bg-gray-200 text-gray-800', 'In Progress': 'bg-blue-200 text-blue-800', 'Completed': 'bg-green-200 text-green-800' };
-                return `
-                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-semibold text-slate-800 mb-2">${item.skill_name}</h4>
-                        <div class="flex space-x-2">
-                           <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                           <button onclick="deletePersonalGrowth(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-600 mb-3 min-h-[40px]">${item.goal || ''}</p>
-                    <div class="text-xs text-slate-500"><strong>เริ่ม:</strong> ${item.start_date ? formatDate(item.start_date) : '-'}</div>
-                    <div class="mt-2"><span class="text-xs font-medium px-2 py-1 rounded-full ${statusColors[item.status]}">${item.status}</span></div>
-                </div>`;
-            }).join('');
-        }
-        async function deletePersonalGrowth(id) { showConfirmationModal('คุณต้องการลบเป้าหมายนี้ใช่หรือไม่?', async () => { const { error } = await db.from('personal_growth').delete().eq('id', id); if (error) { console.error('Error deleting personal growth item:', error); showNotification('เกิดข้อผิดพลาด', 'error'); } else { showNotification('ลบสำเร็จ'); fetchAllData(); } }); }
-        
-        // --- HEALTH TRACKER (NEW) ---
-        function openHealthLogModal() {
-            const todayLog = allHealthLogs.find(log => log.log_date === getToday());
-            const isEdit = todayLog !== null;
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพวันนี้' : 'เพิ่มบันทึกสุขภาพวันนี้'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? todayLog.id : ''}">
-                        <input type="hidden" name="log_date" value="${getToday()}">
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium">ชั่วโมงการนอน</label><input name="sleep_hours" type="number" step="0.5" value="${isEdit ? todayLog.sleep_hours : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div>
-                                <label class="text-sm font-medium">ระดับความเครียด (1-5)</label>
-                                <select name="stress_level" class="w-full mt-1 p-2 border rounded-md">
-                                    <option value="">--เลือก--</option>
-                                    <option value="1" ${isEdit && todayLog.stress_level == 1 ? 'selected' : ''}>1 (น้อยมาก)</option>
-                                    <option value="2" ${isEdit && todayLog.stress_level == 2 ? 'selected' : ''}>2 (น้อย)</option>
-                                    <option value="3" ${isEdit && todayLog.stress_level == 3 ? 'selected' : ''}>3 (ปานกลาง)</option>
-                                    <option value="4" ${isEdit && todayLog.stress_level == 4 ? 'selected' : ''}>4 (มาก)</option>
-                                    <option value="5" ${isEdit && todayLog.stress_level == 5 ? 'selected' : ''}>5 (มากที่สุด)</option>
-                                </select>
-                            </div>
-                            <div><label class="text-sm font-medium">หมายเหตุเพิ่มเติม</label><textarea name="notes" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? todayLog.notes || '' : ''}</textarea></div>
-                        </div>
-                        <div class="mt-6 flex justify-end space-x-2">
-                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">บันทึก</button>
-                        </div>
-                    </form>
-                </div>`;
-            document.getElementById('health-log-form').addEventListener('submit', handleSaveHealthLog);
-        }
-        async function handleSaveHealthLog(e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const logData = Object.fromEntries(formData.entries());
-            const id = logData.id;
-            delete logData.id;
-
-            // Convert empty strings to null for Supabase
-            if (logData.sleep_hours === '') logData.sleep_hours = null;
-            if (logData.stress_level === '') logData.stress_level = null;
-
-            const { error } = await db.from('health_log').upsert(logData, { onConflict: 'log_date' });
-
-            if (error) {
-                console.error('Error saving health log:', error);
-                showNotification('เกิดข้อผิดพลาดในการบันทึก', 'error');
-            } else {
-                showNotification('บันทึกข้อมูลสุขภาพสำเร็จ');
-                fetchAllData();
-                closeModal();
-            }
-        }
-        function renderHealthLog() {
-            const container = document.getElementById('health-log-today-container');
-            const todayLog = allHealthLogs.find(log => log.log_date === getToday());
-
-            if (!todayLog) {
-                container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกสุขภาพสำหรับวันนี้</p>';
-                return;
-            }
-
-            container.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p class="text-sm text-blue-800">ชั่วโมงการนอน</p>
-                        <p class="text-2xl font-bold text-blue-600">${todayLog.sleep_hours !== null ? todayLog.sleep_hours : '-'} <span class="text-base font-normal">ชม.</span></p>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-lg">
-                        <p class="text-sm text-yellow-800">ระดับความเครียด</p>
-                        <p class="text-2xl font-bold text-yellow-600">${todayLog.stress_level !== null ? todayLog.stress_level : '-'} <span class="text-base font-normal">/ 5</span></p>
-                    </div>
-                    ${todayLog.notes ? `
-                    <div class="md:col-span-2 bg-slate-50 p-4 rounded-lg text-left">
-                        <p class="text-sm font-semibold text-slate-800">หมายเหตุ:</p>
-                        <p class="text-slate-600">${todayLog.notes}</p>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // --- DATA FETCHING & RENDERING ---
-        /**
-         * This is the main function to fetch all data from Supabase,
-         * update the global state, and then call all render functions.
-         * It ensures the entire dashboard is in sync after any change.
-         */
-        async function fetchAllData() {
-            console.log("Fetching all data...");
-            const [
-                tasksRes, budgetRes, knowledgeRes, journalRes, scheduleRes, 
-                habitsRes, habitLogRes, ideasRes, eventLogRes, healthLogRes, personalGrowthRes
-            ] = await Promise.all([
-                db.from('tasks').select('*, idea_task_links(idea_id, ideas(title))').order('created_at', { ascending: false }),
-                db.from('budget').select('*').order('transaction_date', { ascending: false }),
-                db.from('knowledge_base').select('*').order('created_at', { ascending: false }),
-                db.from('journal_entries').select('*').order('entry_date', { ascending: false }),
-                db.from('schedule').select('*'),
-                db.from('habits').select('*').order('created_at'),
-                db.from('habit_log').select('*'),
-                db.from('ideas').select('*, idea_task_links(tasks(title))').order('created_at', { ascending: false }),
-                db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }),
-                db.from('health_log').select('*'),
-                db.from('personal_growth').select('*').order('created_at', { ascending: false })
-            ]);
-
-            // Update global state
-            allTasks = tasksRes.data || [];
-            allBudgetItems = budgetRes.data || [];
-            allKnowledgeItems = knowledgeRes.data || [];
-            allJournalEntries = journalRes.data || [];
-            allScheduleEvents = scheduleRes.data || [];
-            allHabits = habitsRes.data || [];
-            allHabitLogs = habitLogRes.data || [];
-            allIdeas = ideasRes.data || [];
-            allEventLogs = eventLogRes.data || [];
-            allHealthLogs = healthLogRes.data || [];
-            allPersonalGrowthItems = personalGrowthRes.data || [];
-
-            // Process data for calendar
-            const formattedEvents = allScheduleEvents.map(e => ({ id: `event-${e.id}`, date: new Date(e.event_date), endDate: e.end_date ? new Date(e.end_date) : null, title: e.title, type: 'event', originalData: e }));
-            const formattedTasks = allTasks.map(t => ({ id: `task-${t.id}`, date: new Date(t.due_date + 'T00:00:00'), endDate: null, title: t.title, type: 'task', originalData: t }));
-            allCalendarItems = [...formattedEvents, ...formattedTasks];
-            
-            dailyExpenses.clear();
-            dailyIncomes.clear();
-            allBudgetItems.forEach(item => { 
-                const dateStr = item.transaction_date;
-                if (item.transaction_type === 'Expense') {
-                    const currentTotal = dailyExpenses.get(dateStr) || 0;
-                    dailyExpenses.set(dateStr, currentTotal + item.amount);
-                } else if (item.transaction_type === 'Income') {
-                    const currentTotal = dailyIncomes.get(dateStr) || 0;
-                    dailyIncomes.set(dateStr, currentTotal + item.amount);
-                }
-            });
-
-            // Render all components
-            renderTaskBoard();
-            renderBudgetTable();
-            updateBudgetSummary();
-            renderKnowledgeGallery();
-            renderJournal();
-            renderCalendar();
-            renderHabitTracker();
-            renderIdeaBoard();
-            renderEventLog();
-            renderHealthLog();
-            renderPersonalGrowth();
-            renderWeeklyAgenda();
-            console.log("All data fetched and components rendered.");
-        }
 
 
-        // --- INITIAL LOAD & SETUP ---
+        // --- INITIAL LOAD ---
         document.addEventListener('DOMContentLoaded', () => {
             if (db) {
-                fetchAllData();
+                fetchTasks();
+                fetchBudget();
+                fetchKnowledge();
+                fetchJournal();
+                fetchDataForCalendar();
+                fetchHabits();
+                fetchIdeas();
+                fetchEventLog();
+                fetchHealthLog();
             } else {
-                showNotification('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า', 'error');
+                alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
 
             // Sidebar active link logic
@@ -1087,6 +852,157 @@
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
+
+        // --- EVENT LOG ---
+        function openEventLogModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์ใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? entry.event_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลา (ไม่บังคับ)</label><input name="event_time" type="time" value="${isEdit ? entry.event_time || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">รายละเอียดเหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? entry.description : ''}</textarea></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('event-log-form').addEventListener('submit', isEdit ? handleEditEventLog : addEventLogEntry);
+        }
+        async function addEventLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); delete eventData.id; if (!eventData.event_time) { delete eventData.event_time; } const { error } = await db.from('event_log').insert([eventData]); if (error) { console.error('Error adding event log:', error); } else { fetchEventLog(); closeModal(); } }
+        async function handleEditEventLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); if (!eventData.event_time) { eventData.event_time = null; } const { error } = await db.from('event_log').update({ event_date: eventData.event_date, event_time: eventData.event_time, description: eventData.description }).eq('id', eventData.id); if (error) { console.error('Error updating event log:', error); } else { fetchEventLog(); closeModal(); } }
+        async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
+        function renderEventLog(items) { const container = document.getElementById('event-log-container'); if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
+        async function deleteEventLog(id) { if (!confirm('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?')) return; const { error } = await db.from('event_log').delete().eq('id', id); if (error) console.error('Error deleting event log:', error); else fetchEventLog(); }
+
+        // --- PERSONAL GROWTH ---
+        function openPersonalGrowthModal(item = null) {
+            const isEdit = item !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="personal-growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ทักษะ/เรื่องที่ต้องการพัฒนา</label><input name="skill_name" type="text" value="${isEdit ? item.skill_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เป้าหมาย</label><textarea name="goal" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? item.goal || '' : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${isEdit ? item.start_date : getToday()}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md">
+                                <option value="Not Started" ${isEdit && item.status === 'Not Started' ? 'selected' : ''}>ยังไม่เริ่ม</option>
+                                <option value="In Progress" ${isEdit && item.status === 'In Progress' ? 'selected' : ''}>กำลังดำเนินการ</option>
+                                <option value="Completed" ${isEdit && item.status === 'Completed' ? 'selected' : ''}>สำเร็จ</option>
+                            </select></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('personal-growth-form').addEventListener('submit', isEdit ? handleEditPersonalGrowth : addPersonalGrowth);
+        }
+        async function addPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); delete growthData.id; const { error } = await db.from('personal_growth').insert([growthData]); if (error) { console.error('Error adding personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
+        async function handleEditPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); const { error } = await db.from('personal_growth').update({ skill_name: growthData.skill_name, goal: growthData.goal, start_date: growthData.start_date, status: growthData.status }).eq('id', growthData.id); if (error) { console.error('Error updating personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
+        async function fetchPersonalGrowth() { const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching personal growth:', error); return; } renderPersonalGrowth(data); }
+        function renderPersonalGrowth(items) {
+            const container = document.getElementById('personal-growth-container');
+            if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4 col-span-full">ยังไม่มีเป้าหมายการพัฒนาตนเอง</p>'; return; }
+            container.innerHTML = items.map(item => {
+                const statusColors = { 'Not Started': 'bg-gray-200 text-gray-800', 'In Progress': 'bg-blue-200 text-blue-800', 'Completed': 'bg-green-200 text-green-800' };
+                return `
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-semibold text-slate-800 mb-2">${item.skill_name}</h4>
+                        <div class="flex space-x-2">
+                           <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                           <button onclick="deletePersonalGrowth(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3 min-h-[40px]">${item.goal || ''}</p>
+                    <div class="text-xs text-slate-500"><strong>เริ่ม:</strong> ${item.start_date ? formatDate(item.start_date) : '-'}</div>
+                    <div class="mt-2"><span class="text-xs font-medium px-2 py-1 rounded-full ${statusColors[item.status]}">${item.status}</span></div>
+                </div>`;
+            }).join('');
+        }
+        async function deletePersonalGrowth(id) { if (!confirm('คุณต้องการลบเป้าหมายนี้ใช่หรือไม่?')) return; const { error } = await db.from('personal_growth').delete().eq('id', id); if (error) console.error('Error deleting personal growth item:', error); else fetchPersonalGrowth(); }
+
+        // --- HEALTH TRACKER ---
+        const CALORIE_GOAL = 1850;
+        function openHealthLogModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ประเภท</label><select name="type" class="w-full mt-1 p-2 border rounded-md"><option value="food" ${isEdit && entry.type === 'food' ? 'selected' : ''}>🍔 อาหาร</option><option value="exercise" ${isEdit && entry.type === 'exercise' ? 'selected' : ''}>🏃 ออกกำลังกาย</option></select></div>
+                            <div><label class="text-sm font-medium">รายการ</label><input name="item_name" type="text" value="${isEdit ? entry.item_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">แคลอรี่</label><input name="calories" type="number" value="${isEdit ? entry.calories : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('health-log-form').addEventListener('submit', isEdit ? handleEditHealthLog : addHealthLogEntry);
+        }
+        async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); }
+        function renderHealthTracker(items) {
+            const container = document.getElementById('health-tracker-container');
+            const foodItems = items.filter(i => i.type === 'food');
+            const exerciseItems = items.filter(i => i.type === 'exercise');
+            const totalCaloriesIn = foodItems.reduce((sum, i) => sum + i.calories, 0);
+            const totalCaloriesOut = exerciseItems.reduce((sum, i) => sum + i.calories, 0);
+            const netCalories = totalCaloriesIn - totalCaloriesOut;
+            const remainingCalories = CALORIE_GOAL - netCalories;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-center">
+                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">เป้าหมาย</p><p class="text-xl font-bold text-blue-600">${CALORIE_GOAL.toLocaleString()} แคล</p></div>
+                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ</p><p class="text-xl font-bold text-green-600">${totalCaloriesIn.toLocaleString()} แคล</p></div>
+                    <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">เผาผลาญ</p><p class="text-xl font-bold text-orange-600">${totalCaloriesOut.toLocaleString()} แคล</p></div>
+                    <div class="${remainingCalories >= 0 ? 'bg-purple-100' : 'bg-red-200'} p-3 rounded-lg"><p class="text-sm ${remainingCalories >= 0 ? 'text-purple-800' : 'text-red-800'}">คงเหลือ</p><p class="text-xl font-bold ${remainingCalories >= 0 ? 'text-purple-600' : 'text-red-600'}">${remainingCalories.toLocaleString()} แคล</p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🍔 อาหารที่ทาน</h3>
+                        <div class="space-y-2">${foodItems.map(item => `
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
+                                <span>${item.item_name}</span>
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-medium text-green-600">${item.calories.toLocaleString()} แคล</span>
+                                    <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการอาหาร</p>'}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🏃 การออกกำลังกาย</h3>
+                         <div class="space-y-2">${exerciseItems.map(item => `
+                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
+                                <span>${item.item_name}</span>
+                                <div class="flex items-center space-x-3">
+                                    <span class="font-medium text-orange-600">${item.calories.toLocaleString()} แคล</span>
+                                     <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการออกกำลังกาย</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
 
     </script>
 
