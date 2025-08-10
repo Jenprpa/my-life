@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Life Dashboard - แดชบอร์ดจัดการชีวิต</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -26,7 +25,6 @@
 <body class="bg-slate-100">
 
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <aside id="sidebar" class="bg-slate-800 text-slate-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
             <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
             <nav id="sidebar-nav" class="flex flex-col space-y-1">
@@ -38,18 +36,17 @@
                 <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
                 <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
                 <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
+                <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
                 <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
                 <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
                 <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
                 <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> ระบบบันทึกการเงิน</a>
-                <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> ประมาณการเงิน (Excel)</a>
+                <a href="#financial-forecast" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> ประมาณการเงิน (Excel)</a>
             </nav>
         </aside>
         
-        <!-- Overlay for mobile -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-        <!-- Main Content -->
         <div class="flex-1 lg:ml-64">
             <header class="bg-white shadow-sm sticky top-0 z-30">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
@@ -107,12 +104,12 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📅</span>
-                                <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                            </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📅</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                             </div>
                              <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
-                        </div>
+                         </div>
                         <div id="calendar-container"></div>
                     </section>
 
@@ -131,32 +128,43 @@
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
                                 <span class="text-2xl mr-3">❤️</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ (วันนี้)</h2>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ</h2>
                             </div>
                             <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
-                        <div id="health-tracker-container"></div>
+                        <div id="health-tracker-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📌</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                            </div>
-                            <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
-                        </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📌</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                             </div>
+                             <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                         </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                    </section>
+
+                    <section id="personal-growth" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🌱</span>
+                                <h2 class="text-xl font-semibold text-gray-900">การพัฒนาตนเอง</h2>
+                            </div>
+                            <button onclick="openPersonalGrowthModal()" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors">+ เพิ่มเป้าหมาย</button>
+                        </div>
+                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                     </section>
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📓</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                            </div>
-                            <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
-                        </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📓</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                             </div>
+                             <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                         </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
                     
@@ -214,7 +222,7 @@
                              <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">เปิดในแท็บใหม่ <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
                         </div>
                         <div class="w-full h-[600px] border border-slate-200 rounded-lg overflow-hidden">
-                            <iframe src="https://onedrive.live.com/embed?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&action=embedview" class="w-full h-full" title="Financial Forecast Excel"></iframe>
+                            <iframe src="https://onedrive.live.com/embed?resid=FCA2AC859C324518%212984&authkey=%21ADlJqJjYnZF3R9c&em=2&action=embedview" class="w-full h-full" title="Financial Forecast Excel"></iframe>
                         </div>
                     </section>
 
@@ -223,7 +231,6 @@
         </div>
     </div>
     
-    <!-- Modals -->
     <div id="modal-container"></div>
 
     <script>
@@ -311,7 +318,7 @@
                         <div><label class="text-sm font-medium">รายการ</label><input name="item" type="text" value="${isEdit ? item.item : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
                         <div><label class="text-sm font-medium">จำนวนเงิน</label><input name="amount" type="number" step="0.01" value="${isEdit ? item.amount : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
                         <div><label class="text-sm font-medium">วันที่</label><input name="transaction_date" type="date" value="${isEdit ? item.transaction_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income" ${isEdit && item.transaction_type === 'Income' ? 'selected' : ''}>รายรับ</option><option value="Expense" ${isEdit && item.transaction_type === 'Expense' ? 'selected' : ''}>รายจ่าย</option></select></div>
+                        <div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income" ${isEdit && item.transaction_type === 'Income' ? 'selected' : ''}>รายรับ</option><option value="Expense" ${isEdit && item.transaction_type === 'Expense' ? 'selected' : !isEdit ? 'selected' : ''}>รายจ่าย</option></select></div>
                         <div><label class="text-sm font-medium">หมวดหมู่</label><select name="category" class="w-full mt-1 p-2 border rounded-md"><option>อาหาร</option><option>การเดินทาง</option><option>บิล & ค่าใช้จ่าย</option><option>ช้อปปิ้ง</option><option>บันเทิง</option><option>สุขภาพ</option><option>การศึกษา</option><option>เงินเดือน</option><option>ธุรกิจ</option><option>อื่นๆ</option></select></div>
                     </div>
                     <div class="mt-6 flex justify-end space-x-2">
@@ -323,8 +330,8 @@
             if(isEdit) { document.querySelector('#budget-form select[name="category"]').value = item.category; }
             document.getElementById('budget-form').addEventListener('submit', isEdit ? handleEditBudget : addBudgetItem);
         }
-        async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.id = Date.now(); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); alert('ไม่สามารถเพิ่มรายการได้: ' + error.message); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
-        async function handleEditBudget(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').update(budgetData).eq('id', budgetData.id); if (error) { console.error('Error updating budget item:', error); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
+        async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); delete budgetData.id; budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); alert('ไม่สามารถเพิ่มรายการได้: ' + error.message); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
+        async function handleEditBudget(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').update({ item: budgetData.item, amount: budgetData.amount, transaction_date: budgetData.transaction_date, transaction_type: budgetData.transaction_type, category: budgetData.category }).eq('id', budgetData.id); if (error) { console.error('Error updating budget item:', error); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
         async function fetchBudget() { const { data: budgetItems, error } = await db.from('budget').select('*').order('transaction_date', { ascending: false }); if (error) { console.error('Error fetching budget:', error); return; } renderBudgetTable(budgetItems); updateBudgetSummary(budgetItems); }
         function renderBudgetTable(items) { const tableBody = document.getElementById('budget-table-body'); tableBody.innerHTML = items.map(item => `<tr class="border-b"><td class="p-3 font-medium">${item.item}</td><td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td><td class="p-3 text-slate-500">${formatDate(item.transaction_date)}</td><td class="p-3"><span class="bg-slate-200 text-slate-800 px-2 py-1 text-xs rounded-full">${item.category}</span></td><td class="p-3 text-xs font-semibold">${item.transaction_type}</td><td class="p-3 flex space-x-2"><button onclick='openBudgetModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600">✏️</button><button onclick="deleteBudgetItem(${item.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
         function updateBudgetSummary(items) { const totalIncome = items.filter(i => i.transaction_type === 'Income').reduce((sum, i) => sum + i.amount, 0); const totalExpense = items.filter(i => i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('total-income').textContent = formatCurrency(totalIncome); document.getElementById('total-expense').textContent = formatCurrency(totalExpense); document.getElementById('balance').textContent = formatCurrency(balance); }
@@ -352,7 +359,7 @@
             document.getElementById('knowledge-form').addEventListener('submit', isEdit ? handleEditKnowledge : addKnowledgeItem);
         }
         async function addKnowledgeItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); delete knowledgeData.id; knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').insert([knowledgeData]); if (error) { console.error('Error adding knowledge item:', error); alert('ไม่สามารถเพิ่มข้อมูลได้: ' + error.message); } else { fetchKnowledge(); closeModal(); } }
-        async function handleEditKnowledge(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').update(knowledgeData).eq('id', knowledgeData.id); if (error) { console.error('Error updating knowledge item:', error); } else { fetchKnowledge(); closeModal(); } }
+        async function handleEditKnowledge(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').update({ topic: knowledgeData.topic, summary: knowledgeData.summary, url: knowledgeData.url, tags: knowledgeData.tags }).eq('id', knowledgeData.id); if (error) { console.error('Error updating knowledge item:', error); } else { fetchKnowledge(); closeModal(); } }
         async function fetchKnowledge() { const { data, error } = await db.from('knowledge_base').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching knowledge base:', error); return; } renderKnowledgeGallery(data); }
         function renderKnowledgeGallery(items) { const gallery = document.getElementById('knowledge-gallery'); gallery.innerHTML = items.map(item => `<div class="bg-slate-50 border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-start"><h4 class="font-semibold text-slate-800 mb-2">${item.topic}</h4><div class="flex space-x-2"><button onclick='openKnowledgeModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteKnowledge(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-600 mb-3">${item.summary || ''}</p><div class="flex flex-wrap gap-1 mb-3">${(item.tags || []).map(tag => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>${item.url ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:underline">ไปที่แหล่งข้อมูล <i class="fa-solid fa-link text-xs"></i></a>` : ''}</div>`).join(''); }
         async function deleteKnowledge(id) { if (!confirm('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?')) return; const { error } = await db.from('knowledge_base').delete().eq('id', id); if (error) console.error('Error deleting knowledge item:', error); else fetchKnowledge(); }
@@ -379,7 +386,7 @@
             document.getElementById('journal-form').addEventListener('submit', isEdit ? handleEditJournal : addJournalEntry);
         }
         async function addJournalEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); delete journalData.id; const { error } = await db.from('journal_entries').insert([journalData]); if (error) { console.error('Error adding journal entry:', error); alert('ไม่สามารถเพิ่มบันทึกได้: ' + error.message); } else { fetchJournal(); closeModal(); } }
-        async function handleEditJournal(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); const { error } = await db.from('journal_entries').update(journalData).eq('id', journalData.id); if (error) { console.error('Error updating journal:', error); } else { fetchJournal(); closeModal(); } }
+        async function handleEditJournal(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); const { error } = await db.from('journal_entries').update({ entry_date: journalData.entry_date, gratitude: journalData.gratitude, small_wins: journalData.small_wins, mood_check_in: journalData.mood_check_in }).eq('id', journalData.id); if (error) { console.error('Error updating journal:', error); } else { fetchJournal(); closeModal(); } }
         async function fetchJournal() { const { data, error } = await db.from('journal_entries').select('*').order('entry_date', { ascending: false }); if (error) { console.error('Error fetching journal entries:', error); return; } renderJournal(data); }
         function renderJournal(items) { const container = document.getElementById('journal-entries'); container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-purple-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.entry_date)}</h4><div class="flex space-x-2"><button onclick='openJournalModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteJournal(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><div class="space-y-2 text-sm text-slate-700">${entry.gratitude ? `<div><strong>ขอบคุณ:</strong> ${entry.gratitude}</div>` : ''}${entry.small_wins ? `<div><strong>ความสำเร็จ:</strong> ${entry.small_wins}</div>` : ''}${entry.mood_check_in ? `<div><strong>ความรู้สึก:</strong> ${entry.mood_check_in}</div>` : ''}</div></div>`).join(''); }
         async function deleteJournal(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('journal_entries').delete().eq('id', id); if (error) console.error('Error deleting journal entry:', error); else fetchJournal(); }
@@ -483,8 +490,8 @@
             }
             document.getElementById('habit-form').addEventListener('submit', isEdit ? handleEditHabit : addHabit);
         }
-        async function addHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); delete habitData.id; if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').insert([habitData]); if (error) { console.error('Error adding habit:', error); alert('ไม่สามารถเพิ่มกิจวัตรได้: ' + error.message); } else { fetchHabits(); closeModal(); } }
-        async function handleEditHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').update({ name: habitData.name, frequency: habitData.frequency, weekly_day: habitData.weekly_day }).eq('id', habitData.id); if (error) { console.error('Error updating habit:', error); } else { fetchHabits(); closeModal(); } }
+        async function addHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); delete habitData.id; if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } else { habitData.weekly_day = parseInt(habitData.weekly_day); } const { error } = await db.from('habits').insert([habitData]); if (error) { console.error('Error adding habit:', error); alert('ไม่สามารถเพิ่มกิจวัตรได้: ' + error.message); } else { fetchHabits(); closeModal(); } }
+        async function handleEditHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } else { habitData.weekly_day = parseInt(habitData.weekly_day); } const { error } = await db.from('habits').update({ name: habitData.name, frequency: habitData.frequency, weekly_day: habitData.weekly_day }).eq('id', habitData.id); if (error) { console.error('Error updating habit:', error); } else { fetchHabits(); closeModal(); } }
         async function fetchHabits() {
             const today = new Date();
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
@@ -504,25 +511,30 @@
                 const habitLogs = log.filter(l => l.habit_id === habit.id);
                 const logDates = new Set(habitLogs.map(l => l.completed_date));
                 let streak = 0;
-                if (logDates.has(todayStr)) {
-                    streak = 1;
-                    let currentDate = new Date(today);
-                    currentDate.setDate(currentDate.getDate() - 1);
-                    while (logDates.has(toYYYYMMDD(currentDate))) {
-                        streak++;
-                        currentDate.setDate(currentDate.getDate() - 1);
-                    }
-                } else {
-                    let yesterday = new Date(today);
+                let lastLoggedDate = null;
+                
+                // Find the most recent log date
+                for (const dateStr of Array.from(logDates).sort().reverse()) {
+                    lastLoggedDate = new Date(dateStr + 'T00:00:00');
+                    break;
+                }
+                
+                // Calculate streak based on last logged date
+                if (lastLoggedDate) {
+                    const todayOrYesterday = new Date();
+                    const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
-                    if (logDates.has(toYYYYMMDD(yesterday))) {
-                         let currentDate = yesterday;
-                         while (logDates.has(toYYYYMMDD(currentDate))) {
-                            streak++;
-                            currentDate.setDate(currentDate.getDate() - 1);
+                    
+                    // Streak is current if logged today or yesterday
+                    if (toYYYYMMDD(lastLoggedDate) === toYYYYMMDD(todayOrYesterday) || toYYYYMMDD(lastLoggedDate) === toYYYYMMDD(yesterday)) {
+                       let currentDate = lastLoggedDate;
+                        while(logDates.has(toYYYYMMDD(currentDate))) {
+                           streak++;
+                           currentDate.setDate(currentDate.getDate() - 1);
                         }
                     }
                 }
+
                 const startOfWeek = new Date(today);
                 startOfWeek.setDate(today.getDate() - today.getDay());
                 let weekCompleted = 0;
@@ -531,9 +543,22 @@
                     day.setDate(day.getDate() + i);
                     if (logDates.has(toYYYYMMDD(day))) { weekCompleted++; }
                 }
-                const weekPercent = Math.round((weekCompleted / (today.getDay() + 1)) * 100);
+                const weekPercent = habit.frequency === 'daily' ? Math.round((weekCompleted / (today.getDay() + 1)) * 100) : (weekCompleted > 0 ? 100 : 0) ;
+                
                 const monthCompleted = habitLogs.length;
-                const monthPercent = Math.round((monthCompleted / today.getDate()) * 100);
+                let monthPercent = 0;
+                if(habit.frequency === 'daily') {
+                    monthPercent = Math.round((monthCompleted / today.getDate()) * 100);
+                } else {
+                    // For weekly, calculate how many weeks have passed this month and if they were completed
+                    const weeksInMonthSoFar = Math.ceil((today.getDate() - startOfMonth.getDate() + 1) / 7);
+                    let weeksCompletedCount = 0;
+                    // This is a simplified calculation
+                    if (monthCompleted > 0) weeksCompletedCount = monthCompleted;
+                    monthPercent = weeksInMonthSoFar > 0 ? Math.round((weeksCompletedCount / weeksInMonthSoFar) * 100) : 0;
+                }
+
+
                 let graphData = [];
                 for (let i = 6; i >= 0; i--) {
                     const day = new Date(today);
@@ -561,23 +586,24 @@
         }
         function renderHabitCard(habit, log) {
             const today = new Date();
-            let isChecked = false;
-            if (habit.frequency === 'daily') {
-                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === getToday());
-            } else {
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                const startOfWeekStr = toYYYYMMDD(startOfWeek);
-                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === startOfWeekStr);
+            const todayStr = getToday();
+            let isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === todayStr);
+            let isDisabled = false;
+            
+            if (habit.frequency === 'weekly') {
+                if (today.getDay() != habit.weekly_day) {
+                    isDisabled = true;
+                }
             }
+            
             const { streak, weekPercent, monthPercent, graphData } = habit.stats;
             const graphHTML = graphData.map(completed => `<div class="w-full h-6 ${completed ? 'bg-teal-500' : 'bg-slate-200'} rounded-sm"></div>`).join('');
             return `
             <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input type="checkbox" id="habit-${habit.id}" data-habit-id="${habit.id}" data-frequency="${habit.frequency}" onchange="toggleHabit(this)" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}>
-                        <label for="habit-${habit.id}" class="ml-3 text-slate-800 font-semibold">${habit.name}</label>
+                        <input type="checkbox" id="habit-${habit.id}" data-habit-id="${habit.id}" onchange="toggleHabit(this)" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+                        <label for="habit-${habit.id}" class="ml-3 text-slate-800 font-semibold ${isDisabled ? 'text-slate-400' : ''}">${habit.name}</label>
                     </div>
                     <div class="flex space-x-2"><button onclick='openHabitModal(${JSON.stringify(habit)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteHabit(${habit.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>
                 </div>
@@ -596,16 +622,8 @@
         }
         async function toggleHabit(checkbox, dateOverride = null) { 
             const habitId = checkbox.dataset.habitId; 
-            const frequency = checkbox.dataset.frequency;
             const completed = checkbox.checked; 
-            
-            let completionDate = dateOverride || getToday();
-            if (frequency === 'weekly' && !dateOverride) {
-                const today = new Date();
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                completionDate = toYYYYMMDD(startOfWeek);
-            }
+            const completionDate = dateOverride || getToday();
             
             if (completed) { 
                 const { error } = await db.from('habit_log').insert([{ habit_id: habitId, completed_date: completionDate }]); 
@@ -735,6 +753,7 @@
         function renderWeeklyAgenda() {
             const container = document.getElementById('weekly-agenda-container');
             const startOfWeek = new Date(weeklyAgendaDate);
+            startOfWeek.setHours(0,0,0,0);
             startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(endOfWeek.getDate() + 6);
@@ -762,84 +781,92 @@
                 
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allTasks.filter(t => t.due_date === dateStr);
-                const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day === i);
+                const habitsOnDay = allHabits.filter(h => h.frequency === 'daily' || (h.frequency === 'weekly' && h.weekly_day == i));
                 
                 let itemsHTML = '';
                 
                 if (eventsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-cyan-600 mt-2 mb-1">กิจกรรม</h4>` + eventsOnDay.map(e => `<div class="flex items-start space-x-2"><input type="checkbox" disabled class="mt-1"><label>${e.title}</label></div>`).join('');
+                    itemsHTML += `<h4 class="font-bold text-cyan-600 mt-2 mb-1">กิจกรรม</h4>` + eventsOnDay.map(e => `<div class="flex items-start space-x-2"><i class="fa-regular fa-square text-cyan-500 mt-1"></i><label>${e.title}</label></div>`).join('');
                 }
                 if (tasksOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-blue-600 mt-2 mb-1">งาน</h4>` + tasksOnDay.map(t => `<div class="flex items-start space-x-2"><input type="checkbox" disabled ${t.status === 'Done' ? 'checked' : ''} class="mt-1"><label class="${t.status === 'Done' ? 'line-through text-slate-400' : ''}">${t.title}</label></div>`).join('');
+                    itemsHTML += `<h4 class="font-bold text-blue-600 mt-2 mb-1">งาน</h4>` + tasksOnDay.map(t => `<div class="flex items-start space-x-2"><i class="fa-regular ${t.status === 'Done' ? 'fa-check-square text-blue-500' : 'fa-square text-blue-500'} mt-1"></i><label class="${t.status === 'Done' ? 'line-through text-slate-400' : ''}">${t.title}</label></div>`).join('');
                 }
-                if (dailyHabitsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-teal-600 mt-2 mb-1">กิจวัตรรายวัน</h4>` + dailyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="daily" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
-                    }).join('');
-                }
-                 if (weeklyHabitsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-purple-600 mt-2 mb-1">กิจวัตรรายสัปดาห์</h4>` + weeklyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="weekly" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
-                    }).join('');
+                if (habitsOnDay.length > 0) {
+                     itemsHTML += `<h4 class="font-bold text-teal-600 mt-2 mb-1">กิจวัตร</h4>` + habitsOnDay.map(h => {
+                         const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
+                         return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
+                     }).join('');
                 }
 
 
                 weekHtml += `
                     <div class="p-3 bg-slate-50 rounded-lg">
                         <div class="text-center font-bold text-slate-700 pb-2 border-b">${day.toLocaleDateString('th-TH', { weekday: 'short' })} <span class="font-normal text-slate-500">${day.getDate()}</span></div>
-                        <div class="mt-2 space-y-2">${itemsHTML || '<div class="h-10 text-xs text-slate-400 text-center pt-4">ไม่มีรายการ</div>'}</div>
+                        <div class="mt-2 space-y-2 min-h-[6rem]">${itemsHTML || '<div class="h-10 text-xs text-slate-400 text-center pt-4">ไม่มีรายการ</div>'}</div>
                     </div>`;
             }
             weekHtml += `</div>`;
             container.innerHTML = headerHTML + weekHtml;
         }
 
-
-        // --- INITIAL LOAD ---
-        document.addEventListener('DOMContentLoaded', () => {
-            if (db) {
-                fetchTasks();
-                fetchBudget();
-                fetchKnowledge();
-                fetchJournal();
-                fetchDataForCalendar();
-                fetchHabits();
-                fetchIdeas();
-                fetchEventLog();
-                fetchHealthLog();
-            } else {
-                alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
-            }
-
-            // Sidebar active link logic
-            const sections = document.querySelectorAll('main section');
-            const navLinks = document.querySelectorAll('#sidebar-nav a');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href').substring(1) === entry.target.id) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, { rootMargin: "-50% 0px -50% 0px" });
-
-            sections.forEach(section => observer.observe(section));
-        });
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+        // --- HEALTH TRACKER ---
+        function openHealthLogModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">วันที่</label><input name="log_date" type="date" value="${isEdit ? entry.log_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="text-sm font-medium">ชั่วโมงนอน</label><input name="sleep_hours" type="number" step="0.5" value="${isEdit ? entry.sleep_hours || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                                <div><label class="text-sm font-medium">ดื่มน้ำ (ลิตร)</label><input name="water_intake" type="number" step="0.1" value="${isEdit ? entry.water_intake || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            </div>
+                            <div><label class="text-sm font-medium">อารมณ์</label><select name="mood" class="w-full mt-1 p-2 border rounded-md">
+                                <option value="" ${!isEdit || !entry.mood ? 'selected' : ''}>-- เลือก --</option>
+                                <option value="ดีเยี่ยม" ${isEdit && entry.mood === 'ดีเยี่ยม' ? 'selected' : ''}>ดีเยี่ยม 😄</option>
+                                <option value="ดี" ${isEdit && entry.mood === 'ดี' ? 'selected' : ''}>ดี 😊</option>
+                                <option value="ปกติ" ${isEdit && entry.mood === 'ปกติ' ? 'selected' : ''}>ปกติ 😐</option>
+                                <option value="แย่" ${isEdit && entry.mood === 'แย่' ? 'selected' : ''}>แย่ 😞</option>
+                            </select></div>
+                            <div><label class="text-sm font-medium">บันทึกเพิ่มเติม</label><textarea name="notes" class="w-full mt-1 p-2 border rounded-md">${isEdit ? entry.notes || '' : ''}</textarea></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('health-log-form').addEventListener('submit', isEdit ? handleEditHealthLog : addHealthLog);
         }
+        async function addHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const logData = Object.fromEntries(formData.entries()); delete logData.id; const { error } = await db.from('health_log').insert([logData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const logData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ log_date: logData.log_date, sleep_hours: logData.sleep_hours, water_intake: logData.water_intake, mood: logData.mood, notes: logData.notes }).eq('id', logData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
+        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').order('log_date', { ascending: false }); if (error) { console.error('Error fetching health log:', error); return; } renderHealthLog(data); }
+        function renderHealthLog(items) {
+            const container = document.getElementById('health-tracker-container');
+            if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกสุขภาพ</p>'; return; }
+            container.innerHTML = items.map(entry => {
+                let details = [];
+                if(entry.sleep_hours) details.push(`😴 <strong>นอน:</strong> ${entry.sleep_hours} ชม.`);
+                if(entry.water_intake) details.push(`💧 <strong>น้ำ:</strong> ${entry.water_intake} ลิตร`);
+                if(entry.mood) details.push(`😊 <strong>อารมณ์:</strong> ${entry.mood}`);
+                if(entry.notes) details.push(`📝 <strong>โน้ต:</strong> ${entry.notes}`);
+                
+                return `
+                <div class="bg-slate-50 rounded-lg p-4 border-l-4 border-red-400">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-semibold text-gray-800">${formatDate(entry.log_date)}</h4>
+                        <div class="flex space-x-2">
+                            <button onclick='openHealthLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                            <button onclick="deleteHealthLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-sm text-slate-700">${details.join('<br>')}</div>
+                </div>`;
+            }).join('');
+        }
+        async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกสุขภาพนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
 
         // --- EVENT LOG ---
         function openEventLogModal(entry = null) {
@@ -864,82 +891,104 @@
         }
         async function addEventLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); delete eventData.id; if (!eventData.event_time) { delete eventData.event_time; } const { error } = await db.from('event_log').insert([eventData]); if (error) { console.error('Error adding event log:', error); } else { fetchEventLog(); closeModal(); } }
         async function handleEditEventLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); if (!eventData.event_time) { eventData.event_time = null; } const { error } = await db.from('event_log').update({ event_date: eventData.event_date, event_time: eventData.event_time, description: eventData.description }).eq('id', eventData.id); if (error) { console.error('Error updating event log:', error); } else { fetchEventLog(); closeModal(); } }
-        async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
+        async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false, nullsFirst: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
         function renderEventLog(items) { const container = document.getElementById('event-log-container'); if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
         async function deleteEventLog(id) { if (!confirm('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?')) return; const { error } = await db.from('event_log').delete().eq('id', id); if (error) console.error('Error deleting event log:', error); else fetchEventLog(); }
 
-        // --- HEALTH TRACKER ---
-        const CALORIE_GOAL = 1850;
-        function openHealthLogModal(entry = null) {
-            const isEdit = entry !== null;
+        // --- PERSONAL GROWTH ---
+        function openPersonalGrowthModal(item = null) {
+            const isEdit = item !== null;
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                    <form id="personal-growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
                         <div class="space-y-4">
-                            <div><label class="text-sm font-medium">ประเภท</label><select name="type" class="w-full mt-1 p-2 border rounded-md"><option value="food" ${isEdit && entry.type === 'food' ? 'selected' : ''}>🍔 อาหาร</option><option value="exercise" ${isEdit && entry.type === 'exercise' ? 'selected' : ''}>🏃 ออกกำลังกาย</option></select></div>
-                            <div><label class="text-sm font-medium">รายการ</label><input name="item_name" type="text" value="${isEdit ? entry.item_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">แคลอรี่</label><input name="calories" type="number" value="${isEdit ? entry.calories : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ทักษะ/เรื่องที่ต้องการพัฒนา</label><input name="skill_name" type="text" value="${isEdit ? item.skill_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เป้าหมาย</label><textarea name="goal" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? item.goal || '' : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${isEdit ? item.start_date : getToday()}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md">
+                                <option value="Not Started" ${isEdit && item.status === 'Not Started' ? 'selected' : !isEdit ? 'selected' : ''}>ยังไม่เริ่ม</option>
+                                <option value="In Progress" ${isEdit && item.status === 'In Progress' ? 'selected' : ''}>กำลังดำเนินการ</option>
+                                <option value="Completed" ${isEdit && item.status === 'Completed' ? 'selected' : ''}>สำเร็จ</option>
+                            </select></div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
                             <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-md">บันทึก</button>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">บันทึก</button>
                         </div>
                     </form>
                 </div>`;
-            document.getElementById('health-log-form').addEventListener('submit', isEdit ? handleEditHealthLog : addHealthLogEntry);
+            document.getElementById('personal-growth-form').addEventListener('submit', isEdit ? handleEditPersonalGrowth : addPersonalGrowth);
         }
-        async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); }
-        function renderHealthTracker(items) {
-            const container = document.getElementById('health-tracker-container');
-            const foodItems = items.filter(i => i.type === 'food');
-            const exerciseItems = items.filter(i => i.type === 'exercise');
-            const totalCaloriesIn = foodItems.reduce((sum, i) => sum + i.calories, 0);
-            const totalCaloriesOut = exerciseItems.reduce((sum, i) => sum + i.calories, 0);
-            const netCalories = totalCaloriesIn - totalCaloriesOut;
-            const remainingCalories = CALORIE_GOAL - netCalories;
+        async function addPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); delete growthData.id; const { error } = await db.from('personal_growth').insert([growthData]); if (error) { console.error('Error adding personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
+        async function handleEditPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); const { error } = await db.from('personal_growth').update({ skill_name: growthData.skill_name, goal: growthData.goal, start_date: growthData.start_date, status: growthData.status }).eq('id', growthData.id); if (error) { console.error('Error updating personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
+        async function fetchPersonalGrowth() { const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching personal growth:', error); return; } renderPersonalGrowth(data); }
+        function renderPersonalGrowth(items) {
+            const container = document.getElementById('personal-growth-container');
+            if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4 col-span-full">ยังไม่มีเป้าหมายการพัฒนาตนเอง</p>'; return; }
+            container.innerHTML = items.map(item => {
+                const statusColors = { 'Not Started': 'bg-gray-200 text-gray-800', 'In Progress': 'bg-blue-200 text-blue-800', 'Completed': 'bg-green-200 text-green-800' };
+                return `
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <h4 class="font-semibold text-slate-800 mb-2">${item.skill_name}</h4>
+                        <div class="flex space-x-2">
+                           <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
+                           <button onclick="deletePersonalGrowth(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3 min-h-[40px]">${item.goal || ''}</p>
+                    <div class="text-xs text-slate-500"><strong>เริ่ม:</strong> ${item.start_date ? formatDate(item.start_date) : '-'}</div>
+                    <div class="mt-2"><span class="text-xs font-medium px-2 py-1 rounded-full ${statusColors[item.status]}">${item.status}</span></div>
+                </div>`;
+            }).join('');
+        }
+        async function deletePersonalGrowth(id) { if (!confirm('คุณต้องการลบเป้าหมายนี้ใช่หรือไม่?')) return; const { error } = await db.from('personal_growth').delete().eq('id', id); if (error) console.error('Error deleting personal growth item:', error); else fetchPersonalGrowth(); }
 
-            container.innerHTML = `
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-center">
-                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">เป้าหมาย</p><p class="text-xl font-bold text-blue-600">${CALORIE_GOAL.toLocaleString()} แคล</p></div>
-                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ</p><p class="text-xl font-bold text-green-600">${totalCaloriesIn.toLocaleString()} แคล</p></div>
-                    <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">เผาผลาญ</p><p class="text-xl font-bold text-orange-600">${totalCaloriesOut.toLocaleString()} แคล</p></div>
-                    <div class="${remainingCalories >= 0 ? 'bg-purple-100' : 'bg-red-200'} p-3 rounded-lg"><p class="text-sm ${remainingCalories >= 0 ? 'text-purple-800' : 'text-red-800'}">คงเหลือ</p><p class="text-xl font-bold ${remainingCalories >= 0 ? 'text-purple-600' : 'text-red-600'}">${remainingCalories.toLocaleString()} แคล</p></div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🍔 อาหารที่ทาน</h3>
-                        <div class="space-y-2">${foodItems.map(item => `
-                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
-                                <span>${item.item_name}</span>
-                                <div class="flex items-center space-x-3">
-                                    <span class="font-medium text-green-600">${item.calories.toLocaleString()} แคล</span>
-                                    <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการอาหาร</p>'}
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🏃 การออกกำลังกาย</h3>
-                         <div class="space-y-2">${exerciseItems.map(item => `
-                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
-                                <span>${item.item_name}</span>
-                                <div class="flex items-center space-x-3">
-                                    <span class="font-medium text-orange-600">${item.calories.toLocaleString()} แคล</span>
-                                     <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการออกกำลังกาย</p>'}
-                        </div>
-                    </div>
-                </div>
-            `;
+        // --- INITIAL LOAD ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (db) {
+                fetchTasks();
+                fetchBudget();
+                fetchKnowledge();
+                fetchJournal();
+                fetchDataForCalendar();
+                fetchHabits();
+                fetchIdeas();
+                fetchEventLog();
+                fetchHealthLog();
+                fetchPersonalGrowth(); // Added missing fetch call
+            } else {
+                alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
+            }
+
+            // Sidebar active link logic
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px", threshold: 0.1 });
+
+            sections.forEach(section => observer.observe(section));
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
-        async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
 
     </script>
 
