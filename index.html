@@ -108,12 +108,12 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📅</span>
-                                <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                            </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📅</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                             </div>
                              <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
-                        </div>
+                         </div>
                         <div id="calendar-container"></div>
                     </section>
 
@@ -141,12 +141,12 @@
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📌</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                            </div>
-                            <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
-                        </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📌</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                             </div>
+                             <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                         </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
 
@@ -163,12 +163,12 @@
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📓</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                            </div>
-                            <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
-                        </div>
+                             <div class="flex items-center">
+                                 <span class="text-2xl mr-3">📓</span>
+                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                             </div>
+                             <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                         </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto"></div>
                     </section>
                     
@@ -253,6 +253,8 @@
         let allCalendarItems = [];
         let dailyExpenses = new Map();
         let dailyIncomes = new Map();
+        let dailyCaloriesIn = new Map(); // ADDED: For health summary
+        let dailyCaloriesOut = new Map(); // ADDED: For health summary
         let allTasks = [];
         let allHabits = [];
         let allHabitLogs = [];
@@ -260,6 +262,7 @@
 
         // --- UTILITY FUNCTIONS ---
         const formatCurrency = (amount) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount);
+        const formatNumber = (amount) => new Intl.NumberFormat('th-TH').format(amount);
         const formatDate = (dateString) => new Date(dateString).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
         const formatTime = (dateString) => new Date(dateString).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
         const getToday = () => new Date().toISOString().split('T')[0];
@@ -400,11 +403,23 @@
         function openScheduleModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3><div class="space-y-4"><div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="event_type" class="w-full mt-1 p-2 border rounded-md"><option>Personal</option><option>Work</option><option>Health</option><option>Learning</option><option>Family</option><option>Errands</option><option>Social</option><option>Other</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem); }
         async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } else { fetchDataForCalendar(); closeModal(); } }
         async function fetchDataForCalendar() {
-            const [eventsRes, tasksRes, budgetRes] = await Promise.all([ db.from('schedule').select('*'), db.from('tasks').select('*'), db.from('budget').select('amount, transaction_date, transaction_type') ]);
-            if (eventsRes.error || tasksRes.error || budgetRes.error) { console.error('Error fetching calendar data:', eventsRes.error || tasksRes.error || budgetRes.error); return; }
+            // UPDATED: Added health_log to the promise
+            const [eventsRes, tasksRes, budgetRes, healthRes] = await Promise.all([
+                db.from('schedule').select('*'),
+                db.from('tasks').select('*'),
+                db.from('budget').select('amount, transaction_date, transaction_type'),
+                db.from('health_log').select('calories, log_date, type')
+            ]);
+
+            if (eventsRes.error || tasksRes.error || budgetRes.error || healthRes.error) {
+                console.error('Error fetching calendar data:', eventsRes.error || tasksRes.error || budgetRes.error || healthRes.error);
+                return;
+            }
+
             const formattedEvents = eventsRes.data.map(e => ({ id: `event-${e.id}`, date: new Date(e.event_date), endDate: e.end_date ? new Date(e.end_date) : null, title: e.title, type: 'event', originalData: e }));
             const formattedTasks = tasksRes.data.map(t => ({ id: `task-${t.id}`, date: new Date(t.due_date + 'T00:00:00'), endDate: null, title: t.title, type: 'task', originalData: t }));
             allCalendarItems = [...formattedEvents, ...formattedTasks];
+            
             dailyExpenses.clear();
             dailyIncomes.clear();
             budgetRes.data.forEach(item => { 
@@ -417,6 +432,21 @@
                     dailyIncomes.set(dateStr, currentTotal + item.amount);
                 }
             });
+
+            // ADDED: Process health data for calendar summary
+            dailyCaloriesIn.clear();
+            dailyCaloriesOut.clear();
+            healthRes.data.forEach(item => {
+                const dateStr = item.log_date;
+                if (item.type === 'food') {
+                    const currentTotal = dailyCaloriesIn.get(dateStr) || 0;
+                    dailyCaloriesIn.set(dateStr, currentTotal + item.calories);
+                } else if (item.type === 'exercise') {
+                    const currentTotal = dailyCaloriesOut.get(dateStr) || 0;
+                    dailyCaloriesOut.set(dateStr, currentTotal + item.calories);
+                }
+            });
+
             renderCalendar();
             renderWeeklyAgenda();
         }
@@ -437,12 +467,34 @@
                 const dayDate = new Date(year, month, i); const dateStr = toYYYYMMDD(dayDate); const isToday = dateStr === getToday() ? 'today' : '';
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
+                
+                // Get financial and health data for the day
                 const expenseTotal = dailyExpenses.get(dateStr);
                 const incomeTotal = dailyIncomes.get(dateStr);
+                const caloriesInTotal = dailyCaloriesIn.get(dateStr);
+                const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
+
                 let financialHtml = '';
-                if (incomeTotal) { financialHtml += `<div class="text-xs text-green-600 text-right truncate">+${incomeTotal.toLocaleString()}</div>`; }
-                if (expenseTotal) { financialHtml += `<div class="text-xs text-red-500 text-right truncate">-฿${expenseTotal.toLocaleString()}</div>`; }
-                daysHtml += `<div class="calendar-day p-1 rounded-lg cursor-pointer h-20 border ${isToday} flex flex-col"><div class="font-semibold text-left">${i}</div><div class="flex-grow overflow-hidden"><div class="flex justify-start space-x-1">${eventsOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>`).join('')}${tasksOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>`).join('')}</div>${financialHtml}</div></div>`;
+                if (incomeTotal) { financialHtml += `<div class="text-xs text-green-500 truncate">+${formatNumber(incomeTotal)}</div>`; }
+                if (expenseTotal) { financialHtml += `<div class="text-xs text-red-500 truncate">-${formatNumber(expenseTotal)}</div>`; }
+
+                // ADDED: HTML for health summary
+                let healthHtml = '';
+                if (caloriesInTotal) { healthHtml += `<div class="text-xs text-green-600 truncate">🍔 ${formatNumber(caloriesInTotal)}</div>`; }
+                if (caloriesOutTotal) { healthHtml += `<div class="text-xs text-orange-500 truncate">🔥 ${formatNumber(caloriesOutTotal)}</div>`; }
+
+                // UPDATED: Increased height to h-28 and added healthHtml
+                daysHtml += `<div class="calendar-day p-1 rounded-lg cursor-pointer h-28 border ${isToday} flex flex-col" onclick="currentViewDate = new Date('${dateStr}T00:00:00'); switchCalendarView('day')">
+                                <div class="font-semibold text-left">${i}</div>
+                                <div class="flex-grow overflow-hidden text-right">
+                                    <div class="flex justify-start space-x-1 mb-1">
+                                        ${eventsOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>`).join('')}
+                                        ${tasksOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>`).join('')}
+                                    </div>
+                                    ${financialHtml}
+                                    ${healthHtml}
+                                </div>
+                            </div>`;
             }
             daysHtml += `</div>`; container.innerHTML = daysHtml;
         }
@@ -457,16 +509,30 @@
             const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
             const expenseTotal = dailyExpenses.get(dateStr);
             const incomeTotal = dailyIncomes.get(dateStr);
+            // ADDED: Get health data for daily view
+            const caloriesInTotal = dailyCaloriesIn.get(dateStr);
+            const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
+
             let dayHtml = `<div class="space-y-4">`;
+            
             if (incomeTotal || expenseTotal) { 
-                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปการเงิน</h4>`;
+                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปการเงิน</h4><div class="space-y-1">`;
                 if(incomeTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-600 font-bold">รายรับ: ${formatCurrency(incomeTotal)}</div>`;
-                if(expenseTotal) dayHtml += `<div class="p-3 rounded-lg bg-red-50 text-red-600 font-bold mt-1">รายจ่าย: ${formatCurrency(expenseTotal)}</div>`;
-                dayHtml += `</div>`;
+                if(expenseTotal) dayHtml += `<div class="p-3 rounded-lg bg-red-50 text-red-600 font-bold">รายจ่าย: ${formatCurrency(expenseTotal)}</div>`;
+                dayHtml += `</div></div>`;
             }
+
+            // ADDED: Health summary section for daily view
+            if (caloriesInTotal || caloriesOutTotal) {
+                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปสุขภาพ</h4><div class="space-y-1">`;
+                if(caloriesInTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-700 font-bold">🍔 ได้รับ: ${formatNumber(caloriesInTotal)} แคล</div>`;
+                if(caloriesOutTotal) dayHtml += `<div class="p-3 rounded-lg bg-orange-50 text-orange-700 font-bold">🔥 เผาผลาญ: ${formatNumber(caloriesOutTotal)} แคล</div>`;
+                dayHtml += `</div></div>`;
+            }
+
             if (eventsOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจกรรม</h4><div class="space-y-3">${eventsOnDay.map(e => `<div class="p-3 rounded-lg bg-slate-100 flex items-start space-x-4"><div class="text-sm text-cyan-600 font-semibold w-24"><div>${formatTime(e.date)}</div>${e.endDate ? `<div class="text-xs">ถึง ${formatTime(e.endDate)}</div>` : ''}</div><div class="flex-grow"><p class="font-semibold text-slate-800">${e.title}</p><p class="text-xs text-slate-500">${e.originalData.event_type}</p></div><button onclick="deleteScheduleItem(${e.originalData.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>`).join('')}</div></div>`; }
             if (tasksOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">งานที่ครบกำหนดวันนี้</h4><div class="space-y-3">${tasksOnDay.map(t => `<div class="p-3 rounded-lg bg-slate-100 flex items-center space-x-4"><div class="flex-grow"><p class="font-semibold text-slate-800">${t.title}</p></div><span class="text-xs font-medium px-2 py-1 rounded-full priority-${t.originalData.priority}">${t.originalData.priority}</span></div>`).join('')}</div></div>`; }
-            if (eventsOnDay.length === 0 && tasksOnDay.length === 0) { dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีกิจกรรมหรืองานสำหรับวันนี้</p></div>`; }
+            if (eventsOnDay.length === 0 && tasksOnDay.length === 0 && !incomeTotal && !expenseTotal && !caloriesInTotal && !caloriesOutTotal) { dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีกิจกรรมหรืองานสำหรับวันนี้</p></div>`; }
             dayHtml += `</div>`; container.innerHTML = dayHtml;
         }
 
@@ -530,9 +596,9 @@
                     if (logDates.has(toYYYYMMDD(yesterday))) {
                          let currentDate = yesterday;
                          while (logDates.has(toYYYYMMDD(currentDate))) {
-                            streak++;
-                            currentDate.setDate(currentDate.getDate() - 1);
-                        }
+                             streak++;
+                             currentDate.setDate(currentDate.getDate() - 1);
+                         }
                     }
                 }
                 const startOfWeek = new Date(today);
@@ -775,7 +841,7 @@
                 const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
                 const tasksOnDay = allTasks.filter(t => t.due_date === dateStr);
                 const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day === i);
+                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == i); // Use == for loose comparison of number and string
                 
                 let itemsHTML = '';
                 
@@ -822,6 +888,7 @@
                 fetchIdeas();
                 fetchEventLog();
                 fetchHealthLog();
+                fetchPersonalGrowth();
             } else {
                 alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
             }
@@ -955,7 +1022,7 @@
         }
         async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
         async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); }
+        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); fetchDataForCalendar(); /* ADDED: Refresh calendar data */ }
         function renderHealthTracker(items) {
             const container = document.getElementById('health-tracker-container');
             const foodItems = items.filter(i => i.type === 'food');
