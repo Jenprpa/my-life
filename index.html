@@ -848,7 +848,7 @@
                         <input type="hidden" name="id" value="${isEdit ? habit.id : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">ชื่อกิจวัตร</label><input name="name" type="text" value="${isEdit ? habit.name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เป้าหมาย/คำอธิบาย</label><input name="goal" type="text" value="${isEdit && habit.goal ? habit.goal : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ไอคอน (Font Awesome)</label><input name="icon" type="text" value="${isEdit && habit.icon ? habit.icon : ''}" class="w-full mt-1 p-2 border rounded-md" placeholder="เช่น fa-solid fa-book"></div>
                             <div><label class="text-sm font-medium">ความถี่</label>
                                 <select name="frequency" id="frequency-select" class="w-full mt-1 p-2 border rounded-md">
                                     <option value="daily" ${isEdit && habit.frequency === 'daily' ? 'selected' : ''}>รายวัน</option>
@@ -887,7 +887,7 @@
             const todayStr = getToday();
             const [habitsRes, habitLogsRes] = await Promise.all([
                 db.from('habits').select('*').order('sort_order'),
-                db.from('habit_log').select('*').eq('completed_date', todayStr)
+                db.from('habit_log').select('*')
             ]);
             if (habitsRes.error) { console.error('Error fetching habits:', habitsRes.error); appState.habits = []; }
             else { appState.habits = habitsRes.data || []; }
@@ -914,9 +914,9 @@
                         <div class="flex items-center">
                             <i class="fas fa-grip-vertical drag-handle text-slate-400 mr-3"></i>
                             <input type="checkbox" id="habit-${habit.id}" class="habit-checkbox h-5 w-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300 mr-3" ${isDone ? 'checked' : ''} onchange="logHabit(${habit.id}, this.checked)">
-                            <label for="habit-${habit.id}" class="text-slate-800">
+                            <label for="habit-${habit.id}" class="text-slate-800 flex items-center">
+                                ${habit.icon ? `<i class="${habit.icon} w-5 text-center mr-2 text-teal-600"></i>` : ''}
                                 <span class="font-medium">${habit.name}</span>
-                                <span class="text-sm text-slate-500 ml-2">${habit.goal || ''}</span>
                             </label>
                         </div>
                         <div>
@@ -1470,10 +1470,14 @@
             if (!container) return;
             
             const todayStr = getToday();
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+
             const tasksToday = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === todayStr && t.status !== 'Done').length;
             const eventsToday = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === todayStr).length;
             const habitsDoneToday = appState.habit_log.filter(hl => toYYYYMMDD(hl.completed_date) === todayStr).length;
-            const totalHabits = appState.habits.length;
+            
+            const totalApplicableHabits = appState.habits.filter(h => h.frequency === 'daily' || (h.frequency === 'weekly' && h.weekly_day === dayOfWeek)).length;
             
             container.innerHTML = `
                 <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
@@ -1486,7 +1490,7 @@
                 </div>
                 <div class="bg-teal-50 border border-teal-200 p-4 rounded-lg text-center">
                     <p class="text-sm text-teal-700">กิจวัตรที่ทำแล้ว</p>
-                    <p class="text-3xl font-bold text-teal-800">${habitsDoneToday} / ${totalHabits}</p>
+                    <p class="text-3xl font-bold text-teal-800">${habitsDoneToday} / ${totalApplicableHabits}</p>
                 </div>
                 <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-center">
                     <p class="text-sm text-yellow-700">ไอเดียทั้งหมด</p>
@@ -1501,19 +1505,31 @@
              const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
              const dayJournal = appState.journal_entries.find(j => toYYYYMMDD(j.entry_date) === dateStr);
              const dayOfWeek = new Date(dateStr).getDay();
+             const dailyHabitsForDay = appState.habits.filter(h => h.frequency === 'daily');
              const weeklyHabitsForDay = appState.habits.filter(h => h.frequency === 'weekly' && h.weekly_day === dayOfWeek);
+             const allHabitsForDay = [...dailyHabitsForDay, ...weeklyHabitsForDay];
              const dayExpensesList = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense');
+             const completedHabitsForDay = appState.habit_log.filter(log => log.completed_date === dateStr);
+             const habitProgress = allHabitsForDay.length > 0 ? (completedHabitsForDay.length / allHabitsForDay.length) * 100 : 0;
+
 
              let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
              let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
-             let weeklyHabitHtml = weeklyHabitsForDay.length > 0 ? weeklyHabitsForDay.map(h => `<div class="text-sm p-2 bg-teal-50 rounded">${h.name}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจวัตรประจำสัปดาห์</p>';
              let expenseHtml = dayExpensesList.length > 0 ? dayExpensesList.map(item => `<div class="text-sm p-2 bg-red-50 rounded flex justify-between"><span>${item.item}</span> <span>${formatCurrency(item.amount)}</span></div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีรายจ่าย</p>';
              let journalHtml = dayJournal ? `
                 ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
                 ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
                 ${dayJournal.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.mood_check_in}</p></div>` : ''}
              ` : '<p class="text-sm text-slate-400">ไม่มีบันทึก</p>';
-
+            let habitSummaryHtml = `
+                <div class="flex justify-between items-center text-sm mb-1">
+                    <span>ความสำเร็จของกิจวัตร</span>
+                    <span>${completedHabitsForDay.length}/${allHabitsForDay.length} (${Math.round(habitProgress)}%)</span>
+                </div>
+                <div class="progress-bar h-2 w-full">
+                    <div class="progress-bar-inner h-2 bg-teal-500" style="width: ${habitProgress}%;"></div>
+                </div>
+            `;
 
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
@@ -1530,8 +1546,8 @@
                                 <div class="space-y-2">${taskHtml}</div>
                             </div>
                              <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">🎯 กิจวัตรประจำสัปดาห์</h4>
-                                <div class="space-y-2">${weeklyHabitHtml}</div>
+                                <h4 class="font-semibold mb-2">🎯 กิจวัตร</h4>
+                                <div class="space-y-2">${habitSummaryHtml}</div>
                             </div>
                              <div class="md:col-span-2">
                                 <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
