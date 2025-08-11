@@ -1000,8 +1000,8 @@
 
             const caloriesIn = foodLogs.reduce((sum, log) => sum + log.calories, 0);
             const caloriesOut = exerciseLogs.reduce((sum, log) => sum + log.calories, 0);
-            const netCalories = caloriesIn - caloriesOut;
             const calorieGoal = 1850;
+            const remainingCalories = calorieGoal - (caloriesIn - caloriesOut);
             const progress = Math.min((caloriesIn / calorieGoal) * 100, 100);
 
             const renderLogList = (logs) => {
@@ -1018,7 +1018,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
                     <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ (kcal)</p><p class="text-xl font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
                     <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">ใช้ไป (kcal)</p><p class="text-xl font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
-                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">สุทธิ (kcal)</p><p class="text-xl font-bold text-blue-600">${formatNumber(netCalories)}</p></div>
+                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือวันนี้ (kcal)</p><p class="text-xl font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
                 </div>
                 <div class="mb-4">
                     <div class="flex justify-between text-sm mb-1">
@@ -1561,13 +1561,14 @@
              const exerciseLogs = logsToday.filter(log => log.type === 'exercise');
              const caloriesIn = foodLogs.reduce((sum, log) => sum + log.calories, 0);
              const caloriesOut = exerciseLogs.reduce((sum, log) => sum + log.calories, 0);
-             const netCalories = caloriesIn - caloriesOut;
+             const calorieGoal = 1850;
+             const remainingCalories = calorieGoal - (caloriesIn - caloriesOut);
              
              container.innerHTML = `
                 <div class="grid grid-cols-3 gap-2 text-center text-sm mb-2">
                     <div class="bg-green-100 p-2 rounded-lg"><p class="text-xs text-green-800">ได้รับ</p><p class="font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
                     <div class="bg-orange-100 p-2 rounded-lg"><p class="text-xs text-orange-800">ใช้ไป</p><p class="font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
-                    <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">สุทธิ</p><p class="font-bold text-blue-600">${formatNumber(netCalories)}</p></div>
+                    <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">คงเหลือ</p><p class="font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
                 </div>
              `;
         }
