@@ -17,13 +17,16 @@
         .priority-High { background-color: #fed7d7; color: #c53030; }
         .priority-Medium { background-color: #feebc8; color: #dd6b20; }
         .priority-Low { background-color: #c6f6d5; color: #2f855a; }
-        .calendar-day.today { background-color: #ebf8ff; border: 1px solid #90cdf4; }
+        .calendar-day.today { background-color: #ebf8ff; border: 1px solid #90cdf4; font-weight: bold; }
         .calendar-day:hover { background-color: #f7fafc; }
         .habit-checkbox:checked + label { text-decoration: line-through; color: #a0aec0; }
-        .sidebar-link.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #E59572; color: white; }
-        .progress-bar { background-color: #e2e8f0; }
-        .progress-bar-inner { background-color: #4299e1; }
-        .mood-btn.selected { transform: scale(1.2); border-color: #4299e1; }
+        .sidebar-link.active { background-color: rgba(255, 255, 255, 0.1); border-left-color: #4299e1; color: white; }
+        .progress-bar { background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; }
+        .progress-bar-inner { background-color: #4299e1; border-radius: 9999px; transition: width 0.3s ease-in-out; }
+        .mood-btn.selected { transform: scale(1.2); border-color: #4299e1; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); }
+        .habit-item.dragging { opacity: 0.5; background: #f0f8ff; }
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
     </style>
 </head>
 <body class="bg-slate-100">
@@ -72,14 +75,16 @@
             </header>
 
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div id="main-content-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                     <section id="overview" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center mb-4">
                             <span class="text-2xl mr-3">🏠</span>
                             <h2 class="text-xl font-semibold text-gray-900">ภาพรวมวันนี้</h2>
                         </div>
-                        <div id="overview-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+                        <div id="overview-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลด...</p></div>
+                        </div>
                     </section>
                     
                     <section id="website" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -96,7 +101,9 @@
                     </section>
 
                     <section id="weekly-agenda" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
-                        <div id="weekly-agenda-container"></div>
+                        <div id="weekly-agenda-container">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลด...</p></div>
+                        </div>
                     </section>
 
                     <section id="okrs" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -107,7 +114,9 @@
                             </div>
                             <button onclick="openOkrModal()" class="bg-blue-800 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-900 transition-colors">+ เพิ่ม Objective</button>
                         </div>
-                        <div id="okrs-container" class="space-y-4"></div>
+                        <div id="okrs-container" class="space-y-4">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="tasks" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -118,7 +127,9 @@
                             </div>
                             <button onclick="openTaskModal()" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors">+ เพิ่มงาน</button>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1" id="task-board"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1" id="task-board">
+                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="ideas" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -129,18 +140,22 @@
                             </div>
                             <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
                         </div>
-                        <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1"></div>
+                        <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4 md:col-span-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📅</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                             </div>
-                             <button onclick="openScheduleModal()" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
+                              <div class="flex items-center">
+                                  <span class="text-2xl mr-3">📅</span>
+                                  <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                              </div>
+                              <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
                          </div>
-                        <div id="calendar-container"></div>
+                        <div id="calendar-container">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลดปฏิทิน...</p></div>
+                        </div>
                     </section>
 
                     <section id="habits" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -151,7 +166,9 @@
                             </div>
                             <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
                         </div>
-                        <div id="habit-tracker-container" class="max-h-96 overflow-y-auto p-1"></div>
+                        <div id="habit-tracker-container" class="max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="health-tracker" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -160,19 +177,23 @@
                                 <span class="text-2xl mr-3">❤️</span>
                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ (วันนี้)</h2>
                             </div>
-                            <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
+                             <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
-                        <div id="health-tracker-container" class="max-h-96 overflow-y-auto p-1"></div>
+                        <div id="health-tracker-container" class="p-1">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="mood-tracker" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
                                 <span class="text-2xl mr-3">😊</span>
-                                <h2 class="text-xl font-semibold text-gray-900">บันทึกอารมณ์</h2>
+                                <h2 class="text-xl font-semibold text-gray-900">บันทึกอารมณ์วันนี้</h2>
                             </div>
                         </div>
-                        <div id="mood-tracker-container"></div>
+                        <div id="mood-tracker-container">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="media-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -183,18 +204,22 @@
                             </div>
                             <button onclick="openMediaLogModal()" class="bg-gray-700 text-white px-3 py-1 rounded-lg text-sm hover:bg-gray-800 transition-colors">+ เพิ่มรายการ</button>
                         </div>
-                        <div id="media-log-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1"></div>
+                        <div id="media-log-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📌</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                             </div>
-                             <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                              <div class="flex items-center">
+                                  <span class="text-2xl mr-3">📌</span>
+                                  <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                              </div>
+                              <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
                          </div>
-                        <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                        <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto">
+                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="personal-growth" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -205,18 +230,22 @@
                             </div>
                             <button onclick="openPersonalGrowthModal()" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors">+ เพิ่มเป้าหมาย</button>
                         </div>
-                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1"></div>
+                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                             <div class="flex items-center">
-                                 <span class="text-2xl mr-3">📓</span>
-                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                             </div>
-                             <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                              <div class="flex items-center">
+                                  <span class="text-2xl mr-3">📓</span>
+                                  <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                              </div>
+                              <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
                          </div>
-                        <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto"></div>
+                        <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto">
+                            <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
                     
                     <section id="knowledge" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -227,7 +256,9 @@
                             </div>
                             <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
                         </div>
-                        <div id="knowledge-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto"></div>
+                        <div id="knowledge-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
                     </section>
 
                     <section id="budget" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
@@ -246,7 +277,9 @@
                         <div class="overflow-x-auto overflow-y-auto max-h-96">
                             <table class="w-full text-sm text-left">
                                 <thead class="bg-slate-100 sticky top-0"><tr><th class="p-3">รายการ</th><th class="p-3">จำนวนเงิน</th><th class="p-3">วันที่</th><th class="p-3">หมวดหมู่</th><th class="p-3">ประเภท</th><th class="p-3"></th></tr></thead>
-                                <tbody id="budget-table-body"></tbody>
+                                <tbody id="budget-table-body">
+                                     <tr><td colspan="6" class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </section>
@@ -269,7 +302,7 @@
         </div>
     </div>
     
-    <!-- Modals -->
+    <!-- Modals Container -->
     <div id="modal-container"></div>
 
     <script>
@@ -280,52 +313,159 @@
         const { createClient } = supabase;
         const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // --- GLOBAL STATE ---
+        // --- GLOBAL STATE & CACHE ---
+        let appState = {
+            tasks: [],
+            ideas: [],
+            okrs: [],
+            habits: [],
+            habit_log: [],
+            schedules: [],
+            health_log: [],
+            mood_logs: [],
+            media_logs: [],
+            event_log: [],
+            personal_growth: [],
+            journal_entries: [],
+            knowledge_items: [],
+            budget: [],
+        };
         let currentViewDate = new Date();
-        let currentCalendarView = 'month';
-        let weeklyAgendaDate = new Date(); 
-        let allCalendarItems = [];
-        let dailyExpenses = new Map();
-        let dailyIncomes = new Map();
-        let dailyCaloriesIn = new Map();
-        let dailyCaloriesOut = new Map();
-        let allTasks = [];
-        let allHabits = [];
-        let allHabitLogs = [];
-
+        let weeklyAgendaDate = new Date();
 
         // --- UTILITY FUNCTIONS ---
-        const formatCurrency = (amount) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount);
-        const formatNumber = (amount) => new Intl.NumberFormat('th-TH').format(amount);
-        const formatDate = (dateString) => new Date(dateString).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
-        const formatTime = (dateString) => new Date(dateString).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        const formatCurrency = (amount) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount || 0);
+        const formatNumber = (amount) => new Intl.NumberFormat('th-TH').format(amount || 0);
+        const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+        const formatTime = (timeString) => {
+            if (!timeString) return '';
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
+        }
         const getToday = () => new Date().toISOString().split('T')[0];
         const toYYYYMMDD = (date) => {
+            if (!date) return null;
             const d = new Date(date);
             const y = d.getFullYear();
             const m = (d.getMonth() + 1).toString().padStart(2, '0');
             const day = d.getDate().toString().padStart(2, '0');
             return `${y}-${m}-${day}`;
         };
+        const showToast = (message, type = 'success') => {
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            toast.id = toastId;
+            toast.className = `fixed bottom-5 right-5 ${bgColor} text-white py-2 px-4 rounded-lg shadow-lg animate-bounce`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                const el = document.getElementById(toastId);
+                if (el) el.remove();
+            }, 3000);
+        };
 
-
-        // --- MODAL HANDLING ---
+        // --- MODAL & UI HANDLING ---
         const modalContainer = document.getElementById('modal-container');
-        function closeModal() { modalContainer.innerHTML = ''; }
+        const closeModal = () => { modalContainer.innerHTML = ''; };
         
+        const openConfirmModal = (title, message, onConfirm) => {
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+                        <h3 class="text-lg font-semibold mb-2">${title}</h3>
+                        <p class="text-slate-600 mb-4">${message}</p>
+                        <div class="flex justify-end space-x-2">
+                            <button id="confirm-cancel-btn" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 text-white rounded-md">ยืนยัน</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                onConfirm();
+                closeModal();
+            };
+            document.getElementById('confirm-cancel-btn').onclick = closeModal;
+        };
+        
+        const toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        };
+
+        // --- GENERIC FORM HANDLER ---
+        async function handleFormSubmit(e, tableName, onComplete, transformData = null) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData.entries());
+
+            // Specific validation for required fields before processing
+            if (tableName === 'habits' && (!data.name || data.name.trim() === '')) {
+                showToast('กรุณาใส่ชื่อกิจวัตร', 'error');
+                return; // Stop the function if the name is missing
+            }
+
+            const id = data.id;
+            
+            if (id === '' || id === 'null' || id === undefined) {
+                delete data.id;
+            }
+
+            if (transformData) {
+                data = transformData(data);
+            }
+            
+            for (const key in data) {
+                if (data[key] === '' || data[key] === null) {
+                    delete data[key];
+                }
+            }
+            
+            const { error } = id
+                ? await db.from(tableName).update(data).eq('id', id)
+                : await db.from(tableName).insert([data]);
+
+            if (error) {
+                console.error(`Error saving to ${tableName}:`, error);
+                showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+            } else {
+                showToast(`บันทึกข้อมูลสำเร็จ!`, 'success');
+                closeModal();
+                if (onComplete) onComplete();
+            }
+        }
+
+        // --- GENERIC DELETE ---
+        function confirmDelete(tableName, id, onComplete) {
+            openConfirmModal('ยืนยันการลบ', 'คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้? การกระทำนี้ไม่สามารถย้อนกลับได้', async () => {
+                const { error } = await db.from(tableName).delete().eq('id', id);
+                if (error) {
+                    console.error(`Error deleting from ${tableName}:`, error);
+                    showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+                } else {
+                    showToast('ลบรายการสำเร็จ', 'success');
+                    if (onComplete) onComplete();
+                }
+            });
+        }
+
         // --- TASK MANAGEMENT ---
         function openTaskModal(task = null) {
             const isEdit = task !== null;
+            // Removed idea linking to match new schema
             modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="task-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="task-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขงาน' : 'เพิ่มงานใหม่'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? task.id : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">ชื่องาน</label><input name="title" type="text" value="${isEdit ? task.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">วันที่ครบกำหนด</label><input name="due_date" type="date" value="${isEdit ? task.due_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">ระดับความสำคัญ</label><select name="priority" class="w-full mt-1 p-2 border rounded-md"><option ${isEdit && task.priority === 'Low' ? 'selected' : ''}>Low</option><option ${isEdit && task.priority === 'Medium' ? 'selected' : !isEdit ? 'selected' : ''}>Medium</option><option ${isEdit && task.priority === 'High' ? 'selected' : ''}>High</option></select></div>
-                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option ${isEdit && task.status === 'To-Do' ? 'selected' : ''}>To-Do</option><option ${isEdit && task.status === 'In Progress' ? 'selected' : ''}>In Progress</option><option ${isEdit && task.status === 'Done' ? 'selected' : ''}>Done</option></select></div>
+                            <div><label class="text-sm font-medium">วันที่ครบกำหนด</label><input name="due_date" type="date" value="${isEdit ? toYYYYMMDD(task.due_date) : getToday()}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ระดับความสำคัญ</label><select name="priority" class="w-full mt-1 p-2 border rounded-md"><option value="Low" ${isEdit && task.priority === 'Low' ? 'selected' : ''}>Low</option><option value="Medium" ${isEdit && task.priority === 'Medium' ? 'selected' : !isEdit ? 'selected' : ''}>Medium</option><option value="High" ${isEdit && task.priority === 'High' ? 'selected' : ''}>High</option></select></div>
+                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option value="To-Do" ${isEdit && task.status === 'To-Do' ? 'selected' : ''}>To-Do</option><option value="In Progress" ${isEdit && task.status === 'In Progress' ? 'selected' : ''}>In Progress</option><option value="Done" ${isEdit && task.status === 'Done' ? 'selected' : ''}>Done</option></select></div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
                             <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
@@ -333,251 +473,373 @@
                         </div>
                     </form>
                 </div>`;
-            document.getElementById('task-form').addEventListener('submit', isEdit ? handleEditTask : addTask);
+            document.getElementById('task-form').addEventListener('submit', (e) => handleFormSubmit(e, 'tasks', fetchAllData));
         }
-        async function addTask(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const taskData = Object.fromEntries(formData.entries()); delete taskData.id; const { error } = await db.from('tasks').insert([taskData]); if (error) { console.error('Error adding task:', error); alert('ไม่สามารถเพิ่มงานได้: ' + error.message); } else { fetchTasks(); fetchDataForCalendar(); closeModal(); } }
-        async function handleEditTask(e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const taskData = Object.fromEntries(formData.entries());
-            const { error } = await db.from('tasks').update({ title: taskData.title, due_date: taskData.due_date, priority: taskData.priority, status: taskData.status }).eq('id', taskData.id);
-            if (error) { console.error('Error updating task:', error); } 
-            else { fetchTasks(); fetchDataForCalendar(); closeModal(); }
+        async function fetchTasks() {
+            const { data, error } = await db.from('tasks').select('*').order('due_date', { ascending: true, nullsFirst: false });
+            if (error) { console.error('Error fetching tasks:', error); appState.tasks = []; return; }
+            appState.tasks = data || [];
         }
-        async function fetchTasks() { const { data: tasks, error } = await db.from('tasks').select('*, idea_task_links(idea_id, ideas(title))').order('created_at', { ascending: false }); if (error) { console.error('Error fetching tasks:', error); return; } allTasks = tasks; renderTaskBoard(tasks); renderWeeklyAgenda(); fetchDashboardOverview(); }
-        function renderTaskBoard(tasks) { const board = document.getElementById('task-board'); board.innerHTML = ''; const statuses = ['To-Do', 'In Progress', 'Done']; statuses.forEach(status => { const column = document.createElement('div'); column.className = 'bg-slate-100 rounded-lg p-3'; const tasksInStatus = tasks.filter(t => t.status === status); let tasksHTML = tasksInStatus.map(task => { const linkedIdeas = task.idea_task_links.map(link => link.ideas.title).join(', '); return `<div class="bg-white p-3 rounded-md shadow-sm border border-slate-200 mb-2"><div class="flex justify-between items-start"><p class="font-semibold text-slate-800">${task.title}</p><div class="flex items-center space-x-2">${task.idea_task_links.length > 0 ? `<span class="text-yellow-500" title="เชื่อมกับไอเดีย: ${linkedIdeas}">💡</span>` : ''}<button onclick='openTaskModal(${JSON.stringify(task)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button></div></div><div class="text-xs text-slate-500 mt-2">ถึงกำหนด: ${formatDate(task.due_date)}</div><div class="mt-2 flex justify-between items-center"><span class="text-xs font-medium px-2 py-1 rounded-full priority-${task.priority}">${task.priority}</span><button onclick="deleteTask(${task.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div>`}).join(''); column.innerHTML = `<h3 class="font-semibold text-slate-700 mb-3">${status} (${tasksInStatus.length})</h3><div class="space-y-2 min-h-[100px]">${tasksHTML}</div>`; board.appendChild(column); }); }
-        async function deleteTask(id) { if (!confirm('คุณต้องการลบงานนี้ใช่หรือไม่?')) return; const { error } = await db.from('tasks').delete().eq('id', id); if (error) { console.error('Error deleting task:', error); } else { fetchTasks(); fetchDataForCalendar(); } }
-
+        function renderTaskBoard() {
+            const tasks = appState.tasks;
+            const board = document.getElementById('task-board');
+            if (!board) return;
+            board.innerHTML = '';
+            const statuses = ['To-Do', 'In Progress', 'Done'];
+            statuses.forEach(status => {
+                const column = document.createElement('div');
+                column.className = 'bg-slate-100 rounded-lg p-3';
+                const tasksInStatus = tasks.filter(t => t.status === status);
+                let tasksHTML = tasksInStatus.map(task => `
+                    <div class="bg-white p-3 rounded-md shadow-sm border border-slate-200 mb-2">
+                        <div class="flex justify-between items-start">
+                            <p class="font-semibold text-slate-800">${task.title}</p>
+                            <button onclick='openTaskModal(${JSON.stringify(task)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-2">ถึงกำหนด: ${formatDate(task.due_date)}</div>
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-xs font-medium px-2 py-1 rounded-full priority-${task.priority}">${task.priority}</span>
+                            <button onclick="confirmDelete('tasks', ${task.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>`).join('');
+                column.innerHTML = `<h3 class="font-semibold text-slate-700 mb-3">${status} (${tasksInStatus.length})</h3><div class="space-y-2 min-h-[100px]">${tasksHTML || '<p class="text-xs text-slate-400 p-2">ไม่มีงาน</p>'}</div>`;
+                board.appendChild(column);
+            });
+        }
+        
         // --- BUDGET TRACKER ---
         function openBudgetModal(item = null) {
             const isEdit = item !== null;
-            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                <form id="budget-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                    <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขรายการ' : 'เพิ่มรายการงบประมาณ'}</h3>
-                    <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
-                    <div class="space-y-4">
-                        <div><label class="text-sm font-medium">รายการ</label><input name="item" type="text" value="${isEdit ? item.item : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">จำนวนเงิน</label><input name="amount" type="number" step="0.01" value="${isEdit ? item.amount : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">วันที่</label><input name="transaction_date" type="date" value="${isEdit ? item.transaction_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income" ${isEdit && item.transaction_type === 'Income' ? 'selected' : ''}>รายรับ</option><option value="Expense" ${isEdit && item.transaction_type === 'Expense' ? 'selected' : ''}>รายจ่าย</option></select></div>
-                        <div><label class="text-sm font-medium">หมวดหมู่</label><select name="category" class="w-full mt-1 p-2 border rounded-md"><option>อาหาร</option><option>การเดินทาง</option><option>บิล & ค่าใช้จ่าย</option><option>ช้อปปิ้ง</option><option>บันเทิง</option><option>สุขภาพ</option><option>การศึกษา</option><option>เงินเดือน</option><option>ธุรกิจ</option><option>อื่นๆ</option></select></div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-2">
-                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-md">บันทึก</button>
-                    </div>
-                </form>
-            </div>`;
-            if(isEdit) { document.querySelector('#budget-form select[name="category"]').value = item.category; }
-            document.getElementById('budget-form').addEventListener('submit', isEdit ? handleEditBudget : addBudgetItem);
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="budget-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขรายการ' : 'เพิ่มรายการงบประมาณ'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">รายการ</label><input name="item" type="text" value="${isEdit ? item.item : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">จำนวนเงิน</label><input name="amount" type="number" step="0.01" value="${isEdit ? item.amount : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">วันที่</label><input name="transaction_date" type="date" value="${isEdit ? toYYYYMMDD(item.transaction_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ประเภท</label><select name="transaction_type" class="w-full mt-1 p-2 border rounded-md"><option value="Income" ${isEdit && item.transaction_type === 'Income' ? 'selected' : ''}>รายรับ</option><option value="Expense" ${isEdit && item.transaction_type === 'Expense' ? 'selected' : ''}>รายจ่าย</option></select></div>
+                            <div><label class="text-sm font-medium">หมวดหมู่</label><input name="category" type="text" value="${isEdit ? item.category : ''}" required class="w-full mt-1 p-2 border rounded-md" placeholder="เช่น เงินเดือน, อาหาร, เดินทาง"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('budget-form').addEventListener('submit', (e) => handleFormSubmit(e, 'budget', fetchAllData));
         }
-        async function addBudgetItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.id = Date.now(); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').insert([budgetData]); if (error) { console.error('Error adding budget item:', error); alert('ไม่สามารถเพิ่มรายการได้: ' + error.message); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
-        async function handleEditBudget(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const budgetData = Object.fromEntries(formData.entries()); budgetData.amount = parseFloat(budgetData.amount); const { error } = await db.from('budget').update(budgetData).eq('id', budgetData.id); if (error) { console.error('Error updating budget item:', error); } else { fetchBudget(); fetchDataForCalendar(); closeModal(); } }
-        async function fetchBudget() { const { data: budgetItems, error } = await db.from('budget').select('*').order('transaction_date', { ascending: false }); if (error) { console.error('Error fetching budget:', error); return; } renderBudgetTable(budgetItems); updateBudgetSummary(budgetItems); }
-        function renderBudgetTable(items) { const tableBody = document.getElementById('budget-table-body'); tableBody.innerHTML = items.map(item => `<tr class="border-b"><td class="p-3 font-medium">${item.item}</td><td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td><td class="p-3 text-slate-500">${formatDate(item.transaction_date)}</td><td class="p-3"><span class="bg-slate-200 text-slate-800 px-2 py-1 text-xs rounded-full">${item.category}</span></td><td class="p-3 text-xs font-semibold">${item.transaction_type}</td><td class="p-3 flex space-x-2"><button onclick='openBudgetModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600">✏️</button><button onclick="deleteBudgetItem(${item.id})" class="text-red-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); }
-        function updateBudgetSummary(items) { const totalIncome = items.filter(i => i.transaction_type === 'Income').reduce((sum, i) => sum + i.amount, 0); const totalExpense = items.filter(i => i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('total-income').textContent = formatCurrency(totalIncome); document.getElementById('total-expense').textContent = formatCurrency(totalExpense); document.getElementById('balance').textContent = formatCurrency(balance); }
-        async function deleteBudgetItem(id) { if (!confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) return; const { error } = await db.from('budget').delete().eq('id', id); if (error) console.error('Error deleting budget item:', error); else { fetchBudget(); fetchDataForCalendar(); } }
+        async function fetchBudget() {
+            const { data, error } = await db.from('budget').select('*').order('transaction_date', { ascending: false });
+            if (error) { console.error('Error fetching budget:', error); appState.budget = []; return; }
+            appState.budget = data || [];
+        }
+        function renderBudget() {
+            const items = appState.budget;
+            const tableBody = document.getElementById('budget-table-body');
+            const totalIncomeEl = document.getElementById('total-income');
+            const totalExpenseEl = document.getElementById('total-expense');
+            const balanceEl = document.getElementById('balance');
+            if (!tableBody || !totalIncomeEl || !totalExpenseEl || !balanceEl) return;
+
+            let totalIncome = 0;
+            let totalExpense = 0;
+            
+            items.forEach(item => {
+                if (item.transaction_type === 'Income') totalIncome += item.amount;
+                else totalExpense += item.amount;
+            });
+
+            totalIncomeEl.textContent = formatCurrency(totalIncome);
+            totalExpenseEl.textContent = formatCurrency(totalExpense);
+            balanceEl.textContent = formatCurrency(totalIncome - totalExpense);
+            balanceEl.classList.toggle('text-red-600', totalIncome - totalExpense < 0);
+            balanceEl.classList.toggle('text-blue-600', totalIncome - totalExpense >= 0);
+
+            if (items.length === 0) {
+                 tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-slate-500 p-4">ยังไม่มีข้อมูล</td></tr>`;
+                 return;
+            }
+
+            tableBody.innerHTML = items.map(item => `
+                <tr class="border-b border-slate-200 hover:bg-slate-50">
+                    <td class="p-3 font-medium">${item.item}</td>
+                    <td class="p-3 ${item.transaction_type === 'Income' ? 'text-green-600' : 'text-red-600'}">${formatCurrency(item.amount)}</td>
+                    <td class="p-3">${formatDate(item.transaction_date)}</td>
+                    <td class="p-3"><span class="bg-slate-200 text-slate-700 px-2 py-1 text-xs rounded-full">${item.category}</span></td>
+                    <td class="p-3">${item.transaction_type === 'Income' ? 'รายรับ' : 'รายจ่าย'}</td>
+                    <td class="p-3 text-right">
+                        <button onclick='openBudgetModal(${JSON.stringify(item)})' class="text-blue-500 hover:text-blue-700 p-1 text-sm">✏️</button>
+                        <button onclick="confirmDelete('budget', ${item.id}, fetchAllData)" class="text-red-500 hover:text-red-700 p-1 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
         
-        // --- KNOWLEDGE HUB ---
-        function openKnowledgeModal(item = null) {
+        // --- CALENDAR / PLANNER ---
+        function openScheduleModal(item = null, date = null) {
             const isEdit = item !== null;
-            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                <form id="knowledge-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                    <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขคลังความรู้' : 'เพิ่มคลังความรู้'}</h3>
-                    <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
-                    <div class="space-y-4">
-                        <div><label class="text-sm font-medium">หัวข้อ</label><input name="topic" type="text" value="${isEdit ? item.topic : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">สรุป</label><textarea name="summary" class="w-full mt-1 p-2 border rounded-md">${isEdit ? item.summary || '' : ''}</textarea></div>
-                        <div><label class="text-sm font-medium">URL</label><input name="url" type="url" value="${isEdit ? item.url || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">Tags (คั่นด้วยจุลภาค ,)</label><input name="tags" type="text" value="${isEdit ? (item.tags || []).join(', ') : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-2">
-                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md">บันทึก</button>
-                    </div>
-                </form>
-            </div>`;
-            document.getElementById('knowledge-form').addEventListener('submit', isEdit ? handleEditKnowledge : addKnowledgeItem);
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขกิจกรรม' : 'เพิ่มกิจกรรมใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" value="${isEdit ? item.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? toYYYYMMDD(item.event_date) : date ? toYYYYMMDD(date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลาเริ่ม (ถ้ามี)</label><input name="start_time" type="time" value="${isEdit && item.start_time ? item.start_time : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลาสิ้นสุด (ถ้ามี)</label><input name="end_time" type="time" value="${isEdit && item.end_time ? item.end_time : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">รายละเอียด</label><textarea name="description" class="w-full mt-1 p-2 border rounded-md">${isEdit ? item.description || '' : ''}</textarea></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('schedule-form').addEventListener('submit', (e) => handleFormSubmit(e, 'schedules', fetchAllData));
         }
-        async function addKnowledgeItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); delete knowledgeData.id; knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').insert([knowledgeData]); if (error) { console.error('Error adding knowledge item:', error); alert('ไม่สามารถเพิ่มข้อมูลได้: ' + error.message); } else { fetchKnowledge(); closeModal(); } }
-        async function handleEditKnowledge(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const knowledgeData = Object.fromEntries(formData.entries()); knowledgeData.tags = knowledgeData.tags.split(',').map(tag => tag.trim()).filter(tag => tag); const { error } = await db.from('knowledge_base').update(knowledgeData).eq('id', knowledgeData.id); if (error) { console.error('Error updating knowledge item:', error); } else { fetchKnowledge(); closeModal(); } }
-        async function fetchKnowledge() { const { data, error } = await db.from('knowledge_base').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching knowledge base:', error); return; } renderKnowledgeGallery(data); }
-        function renderKnowledgeGallery(items) { const gallery = document.getElementById('knowledge-gallery'); gallery.innerHTML = items.map(item => `<div class="bg-slate-50 border border-slate-200 rounded-lg p-4"><div class="flex justify-between items-start"><h4 class="font-semibold text-slate-800 mb-2">${item.topic}</h4><div class="flex space-x-2"><button onclick='openKnowledgeModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteKnowledge(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-600 mb-3">${item.summary || ''}</p><div class="flex flex-wrap gap-1 mb-3">${(item.tags || []).map(tag => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>${item.url ? `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:underline">ไปที่แหล่งข้อมูล <i class="fa-solid fa-link text-xs"></i></a>` : ''}</div>`).join(''); }
-        async function deleteKnowledge(id) { if (!confirm('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?')) return; const { error } = await db.from('knowledge_base').delete().eq('id', id); if (error) console.error('Error deleting knowledge item:', error); else fetchKnowledge(); }
+        async function fetchSchedules() {
+            const { data, error } = await db.from('schedules').select('*');
+            if (error) { console.error('Error fetching schedules:', error); appState.schedules = []; return; }
+            appState.schedules = data || [];
+        }
+        function renderCalendar() {
+            const container = document.getElementById('calendar-container');
+            if(!container) return;
+            
+            const today = new Date();
+            const month = currentViewDate.getMonth();
+            const year = currentViewDate.getFullYear();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const dayNames = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
+
+            let header = `
+                <div class="flex justify-between items-center mb-4">
+                    <button onclick="changeMonth(-1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fas fa-chevron-left"></i></button>
+                    <h3 class="text-lg font-semibold">${monthNames[month]} ${year + 543}</h3>
+                    <button onclick="changeMonth(1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center text-sm font-semibold text-slate-600">
+                    ${dayNames.map(d => `<div>${d}</div>`).join('')}
+                </div>`;
+
+            let body = '<div class="grid grid-cols-7 gap-1 mt-2">';
+            for (let i = 0; i < firstDay; i++) {
+                body += '<div></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = toYYYYMMDD(date);
+                const isToday = toYYYYMMDD(today) === dateStr;
+
+                const dayExpenses = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0);
+                const dayCaloriesIn = appState.health_log.filter(i => toYYYYMMDD(i.log_date) === dateStr && i.type === 'food').reduce((sum, i) => sum + i.calories, 0);
+                const dayCaloriesOut = appState.health_log.filter(i => toYYYYMMDD(i.log_date) === dateStr && i.type === 'exercise').reduce((sum, i) => sum + i.calories, 0);
+                
+                body += `
+                    <div class="calendar-day border border-slate-200 rounded-md p-2 h-28 flex flex-col cursor-pointer ${isToday ? 'today' : ''}" onclick="openDailyViewModal('${dateStr}')">
+                        <span class="font-bold">${day}</span>
+                        <div class="text-xs mt-1 space-y-1 overflow-hidden">
+                            ${dayExpenses > 0 ? `<div class="flex items-center text-red-500" title="รายจ่าย"><i class="fa-solid fa-arrow-down w-4"></i> ${formatNumber(dayExpenses)}</div>` : ''}
+                            ${dayCaloriesIn > 0 ? `<div class="flex items-center text-green-500" title="แคลอรี่ที่ได้รับ"><i class="fa-solid fa-utensils w-4"></i> ${formatNumber(dayCaloriesIn)}</div>` : ''}
+                            ${dayCaloriesOut > 0 ? `<div class="flex items-center text-orange-500" title="แคลอรี่ที่ใช้ไป"><i class="fa-solid fa-person-running w-4"></i> ${formatNumber(dayCaloriesOut)}</div>` : ''}
+                        </div>
+                    </div>`;
+            }
+            body += '</div>';
+
+            container.innerHTML = header + body;
+        }
+        function changeMonth(delta) {
+            currentViewDate.setMonth(currentViewDate.getMonth() + delta);
+            renderCalendar();
+        }
         
-        // --- JOURNAL ---
-        function openJournalModal(entry = null) {
-            const isEdit = entry !== null;
-            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                <form id="journal-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                    <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึก' : 'เพิ่มบันทึกประจำวัน'}</h3>
-                    <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
-                    <div class="space-y-4">
-                        <div><label class="text-sm font-medium">วันที่</label><input name="entry_date" type="date" value="${isEdit ? entry.entry_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">เรื่องที่อยากขอบคุณ</label><textarea name="gratitude" class="w-full mt-1 p-2 border rounded-md">${isEdit ? entry.gratitude || '' : ''}</textarea></div>
-                        <div><label class="text-sm font-medium">ความสำเร็จเล็กๆ น้อยๆ</label><textarea name="small_wins" class="w-full mt-1 p-2 border rounded-md">${isEdit ? entry.small_wins || '' : ''}</textarea></div>
-                        <div><label class="text-sm font-medium">ความรู้สึกในวันนี้</label><textarea name="mood_check_in" class="w-full mt-1 p-2 border rounded-md">${isEdit ? entry.mood_check_in || '' : ''}</textarea></div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-2">
-                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                        <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-md">บันทึก</button>
-                    </div>
-                </form>
-            </div>`;
-            document.getElementById('journal-form').addEventListener('submit', isEdit ? handleEditJournal : addJournalEntry);
+        // --- OKRs ---
+        function openOkrModal(okr = null) {
+            const isEdit = okr !== null;
+            const keyResults = isEdit && okr.key_results ? okr.key_results : [{ title: '', status: 'Not Started' }];
+            let keyResultsHtml = keyResults.map((kr, index) => `
+                <div class="flex items-center space-x-2" id="kr-row-${index}">
+                    <input name="kr_title_${index}" type="text" value="${kr.title}" placeholder="ผลลัพธ์หลัก ${index + 1}" class="w-full p-2 border rounded-md">
+                    <select name="kr_status_${index}" class="p-2 border rounded-md">
+                        <option value="Not Started" ${kr.status === 'Not Started' ? 'selected' : ''}>ยังไม่เริ่ม</option>
+                        <option value="In Progress" ${kr.status === 'In Progress' ? 'selected' : ''}>กำลังทำ</option>
+                        <option value="Done" ${kr.status === 'Done' ? 'selected' : ''}>เสร็จสิ้น</option>
+                    </select>
+                </div>
+            `).join('');
+
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="okr-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไข Objective' : 'เพิ่ม Objective ใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? okr.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">Objective</label><input name="objective" type="text" value="${isEdit ? okr.objective : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ไตรมาส</label><input name="quarter" type="text" value="${isEdit ? okr.quarter : ''}" placeholder="เช่น Q3 2025" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div>
+                                <label class="text-sm font-medium">Key Results</label>
+                                <div id="key-results-container" class="space-y-2 mt-1">${keyResultsHtml}</div>
+                                <button type="button" id="add-kr-btn" class="text-sm text-blue-600 mt-2">+ เพิ่ม Key Result</button>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-800 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            
+            let krIndex = keyResults.length;
+            document.getElementById('add-kr-btn').onclick = () => {
+                const container = document.getElementById('key-results-container');
+                const newKr = document.createElement('div');
+                newKr.className = 'flex items-center space-x-2';
+                newKr.id = `kr-row-${krIndex}`;
+                newKr.innerHTML = `
+                    <input name="kr_title_${krIndex}" type="text" placeholder="ผลลัพธ์หลัก ${krIndex + 1}" class="w-full p-2 border rounded-md">
+                    <select name="kr_status_${krIndex}" class="p-2 border rounded-md">
+                        <option value="Not Started">ยังไม่เริ่ม</option>
+                        <option value="In Progress">กำลังทำ</option>
+                        <option value="Done">เสร็จสิ้น</option>
+                    </select>`;
+                container.appendChild(newKr);
+                krIndex++;
+            };
+
+            const transformOkrData = (data) => {
+                const key_results = [];
+                for (let i = 0; i < krIndex; i++) {
+                    if (data[`kr_title_${i}`]) {
+                        key_results.push({
+                            title: data[`kr_title_${i}`],
+                            status: data[`kr_status_${i}`]
+                        });
+                    }
+                    delete data[`kr_title_${i}`];
+                    delete data[`kr_status_${i}`];
+                }
+                data.key_results = key_results;
+                return data;
+            };
+
+            document.getElementById('okr-form').addEventListener('submit', (e) => handleFormSubmit(e, 'okrs', fetchAllData, transformOkrData));
         }
-        async function addJournalEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); delete journalData.id; const { error } = await db.from('journal_entries').insert([journalData]); if (error) { console.error('Error adding journal entry:', error); alert('ไม่สามารถเพิ่มบันทึกได้: ' + error.message); } else { fetchJournal(); closeModal(); } }
-        async function handleEditJournal(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const journalData = Object.fromEntries(formData.entries()); const { error } = await db.from('journal_entries').update(journalData).eq('id', journalData.id); if (error) { console.error('Error updating journal:', error); } else { fetchJournal(); closeModal(); } }
-        async function fetchJournal() { const { data, error } = await db.from('journal_entries').select('*').order('entry_date', { ascending: false }); if (error) { console.error('Error fetching journal entries:', error); return; } renderJournal(data); }
-        function renderJournal(items) { const container = document.getElementById('journal-entries'); container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-purple-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.entry_date)}</h4><div class="flex space-x-2"><button onclick='openJournalModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteJournal(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><div class="space-y-2 text-sm text-slate-700">${entry.gratitude ? `<div><strong>ขอบคุณ:</strong> ${entry.gratitude}</div>` : ''}${entry.small_wins ? `<div><strong>ความสำเร็จ:</strong> ${entry.small_wins}</div>` : ''}${entry.mood_check_in ? `<div><strong>ความรู้สึก:</strong> ${entry.mood_check_in}</div>` : ''}</div></div>`).join(''); }
-        async function deleteJournal(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('journal_entries').delete().eq('id', id); if (error) console.error('Error deleting journal entry:', error); else fetchJournal(); }
-
-        // --- SCHEDULE / CALENDAR ---
-        function openScheduleModal() { modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form id="add-schedule-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"><h3 class="text-lg font-semibold mb-4">เพิ่มกิจกรรมใหม่</h3><div class="space-y-4"><div><label class="text-sm font-medium">ชื่อกิจกรรม</label><input name="title" type="text" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">ประเภท</label><select name="event_type" class="w-full mt-1 p-2 border rounded-md"><option>Personal</option><option>Work</option><option>Health</option><option>Learning</option><option>Family</option><option>Errands</option><option>Social</option><option>Other</option></select></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${currentViewDate.toISOString().split('T')[0]}" required class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่เริ่ม</label><input name="start_time" type="time" required class="w-full mt-1 p-2 border rounded-md"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="text-sm font-medium">วันที่สิ้นสุด</label><input name="end_date_val" type="date" class="w-full mt-1 p-2 border rounded-md"></div><div><label class="text-sm font-medium">เวลาที่สิ้นสุด</label><input name="end_time" type="time" class="w-full mt-1 p-2 border rounded-md"></div></div></div><div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-cyan-600 text-white rounded-md">บันทึก</button></div></form></div>`; document.getElementById('add-schedule-form').addEventListener('submit', addScheduleItem); }
-        async function addScheduleItem(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const data = Object.fromEntries(formData.entries()); const event_date = `${data.start_date}T${data.start_time}:00`; const end_date = data.end_date_val && data.end_time ? `${data.end_date_val}T${data.end_time}:00` : null; const { error } = await db.from('schedule').insert([{ title: data.title, event_type: data.event_type, event_date: event_date, end_date: end_date }]); if (error) { console.error('Error adding schedule item:', error); alert('ไม่สามารถเพิ่มกิจกรรมได้: ' + error.message); } else { fetchDataForCalendar(); closeModal(); } }
-        async function fetchDataForCalendar() {
-            const [eventsRes, tasksRes, budgetRes, healthRes] = await Promise.all([
-                db.from('schedule').select('*'),
-                db.from('tasks').select('*'),
-                db.from('budget').select('amount, transaction_date, transaction_type'),
-                db.from('health_log').select('calories, log_date, type')
-            ]);
-
-            if (eventsRes.error || tasksRes.error || budgetRes.error || healthRes.error) {
-                console.error('Error fetching calendar data:', eventsRes.error || tasksRes.error || budgetRes.error || healthRes.error);
+        async function fetchOkrs() {
+            const { data, error } = await db.from('okrs').select('*').order('quarter', { ascending: false });
+            if (error) { console.error('Error fetching OKRs:', error); appState.okrs = []; return; }
+            appState.okrs = data || [];
+        }
+        function renderOkrs() {
+            const okrs = appState.okrs;
+            const container = document.getElementById('okrs-container');
+            if (!container) return;
+            if (okrs.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500">ยังไม่มีเป้าหมาย</p>`;
                 return;
             }
+            container.innerHTML = okrs.map(okr => {
+                const krs = okr.key_results || [];
+                const doneCount = krs.filter(kr => kr.status === 'Done').length;
+                const progress = krs.length > 0 ? (doneCount / krs.length) * 100 : 0;
+                return `
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-semibold text-blue-800">${okr.quarter}</p>
+                            <h4 class="text-lg font-bold text-slate-800">${okr.objective}</h4>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                             <button onclick='openOkrModal(${JSON.stringify(okr)})' class="text-blue-400 hover:text-blue-600 text-sm p-1">✏️</button>
+                             <button onclick="confirmDelete('okrs', ${okr.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-sm p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span>ความคืบหน้า</span>
+                            <span>${Math.round(progress)}%</span>
+                        </div>
+                        <div class="progress-bar h-2 w-full">
+                            <div class="progress-bar-inner h-2" style="width: ${progress}%;"></div>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2">
+                        ${krs.map(kr => `
+                            <div class="flex items-center text-sm">
+                                <i class="fa-solid ${kr.status === 'Done' ? 'fa-circle-check text-green-500' : kr.status === 'In Progress' ? 'fa-circle-half-stroke text-yellow-500' : 'fa-circle-notch text-slate-400'} mr-2"></i>
+                                <span class="${kr.status === 'Done' ? 'line-through text-slate-500' : ''}">${kr.title}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `}).join('');
+        }
 
-            const formattedEvents = eventsRes.data.map(e => ({ id: `event-${e.id}`, date: new Date(e.event_date), endDate: e.end_date ? new Date(e.end_date) : null, title: e.title, type: 'event', originalData: e }));
-            const formattedTasks = tasksRes.data.map(t => ({ id: `task-${t.id}`, date: new Date(t.due_date + 'T00:00:00'), endDate: null, title: t.title, type: 'task', originalData: t }));
-            allCalendarItems = [...formattedEvents, ...formattedTasks];
-            
-            dailyExpenses.clear();
-            dailyIncomes.clear();
-            budgetRes.data.forEach(item => { 
-                const dateStr = item.transaction_date;
-                if (item.transaction_type === 'Expense') {
-                    const currentTotal = dailyExpenses.get(dateStr) || 0;
-                    dailyExpenses.set(dateStr, currentTotal + item.amount);
-                } else if (item.transaction_type === 'Income') {
-                    const currentTotal = dailyIncomes.get(dateStr) || 0;
-                    dailyIncomes.set(dateStr, currentTotal + item.amount);
+        // --- IDEAS ---
+        function openIdeaModal(idea = null) {
+            const isEdit = idea !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="idea-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขไอเดีย' : 'เพิ่มไอเดียใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? idea.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ชื่อไอเดีย</label><input name="title" type="text" value="${isEdit ? idea.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">รายละเอียด</label><textarea name="description" class="w-full mt-1 p-2 border rounded-md h-24">${isEdit ? idea.description || '' : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">แท็ก (คั่นด้วยจุลภาค)</label><input name="tags" type="text" value="${isEdit && idea.tags ? idea.tags.join(', ') : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            const transformIdeaData = (data) => {
+                if (data.tags) {
+                    data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean);
                 }
-            });
-
-            dailyCaloriesIn.clear();
-            dailyCaloriesOut.clear();
-            healthRes.data.forEach(item => {
-                const dateStr = item.log_date;
-                if (item.type === 'food') {
-                    const currentTotal = dailyCaloriesIn.get(dateStr) || 0;
-                    dailyCaloriesIn.set(dateStr, currentTotal + item.calories);
-                } else if (item.type === 'exercise') {
-                    const currentTotal = dailyCaloriesOut.get(dateStr) || 0;
-                    dailyCaloriesOut.set(dateStr, currentTotal + item.calories);
-                }
-            });
-
-            renderCalendar();
-            renderWeeklyAgenda();
+                return data;
+            };
+            document.getElementById('idea-form').addEventListener('submit', (e) => handleFormSubmit(e, 'ideas', fetchAllData, transformIdeaData));
         }
-        async function deleteScheduleItem(id) { if (!confirm('คุณต้องการลบกิจกรรมนี้ใช่หรือไม่?')) return; const { error } = await db.from('schedule').delete().eq('id', id); if (error) console.error('Error deleting schedule item:', error); else fetchDataForCalendar(); }
-        function switchCalendarView(view) { currentCalendarView = view; renderCalendar(); }
-        function navigateCalendar(amount) { if (currentCalendarView === 'month') { currentViewDate.setMonth(currentViewDate.getMonth() + amount); } else if (currentCalendarView === 'week') { currentViewDate.setDate(currentViewDate.getDate() + (amount * 7)); } else { currentViewDate.setDate(currentViewDate.getDate() + amount); } renderCalendar(); }
-        function renderCalendar() {
-            const container = document.getElementById('calendar-container'); let header = `<div class="flex items-center justify-between mb-4"><button onclick="navigateCalendar(-1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fa-solid fa-chevron-left"></i></button><h3 class="text-lg font-semibold text-center"></h3><button onclick="navigateCalendar(1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fa-solid fa-chevron-right"></i></button></div><div class="flex items-center justify-center space-x-1 mb-4 p-1 bg-slate-100 rounded-lg"><button onclick="switchCalendarView('month')" class="view-btn ${currentCalendarView === 'month' ? 'bg-white shadow' : ''} w-full text-sm px-3 py-1 rounded-md">เดือน</button><button onclick="switchCalendarView('week')" class="view-btn ${currentCalendarView === 'week' ? 'bg-white shadow' : ''} w-full text-sm px-3 py-1 rounded-md">สัปดาห์</button><button onclick="switchCalendarView('day')" class="view-btn ${currentCalendarView === 'day' ? 'bg-white shadow' : ''} w-full text-sm px-3 py-1 rounded-md">วัน</button></div>`;
-            container.innerHTML = header + `<div id="calendar-view"></div>`; const viewContainer = document.getElementById('calendar-view'); const headerText = container.querySelector('h3');
-            if (currentCalendarView === 'month') { headerText.textContent = currentViewDate.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' }); renderMonthlyView(viewContainer); } 
-            else if (currentCalendarView === 'week') { const startOfWeek = new Date(currentViewDate); startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(endOfWeek.getDate() + 6); headerText.textContent = `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`; renderWeeklyView(viewContainer); } 
-            else { headerText.textContent = currentViewDate.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); renderDailyView(viewContainer); }
+        async function fetchIdeas() {
+            const { data, error } = await db.from('ideas').select('*').order('created_at', { ascending: false });
+            if (error) { console.error('Error fetching ideas:', error); appState.ideas = []; return; }
+            appState.ideas = data || [];
         }
-        function renderMonthlyView(container) {
-            const year = currentViewDate.getFullYear(); const month = currentViewDate.getMonth(); const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0); let daysHtml = `<div class="grid grid-cols-7 gap-1 text-center text-sm">`; const dayHeaders = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']; daysHtml += dayHeaders.map(d => `<div class="font-bold text-slate-500 py-2">${d}</div>`).join('');
-            for (let i = 0; i < firstDay.getDay(); i++) { daysHtml += `<div></div>`; }
-            for (let i = 1; i <= lastDay.getDate(); i++) {
-                const dayDate = new Date(year, month, i); const dateStr = toYYYYMMDD(dayDate); const isToday = dateStr === getToday() ? 'today' : '';
-                const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
-                const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
-                const expenseTotal = dailyExpenses.get(dateStr);
-                const incomeTotal = dailyIncomes.get(dateStr);
-                const caloriesInTotal = dailyCaloriesIn.get(dateStr);
-                const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
-                let financialHtml = '';
-                if (incomeTotal) { financialHtml += `<div class="text-xs text-green-500 truncate">+${formatNumber(incomeTotal)}</div>`; }
-                if (expenseTotal) { financialHtml += `<div class="text-xs text-red-500 truncate">-${formatNumber(expenseTotal)}</div>`; }
-                let healthHtml = '';
-                if (caloriesInTotal) { healthHtml += `<div class="text-xs text-green-600 truncate">🍔 ${formatNumber(caloriesInTotal)}</div>`; }
-                if (caloriesOutTotal) { healthHtml += `<div class="text-xs text-orange-500 truncate">🔥 ${formatNumber(caloriesOutTotal)}</div>`; }
-                daysHtml += `<div class="calendar-day p-1 rounded-lg cursor-pointer h-28 border ${isToday} flex flex-col" onclick="currentViewDate = new Date('${dateStr}T00:00:00'); switchCalendarView('day')">
-                                <div class="font-semibold text-left">${i}</div>
-                                <div class="flex-grow overflow-hidden text-right">
-                                    <div class="flex justify-start space-x-1 mb-1">
-                                        ${eventsOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>`).join('')}
-                                        ${tasksOnDay.slice(0, 2).map(() => `<div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>`).join('')}
-                                    </div>
-                                    ${financialHtml}
-                                    ${healthHtml}
-                                </div>
-                            </div>`;
+        function renderIdeaBoard() {
+            const ideas = appState.ideas;
+            const container = document.getElementById('idea-board-container');
+            if (!container) return;
+            if (ideas.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-4">ยังไม่มีไอเดีย</p>`;
+                return;
             }
-            daysHtml += `</div>`; container.innerHTML = daysHtml;
-        }
-        function renderWeeklyView(container) {
-            let weekHtml = `<div class="grid grid-cols-7 gap-2 text-sm">`; const startOfWeek = new Date(currentViewDate); startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-            for (let i = 0; i < 7; i++) { const day = new Date(startOfWeek); day.setDate(day.getDate() + i); const itemsOnDay = allCalendarItems.filter(e => new Date(e.date).toDateString() === day.toDateString()).sort((a, b) => a.date - b.date); weekHtml += `<div class="p-2 border rounded-lg"><div class="text-center font-bold">${day.toLocaleDateString('th-TH', { weekday: 'short' })} ${day.getDate()}</div><div class="mt-2 space-y-1">${itemsOnDay.map(item => { if (item.type === 'event') { return `<div class="bg-cyan-100 text-cyan-800 p-1 rounded text-xs truncate">${formatTime(item.date)} ${item.title}</div>`; } else { return `<div class="bg-blue-100 text-blue-800 p-1 rounded text-xs truncate"><i class="fa-solid fa-check-square mr-1"></i>${item.title}</div>`; } }).join('') || '<div class="h-10"></div>'}</div></div>`; }
-            weekHtml += `</div>`; container.innerHTML = weekHtml;
-        }
-        function renderDailyView(container) {
-            const dateStr = toYYYYMMDD(currentViewDate);
-            const dayOfWeek = currentViewDate.getDay();
-            const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event').sort((a, b) => a.date - b.date);
-            const tasksOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'task');
-            const expenseTotal = dailyExpenses.get(dateStr);
-            const incomeTotal = dailyIncomes.get(dateStr);
-            const caloriesInTotal = dailyCaloriesIn.get(dateStr);
-            const caloriesOutTotal = dailyCaloriesOut.get(dateStr);
-            const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-            const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == dayOfWeek);
-
-            let dayHtml = `<div class="space-y-4">`;
-            if (incomeTotal || expenseTotal) { 
-                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปการเงิน</h4><div class="space-y-1">`;
-                if(incomeTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-600 font-bold">รายรับ: ${formatCurrency(incomeTotal)}</div>`;
-                if(expenseTotal) dayHtml += `<div class="p-3 rounded-lg bg-red-50 text-red-600 font-bold">รายจ่าย: ${formatCurrency(expenseTotal)}</div>`;
-                dayHtml += `</div></div>`;
-            }
-            if (caloriesInTotal || caloriesOutTotal) {
-                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">สรุปสุขภาพ</h4><div class="space-y-1">`;
-                if(caloriesInTotal) dayHtml += `<div class="p-3 rounded-lg bg-green-50 text-green-700 font-bold">🍔 ได้รับ: ${formatNumber(caloriesInTotal)} แคล</div>`;
-                if(caloriesOutTotal) dayHtml += `<div class="p-3 rounded-lg bg-orange-50 text-orange-700 font-bold">🔥 เผาผลาญ: ${formatNumber(caloriesOutTotal)} แคล</div>`;
-                dayHtml += `</div></div>`;
-            }
-            if (eventsOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจกรรม</h4><div class="space-y-3">${eventsOnDay.map(e => `<div class="p-3 rounded-lg bg-slate-100 flex items-start space-x-4"><div class="text-sm text-cyan-600 font-semibold w-24"><div>${formatTime(e.date)}</div>${e.endDate ? `<div class="text-xs">ถึง ${formatTime(e.endDate)}</div>` : ''}</div><div class="flex-grow"><p class="font-semibold text-slate-800">${e.title}</p><p class="text-xs text-slate-500">${e.originalData.event_type}</p></div><button onclick="deleteScheduleItem(${e.originalData.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>`).join('')}</div></div>`; }
-            if (tasksOnDay.length > 0) { dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">งานที่ครบกำหนดวันนี้</h4><div class="space-y-3">${tasksOnDay.map(t => `<div class="p-3 rounded-lg bg-slate-100 flex items-center space-x-4"><div class="flex-grow"><p class="font-semibold text-slate-800">${t.title}</p></div><span class="text-xs font-medium px-2 py-1 rounded-full priority-${t.originalData.priority}">${t.originalData.priority}</span></div>`).join('')}</div></div>`; }
-            
-            if (dailyHabitsOnDay.length > 0 || weeklyHabitsOnDay.length > 0) {
-                dayHtml += `<div><h4 class="font-semibold text-slate-600 mb-2">กิจวัตรสำหรับวันนี้</h4><div class="space-y-2">`;
-                if (dailyHabitsOnDay.length > 0) {
-                    dayHtml += dailyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2 text-sm p-2 bg-slate-100 rounded-md"><input type="checkbox" id="daily-view-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="daily" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="daily-view-habit-${h.id}-${dateStr}" class="${isChecked ? 'line-through text-slate-400' : ''}">${h.name}</label></div>`;
-                    }).join('');
-                }
-                if (weeklyHabitsOnDay.length > 0) {
-                     dayHtml += weeklyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2 text-sm p-2 bg-slate-100 rounded-md"><input type="checkbox" id="daily-view-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="weekly" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="daily-view-habit-${h.id}-${dateStr}" class="${isChecked ? 'line-through text-slate-400' : ''}">${h.name}</label></div>`;
-                    }).join('');
-                }
-                dayHtml += `</div></div>`;
-            }
-
-            if (eventsOnDay.length === 0 && tasksOnDay.length === 0 && !incomeTotal && !expenseTotal && !caloriesInTotal && !caloriesOutTotal && dailyHabitsOnDay.length === 0 && weeklyHabitsOnDay.length === 0) { dayHtml += `<div class="text-center text-slate-400 p-8"><p>ไม่มีรายการสำหรับวันนี้</p></div>`; }
-            dayHtml += `</div>`; container.innerHTML = dayHtml;
+            container.innerHTML = ideas.map(idea => `
+                <div class="bg-yellow-100 p-3 rounded-lg shadow-sm h-full flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-yellow-900">${idea.title}</h4>
+                        <p class="text-sm text-yellow-800 mt-1">${idea.description || ''}</p>
+                        <div class="mt-2 flex flex-wrap gap-1">
+                            ${(idea.tags || []).map(tag => `<span class="text-xs bg-yellow-300 text-yellow-900 px-2 py-0.5 rounded-full">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="text-right mt-2">
+                        <button onclick='openIdeaModal(${JSON.stringify(idea)})' class="text-yellow-600 hover:text-yellow-800 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('ideas', ${idea.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // --- HABIT TRACKER ---
+        // --- HABITS ---
         function openHabitModal(habit = null) {
             const isEdit = habit !== null;
             modalContainer.innerHTML = `
@@ -585,484 +847,134 @@
                     <form id="habit-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขกิจวัตร' : 'เพิ่มกิจวัตรใหม่'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? habit.id : ''}">
-                        <div><label class="text-sm font-medium">ชื่อกิจวัตร</label><input name="name" type="text" value="${isEdit ? habit.name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div class="mt-4"><label class="text-sm font-medium">ความถี่</label><select name="frequency" id="habit-frequency" class="w-full mt-1 p-2 border rounded-md"><option value="daily" ${isEdit && habit.frequency === 'daily' ? 'selected' : ''}>รายวัน</option><option value="weekly" ${isEdit && habit.frequency === 'weekly' ? 'selected' : ''}>รายสัปดาห์</option></select></div>
-                        <div id="weekly-day-selector" class="mt-4 ${isEdit && habit.frequency === 'weekly' ? '' : 'hidden'}"><label class="text-sm font-medium">เลือกวัน</label><select name="weekly_day" class="w-full mt-1 p-2 border rounded-md"><option value="0">วันอาทิตย์</option><option value="1">วันจันทร์</option><option value="2">วันอังคาร</option><option value="3">วันพุธ</option><option value="4">วันพฤหัสบดี</option><option value="5">วันศุกร์</option><option value="6">วันเสาร์</option></select></div>
-                        <div class="mt-6 flex justify-end space-x-2"><button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button><button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-md">บันทึก</button></div>
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ชื่อกิจวัตร</label><input name="name" type="text" value="${isEdit ? habit.name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เป้าหมาย/คำอธิบาย</label><input name="goal" type="text" value="${isEdit ? habit.goal : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ความถี่</label>
+                                <select name="frequency" id="frequency-select" class="w-full mt-1 p-2 border rounded-md">
+                                    <option value="daily" ${isEdit && habit.frequency === 'daily' ? 'selected' : ''}>รายวัน</option>
+                                    <option value="weekly" ${isEdit && habit.frequency === 'weekly' ? 'selected' : ''}>รายสัปดาห์</option>
+                                </select>
+                            </div>
+                            <div id="weekly-day-container" class="${!isEdit || habit.frequency !== 'weekly' ? 'hidden' : ''}">
+                                <label class="text-sm font-medium">วันที่ทำ (รายสัปดาห์)</label>
+                                <select name="weekly_day" class="w-full mt-1 p-2 border rounded-md">
+                                    <option value="0" ${isEdit && habit.weekly_day === 0 ? 'selected' : ''}>วันอาทิตย์</option>
+                                    <option value="1" ${isEdit && habit.weekly_day === 1 ? 'selected' : ''}>วันจันทร์</option>
+                                    <option value="2" ${isEdit && habit.weekly_day === 2 ? 'selected' : ''}>วันอังคาร</option>
+                                    <option value="3" ${isEdit && habit.weekly_day === 3 ? 'selected' : ''}>วันพุธ</option>
+                                    <option value="4" ${isEdit && habit.weekly_day === 4 ? 'selected' : ''}>วันพฤหัสบดี</option>
+                                    <option value="5" ${isEdit && habit.weekly_day === 5 ? 'selected' : ''}>วันศุกร์</option>
+                                    <option value="6" ${isEdit && habit.weekly_day === 6 ? 'selected' : ''}>วันเสาร์</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-md">บันทึก</button>
+                        </div>
                     </form>
                 </div>`;
             
-            const frequencySelect = document.getElementById('habit-frequency');
-            const weeklyDaySelect = document.getElementById('weekly-day-selector');
-            frequencySelect.addEventListener('change', () => {
-                weeklyDaySelect.classList.toggle('hidden', frequencySelect.value !== 'weekly');
-            });
-            if (isEdit && habit.frequency === 'weekly') {
-                document.querySelector('#weekly-day-selector select').value = habit.weekly_day;
-            }
-            document.getElementById('habit-form').addEventListener('submit', isEdit ? handleEditHabit : addHabit);
+            const freqSelect = document.getElementById('frequency-select');
+            const weeklyContainer = document.getElementById('weekly-day-container');
+            freqSelect.onchange = () => {
+                weeklyContainer.classList.toggle('hidden', freqSelect.value !== 'weekly');
+            };
+
+            document.getElementById('habit-form').addEventListener('submit', (e) => handleFormSubmit(e, 'habits', fetchAllData));
         }
-        async function addHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); delete habitData.id; if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').insert([habitData]); if (error) { console.error('Error adding habit:', error); alert('ไม่สามารถเพิ่มกิจวัตรได้: ' + error.message); } else { fetchHabits(); closeModal(); } }
-        async function handleEditHabit(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const habitData = Object.fromEntries(formData.entries()); if(habitData.frequency !== 'weekly') { habitData.weekly_day = null; } const { error } = await db.from('habits').update({ name: habitData.name, frequency: habitData.frequency, weekly_day: habitData.weekly_day }).eq('id', habitData.id); if (error) { console.error('Error updating habit:', error); } else { fetchHabits(); closeModal(); } }
         async function fetchHabits() {
-            const today = new Date();
-            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-            const { data: habits, error: habitsError } = await db.from('habits').select('*').order('created_at');
-            const { data: log, error: logError } = await db.from('habit_log').select('*').gte('completed_date', startOfMonth);
-            if (habitsError || logError) { console.error('Error fetching habits:', habitsError || logError); return; }
-            allHabits = habits;
-            allHabitLogs = log;
-            const habitStats = calculateHabitStats(habits, log);
-            renderHabitTracker(habitStats, log);
-            renderWeeklyAgenda();
-            fetchDashboardOverview();
-        }
-        function calculateHabitStats(habits, log) {
-            const today = new Date();
             const todayStr = getToday();
-            return habits.map(habit => {
-                const habitLogs = log.filter(l => l.habit_id === habit.id);
-                const logDates = new Set(habitLogs.map(l => l.completed_date));
-                let streak = 0;
-                if (logDates.has(todayStr)) {
-                    streak = 1;
-                    let currentDate = new Date(today);
-                    currentDate.setDate(currentDate.getDate() - 1);
-                    while (logDates.has(toYYYYMMDD(currentDate))) {
-                        streak++;
-                        currentDate.setDate(currentDate.getDate() - 1);
-                    }
-                } else {
-                    let yesterday = new Date(today);
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    if (logDates.has(toYYYYMMDD(yesterday))) {
-                         let currentDate = yesterday;
-                         while (logDates.has(toYYYYMMDD(currentDate))) {
-                             streak++;
-                             currentDate.setDate(currentDate.getDate() - 1);
-                         }
-                    }
-                }
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                let weekCompleted = 0;
-                for (let i = 0; i <= today.getDay(); i++) {
-                    const day = new Date(startOfWeek);
-                    day.setDate(day.getDate() + i);
-                    if (logDates.has(toYYYYMMDD(day))) { weekCompleted++; }
-                }
-                const weekPercent = Math.round((weekCompleted / (today.getDay() + 1)) * 100);
-                const monthCompleted = habitLogs.length;
-                const monthPercent = Math.round((monthCompleted / today.getDate()) * 100);
-                let graphData = [];
-                for (let i = 6; i >= 0; i--) {
-                    const day = new Date(today);
-                    day.setDate(day.getDate() - i);
-                    graphData.push(logDates.has(toYYYYMMDD(day)));
-                }
-                return { ...habit, stats: { streak, weekPercent, monthPercent, graphData } };
-            });
+            const [habitsRes, habitLogsRes] = await Promise.all([
+                db.from('habits').select('*').order('sort_order'),
+                db.from('habit_log').select('*').eq('completed_date', todayStr)
+            ]);
+            if (habitsRes.error) { console.error('Error fetching habits:', habitsRes.error); appState.habits = []; }
+            else { appState.habits = habitsRes.data || []; }
+
+            if (habitLogsRes.error) { console.error('Error fetching habit_log:', habitLogsRes.error); appState.habit_log = []; }
+            else { appState.habit_log = habitLogsRes.data || []; }
         }
-        function renderHabitTracker(habitsWithStats, log) {
+        function renderHabitTracker() {
             const container = document.getElementById('habit-tracker-container');
-            const dailyHabits = habitsWithStats.filter(h => h.frequency === 'daily');
-            const weeklyHabits = habitsWithStats.filter(h => h.frequency === 'weekly');
-            let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">';
-            if (dailyHabits.length > 0) {
-                html += '<div class="col-span-full"><h3 class="text-lg font-semibold text-slate-600 mb-2">รายวัน</h3></div>';
-                html += dailyHabits.map(habit => renderHabitCard(habit, log)).join('');
-            }
-            if (weeklyHabits.length > 0) {
-                html += '<div class="col-span-full mt-4"><h3 class="text-lg font-semibold text-slate-600 mb-2">รายสัปดาห์</h3></div>';
-                html += weeklyHabits.map(habit => renderHabitCard(habit, log)).join('');
-            }
-            html += '</div>';
-            container.innerHTML = html;
-        }
-        function renderHabitCard(habit, log) {
+            if (!container) return;
+
             const today = new Date();
-            let isChecked = false;
-            if (habit.frequency === 'daily') {
-                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === getToday());
-            } else {
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                const startOfWeekStr = toYYYYMMDD(startOfWeek);
-                isChecked = log.some(l => l.habit_id === habit.id && l.completed_date === startOfWeekStr);
-            }
-            const { streak, weekPercent, monthPercent, graphData } = habit.stats;
-            const graphHTML = graphData.map(completed => `<div class="w-full h-6 ${completed ? 'bg-teal-500' : 'bg-slate-200'} rounded-sm"></div>`).join('');
-            return `
-            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="habit-${habit.id}" data-habit-id="${habit.id}" data-frequency="${habit.frequency}" onchange="toggleHabit(this)" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}>
-                        <label for="habit-${habit.id}" class="ml-3 text-slate-800 font-semibold">${habit.name}</label>
-                    </div>
-                    <div class="flex space-x-2"><button onclick='openHabitModal(${JSON.stringify(habit)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteHabit(${habit.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div>
-                </div>
-                <div class="mt-3 pt-3 border-t">
-                    <div class="flex justify-around text-center text-sm">
-                        <div><div class="font-bold text-teal-600">${streak} วัน</div><div class="text-xs text-slate-500">ต่อเนื่อง 🔥</div></div>
-                        <div><div class="font-bold text-teal-600">${weekPercent}%</div><div class="text-xs text-slate-500">สัปดาห์นี้</div></div>
-                        <div><div class="font-bold text-teal-600">${monthPercent}%</div><div class="text-xs text-slate-500">เดือนนี้</div></div>
-                    </div>
-                    <div class="mt-4">
-                         <div class="text-xs text-slate-500 mb-1 text-center">7 วันล่าสุด</div>
-                         <div class="grid grid-cols-7 gap-1">${graphHTML}</div>
-                    </div>
-                </div>
-            </div>`;
-        }
-        async function toggleHabit(checkbox, dateOverride = null) { 
-            const habitId = checkbox.dataset.habitId; 
-            const frequency = checkbox.dataset.frequency;
-            const completed = checkbox.checked; 
-            
-            let completionDate = dateOverride || getToday();
-            if (frequency === 'weekly' && !dateOverride) {
-                const today = new Date();
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay());
-                completionDate = toYYYYMMDD(startOfWeek);
-            }
-            
-            if (completed) { 
-                const { error } = await db.from('habit_log').insert([{ habit_id: habitId, completed_date: completionDate }]); 
-                if (error) console.error('Error logging habit:', error);
-            } else { 
-                const { error } = await db.from('habit_log').delete().match({ habit_id: habitId, completed_date: completionDate }); 
-                if (error) console.error('Error un-logging habit:', error);
-            }
-            fetchHabits();
-        }
-        async function deleteHabit(id) { if (!confirm('คุณต้องการลบกิจวัตรนี้ใช่หรือไม่? (การบันทึกที่ผ่านมาจะถูกลบด้วย)')) return; const { error } = await db.from('habits').delete().eq('id', id); if (error) console.error('Error deleting habit:', error); else fetchHabits(); }
+            const dayOfWeek = today.getDay();
 
-        // --- IDEA BOARD ---
-        async function openIdeaModal(idea = null) {
-            const isEdit = idea !== null;
-            const { data: tasks, error } = await db.from('tasks').select('id, title').order('created_at', { ascending: false });
-            if (error) { console.error('Error fetching tasks for idea modal:', error); return; }
+            const dailyHabits = appState.habits.filter(h => h.frequency === 'daily');
+            const weeklyHabits = appState.habits.filter(h => h.frequency === 'weekly' && h.weekly_day === dayOfWeek);
 
-            let linkedTaskIds = [];
-            if(isEdit) {
-                const { data: links } = await db.from('idea_task_links').select('task_id').eq('idea_id', idea.id);
-                if(links) linkedTaskIds = links.map(l => l.task_id);
-            }
-
-            const taskOptions = tasks.map(task => 
-                `<label class="flex items-center"><input type="checkbox" name="linked_tasks" value="${task.id}" ${linkedTaskIds.includes(task.id) ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"> <span class="ml-2 text-sm">${task.title}</span></label>`
-            ).join('');
-
-            modalContainer.innerHTML = `<div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                <form id="idea-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-                    <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขไอเดีย' : 'เพิ่มไอเดียใหม่'}</h3>
-                    <input type="hidden" name="id" value="${isEdit ? idea.id : ''}">
-                    <div class="space-y-4">
-                        <div><label class="text-sm font-medium">ชื่อไอเดีย</label><input name="title" type="text" value="${isEdit ? idea.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                        <div><label class="text-sm font-medium">รายละเอียด</label><textarea name="description" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? idea.description || '' : ''}</textarea></div>
-                        <div><label class="text-sm font-medium">Tags (คั่นด้วยจุลภาค ,)</label><input name="tags" type="text" value="${isEdit ? (idea.tags || []).join(', ') : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+            const renderList = (habits, listId) => {
+                if (habits.length === 0) return '<p class="text-xs text-slate-400 p-2">ไม่มีกิจวัตร</p>';
+                return `<div id="${listId}">${habits.map(habit => {
+                    const isDone = appState.habit_log.some(log => log.habit_id === habit.id && log.completed_date === getToday());
+                    return `
+                    <div class="habit-item flex items-center justify-between bg-white p-3 rounded-md border border-slate-200 mb-2" draggable="true" data-id="${habit.id}">
+                        <div class="flex items-center">
+                            <i class="fas fa-grip-vertical drag-handle text-slate-400 mr-3"></i>
+                            <input type="checkbox" id="habit-${habit.id}" class="habit-checkbox h-5 w-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300 mr-3" ${isDone ? 'checked' : ''} onchange="logHabit(${habit.id}, this.checked)">
+                            <label for="habit-${habit.id}" class="text-slate-800">
+                                <span class="font-medium">${habit.name}</span>
+                                <span class="text-sm text-slate-500 ml-2">${habit.goal || ''}</span>
+                            </label>
+                        </div>
                         <div>
-                            <label class="text-sm font-medium">เชื่อมโยงกับงาน</label>
-                            <div class="mt-2 p-2 border rounded-md max-h-32 overflow-y-auto space-y-1">${taskOptions || '<p class="text-sm text-slate-400">ไม่มีงานให้เชื่อมโยง</p>'}</div>
+                            <button onclick='openHabitModal(${JSON.stringify(habit)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                            <button onclick="confirmDelete('habits', ${habit.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-2">
-                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                        <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-md">บันทึก</button>
-                    </div>
-                </form>
-            </div>`;
-            document.getElementById('idea-form').addEventListener('submit', isEdit ? handleEditIdea : addIdea);
-        }
-        async function addIdea(e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const ideaData = { title: formData.get('title'), description: formData.get('description'), tags: formData.get('tags').split(',').map(tag => tag.trim()).filter(tag => tag) };
-            const linkedTaskIds = formData.getAll('linked_tasks');
+                    </div>`;
+                }).join('')}</div>`;
+            };
 
-            const { data: newIdea, error: ideaError } = await db.from('ideas').insert(ideaData).select().single();
-            if (ideaError) { console.error('Error adding idea:', ideaError); return; }
-
-            if (linkedTaskIds.length > 0) {
-                const links = linkedTaskIds.map(taskId => ({ idea_id: newIdea.id, task_id: taskId }));
-                const { error: linkError } = await db.from('idea_task_links').insert(links);
-                if (linkError) { console.error('Error linking idea to tasks:', linkError); }
-            }
-            
-            fetchIdeas();
-            fetchTasks();
-            closeModal();
-        }
-        async function handleEditIdea(e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const ideaData = { id: formData.get('id'), title: formData.get('title'), description: formData.get('description'), tags: formData.get('tags').split(',').map(tag => tag.trim()).filter(tag => tag) };
-            const linkedTaskIds = formData.getAll('linked_tasks');
-
-            const { error: updateError } = await db.from('ideas').update({ title: ideaData.title, description: ideaData.description, tags: ideaData.tags }).eq('id', ideaData.id);
-            if (updateError) { console.error('Error updating idea:', updateError); return; }
-
-            await db.from('idea_task_links').delete().eq('idea_id', ideaData.id);
-            if (linkedTaskIds.length > 0) {
-                const links = linkedTaskIds.map(taskId => ({ idea_id: ideaData.id, task_id: taskId }));
-                await db.from('idea_task_links').insert(links);
-            }
-            
-            fetchIdeas();
-            fetchTasks();
-            closeModal();
-        }
-        async function fetchIdeas() {
-            const { data, error } = await db.from('ideas').select('*, idea_task_links(tasks(title))').order('created_at', { ascending: false });
-            if (error) { console.error('Error fetching ideas:', error); return; }
-            renderIdeaBoard(data);
-        }
-        function renderIdeaBoard(ideas) {
-            const container = document.getElementById('idea-board-container');
-            container.innerHTML = ideas.map(idea => {
-                const linkedTasks = idea.idea_task_links.map(link => link.tasks.title).join(', ');
-                return `
-                <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-semibold text-yellow-800 mb-2">${idea.title}</h4>
-                        <div class="flex space-x-2">
-                           <button onclick='openIdeaModal(${JSON.stringify(idea)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                           <button onclick="deleteIdea(${idea.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-600 mb-3">${idea.description || ''}</p>
-                    <div class="flex flex-wrap gap-1 mb-3">${(idea.tags || []).map(tag => `<span class="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>
-                    ${idea.idea_task_links.length > 0 ? `<div class="text-xs text-slate-500 border-t pt-2 mt-2"><strong class="font-semibold">Linked Tasks:</strong> ${linkedTasks}</div>` : ''}
-                </div>`;
-            }).join('');
-        }
-        async function deleteIdea(id) {
-            if (!confirm('คุณต้องการลบไอเดียนี้ใช่หรือไม่?')) return;
-            const { error } = await db.from('ideas').delete().eq('id', id);
-            if (error) { console.error('Error deleting idea:', error); }
-            else { fetchIdeas(); fetchTasks(); }
-        }
-
-        // --- WEEKLY AGENDA ---
-        function navigateWeeklyAgenda(amount) {
-            weeklyAgendaDate.setDate(weeklyAgendaDate.getDate() + (amount * 7));
-            renderWeeklyAgenda();
-        }
-
-        function renderWeeklyAgenda() {
-            const container = document.getElementById('weekly-agenda-container');
-            const startOfWeek = new Date(weeklyAgendaDate);
-            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(endOfWeek.getDate() + 6);
-
-            let headerHTML = `
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <span class="text-2xl mr-3">🗓️</span>
-                        <h2 class="text-xl font-semibold text-gray-900">แผนประจำสัปดาห์</h2>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="navigateWeeklyAgenda(-1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fa-solid fa-chevron-left"></i></button>
-                        <span class="font-semibold text-slate-600 text-sm">${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}</span>
-                        <button onclick="navigateWeeklyAgenda(1)" class="p-2 rounded-full hover:bg-slate-100"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
+            container.innerHTML = `
+                <div>
+                    <h4 class="font-semibold text-slate-600 mb-2">รายวัน</h4>
+                    ${renderList(dailyHabits, 'daily-habit-list')}
+                </div>
+                <div class="mt-4">
+                    <h4 class="font-semibold text-slate-600 mb-2">รายสัปดาห์ (สำหรับวันนี้)</h4>
+                    ${renderList(weeklyHabits, 'weekly-habit-list')}
                 </div>
             `;
-
-            let weekHtml = `<div class="grid grid-cols-1 md:grid-cols-7 gap-2 text-sm">`;
             
-            for (let i = 0; i < 7; i++) {
-                const day = new Date(startOfWeek);
-                day.setDate(day.getDate() + i);
-                const dateStr = toYYYYMMDD(day);
-                
-                const eventsOnDay = allCalendarItems.filter(e => toYYYYMMDD(e.date) === dateStr && e.type === 'event');
-                const tasksOnDay = allTasks.filter(t => t.due_date === dateStr);
-                const dailyHabitsOnDay = allHabits.filter(h => h.frequency === 'daily');
-                const weeklyHabitsOnDay = allHabits.filter(h => h.frequency === 'weekly' && h.weekly_day == i);
-                
-                let itemsHTML = '';
-                
-                if (eventsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-cyan-600 mt-2 mb-1">กิจกรรม</h4>` + eventsOnDay.map(e => `<div class="flex items-start space-x-2"><input type="checkbox" disabled class="mt-1"><label>${e.title}</label></div>`).join('');
-                }
-                if (tasksOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-blue-600 mt-2 mb-1">งาน</h4>` + tasksOnDay.map(t => `<div class="flex items-start space-x-2"><input type="checkbox" disabled ${t.status === 'Done' ? 'checked' : ''} class="mt-1"><label class="${t.status === 'Done' ? 'line-through text-slate-400' : ''}">${t.title}</label></div>`).join('');
-                }
-                if (dailyHabitsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-teal-600 mt-2 mb-1">กิจวัตรรายวัน</h4>` + dailyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="daily" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
-                    }).join('');
-                }
-                 if (weeklyHabitsOnDay.length > 0) {
-                    itemsHTML += `<h4 class="font-bold text-purple-600 mt-2 mb-1">กิจวัตรรายสัปดาห์</h4>` + weeklyHabitsOnDay.map(h => {
-                        const isChecked = allHabitLogs.some(l => l.completed_date === dateStr && l.habit_id === h.id);
-                        return `<div class="flex items-center space-x-2"><input type="checkbox" id="agenda-habit-${h.id}-${dateStr}" data-habit-id="${h.id}" data-frequency="weekly" onchange="toggleHabit(this, '${dateStr}')" class="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 habit-checkbox" ${isChecked ? 'checked' : ''}><label for="agenda-habit-${h.id}-${dateStr}">${h.name}</label></div>`
-                    }).join('');
-                }
-
-
-                weekHtml += `
-                    <div class="p-3 bg-slate-50 rounded-lg">
-                        <div class="text-center font-bold text-slate-700 pb-2 border-b">${day.toLocaleDateString('th-TH', { weekday: 'short' })} <span class="font-normal text-slate-500">${day.getDate()}</span></div>
-                        <div class="mt-2 space-y-2">${itemsHTML || '<div class="h-10 text-xs text-slate-400 text-center pt-4">ไม่มีรายการ</div>'}</div>
-                    </div>`;
-            }
-            weekHtml += `</div>`;
-            container.innerHTML = headerHTML + `<div class="max-h-96 overflow-y-auto p-1">${weekHtml}</div>`;
+            const dailyList = document.getElementById('daily-habit-list');
+            if(dailyList) addDragDropListeners(dailyList);
         }
-
-        // --- INITIAL LOAD & NAVIGATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            if (db) {
-                fetchTasks();
-                fetchBudget();
-                fetchKnowledge();
-                fetchJournal();
-                fetchDataForCalendar();
-                fetchHabits();
-                fetchIdeas();
-                fetchEventLog();
-                fetchHealthLog();
-                fetchPersonalGrowth();
-                fetchOkrs();
-                fetchMediaLogs();
-                fetchMoodLogs();
+        async function logHabit(habitId, isChecked) {
+            const todayStr = getToday();
+            if (isChecked) {
+                const { error } = await db.from('habit_log').insert({ habit_id: habitId, completed_date: todayStr });
+                if (error && error.code !== '23505') { 
+                    showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
+                } else { fetchAllData(); }
             } else {
-                alert('การเชื่อมต่อ Supabase ล้มเหลว กรุณาตรวจสอบการตั้งค่า');
+                const { error } = await db.from('habit_log').delete().match({ habit_id: habitId, completed_date: todayStr });
+                if (error) {
+                    showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
+                } else { fetchAllData(); }
             }
-
-            // Sidebar active link logic
-            const sections = document.querySelectorAll('main section');
-            const navLinks = document.querySelectorAll('#sidebar-nav a');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href').substring(1) === entry.target.id) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, { rootMargin: "-50% 0px -50% 0px" });
-
-            sections.forEach(section => observer.observe(section));
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) { // 1024px is lg breakpoint in Tailwind
-                        toggleSidebar();
-                    }
-                });
-            });
-        });
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
         }
-
-        // --- EVENT LOG ---
-        function openEventLogModal(entry = null) {
-            const isEdit = entry !== null;
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์ใหม่'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? entry.event_date : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เวลา (ไม่บังคับ)</label><input name="event_time" type="time" value="${isEdit ? entry.event_time || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">รายละเอียดเหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? entry.description : ''}</textarea></div>
-                        </div>
-                        <div class="mt-6 flex justify-end space-x-2">
-                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md">บันทึก</button>
-                        </div>
-                    </form>
-                </div>`;
-            document.getElementById('event-log-form').addEventListener('submit', isEdit ? handleEditEventLog : addEventLogEntry);
-        }
-        async function addEventLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); delete eventData.id; if (!eventData.event_time) { delete eventData.event_time; } const { error } = await db.from('event_log').insert([eventData]); if (error) { console.error('Error adding event log:', error); } else { fetchEventLog(); closeModal(); } }
-        async function handleEditEventLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const eventData = Object.fromEntries(formData.entries()); if (!eventData.event_time) { eventData.event_time = null; } const { error } = await db.from('event_log').update({ event_date: eventData.event_date, event_time: eventData.event_time, description: eventData.description }).eq('id', eventData.id); if (error) { console.error('Error updating event log:', error); } else { fetchEventLog(); closeModal(); } }
-        async function fetchEventLog() { const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false }); if (error) { console.error('Error fetching event log:', error); return; } renderEventLog(data); }
-        function renderEventLog(items) { const container = document.getElementById('event-log-container'); if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4">ยังไม่มีการบันทึกเหตุการณ์</p>'; return; } container.innerHTML = items.map(entry => `<div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-400"><div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-800">${formatDate(entry.event_date)} ${entry.event_time ? ` - ${entry.event_time.substring(0, 5)}` : ''}</h4><div class="flex space-x-2"><button onclick='openEventLogModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button><button onclick="deleteEventLog(${entry.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-sm text-slate-700">${entry.description}</p></div>`).join(''); }
-        async function deleteEventLog(id) { if (!confirm('คุณต้องการลบบันทึกเหตุการณ์นี้ใช่หรือไม่?')) return; const { error } = await db.from('event_log').delete().eq('id', id); if (error) console.error('Error deleting event log:', error); else fetchEventLog(); }
-
-        // --- PERSONAL GROWTH ---
-        function openPersonalGrowthModal(item = null) {
-            const isEdit = item !== null;
-            modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="personal-growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายใหม่'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
-                        <div class="space-y-4">
-                            <div><label class="text-sm font-medium">ทักษะ/เรื่องที่ต้องการพัฒนา</label><input name="skill_name" type="text" value="${isEdit ? item.skill_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เป้าหมาย</label><textarea name="goal" class="w-full mt-1 p-2 border rounded-md" rows="3">${isEdit ? item.goal || '' : ''}</textarea></div>
-                            <div><label class="text-sm font-medium">วันที่เริ่ม</label><input name="start_date" type="date" value="${isEdit ? item.start_date : getToday()}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md">
-                                <option value="Not Started" ${isEdit && item.status === 'Not Started' ? 'selected' : ''}>ยังไม่เริ่ม</option>
-                                <option value="In Progress" ${isEdit && item.status === 'In Progress' ? 'selected' : ''}>กำลังดำเนินการ</option>
-                                <option value="Completed" ${isEdit && item.status === 'Completed' ? 'selected' : ''}>สำเร็จ</option>
-                            </select></div>
-                        </div>
-                        <div class="mt-6 flex justify-end space-x-2">
-                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
-                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">บันทึก</button>
-                        </div>
-                    </form>
-                </div>`;
-            document.getElementById('personal-growth-form').addEventListener('submit', isEdit ? handleEditPersonalGrowth : addPersonalGrowth);
-        }
-        async function addPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); delete growthData.id; const { error } = await db.from('personal_growth').insert([growthData]); if (error) { console.error('Error adding personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
-        async function handleEditPersonalGrowth(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const growthData = Object.fromEntries(formData.entries()); const { error } = await db.from('personal_growth').update({ skill_name: growthData.skill_name, goal: growthData.goal, start_date: growthData.start_date, status: growthData.status }).eq('id', growthData.id); if (error) { console.error('Error updating personal growth item:', error); } else { fetchPersonalGrowth(); closeModal(); } }
-        async function fetchPersonalGrowth() { const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false }); if (error) { console.error('Error fetching personal growth:', error); return; } renderPersonalGrowth(data); }
-        function renderPersonalGrowth(items) {
-            const container = document.getElementById('personal-growth-container');
-            if (items.length === 0) { container.innerHTML = '<p class="text-slate-400 text-center py-4 col-span-full">ยังไม่มีเป้าหมายการพัฒนาตนเอง</p>'; return; }
-            container.innerHTML = items.map(item => {
-                const statusColors = { 'Not Started': 'bg-gray-200 text-gray-800', 'In Progress': 'bg-blue-200 text-blue-800', 'Completed': 'bg-green-200 text-green-800' };
-                return `
-                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    <div class="flex justify-between items-start">
-                        <h4 class="font-semibold text-slate-800 mb-2">${item.skill_name}</h4>
-                        <div class="flex space-x-2">
-                           <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                           <button onclick="deletePersonalGrowth(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-600 mb-3 min-h-[40px]">${item.goal || ''}</p>
-                    <div class="text-xs text-slate-500"><strong>เริ่ม:</strong> ${item.start_date ? formatDate(item.start_date) : '-'}</div>
-                    <div class="mt-2"><span class="text-xs font-medium px-2 py-1 rounded-full ${statusColors[item.status]}">${item.status}</span></div>
-                </div>`;
-            }).join('');
-        }
-        async function deletePersonalGrowth(id) { if (!confirm('คุณต้องการลบเป้าหมายนี้ใช่หรือไม่?')) return; const { error } = await db.from('personal_growth').delete().eq('id', id); if (error) console.error('Error deleting personal growth item:', error); else fetchPersonalGrowth(); }
-
-        // --- HEALTH TRACKER ---
-        const CALORIE_GOAL = 1850;
-        function openHealthLogModal(entry = null) {
-            const isEdit = entry !== null;
+        
+        // --- HEALTH ---
+        function openHealthLogModal(log = null) {
+            const isEdit = log !== null;
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
-                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
+                        <input type="hidden" name="log_date" value="${getToday()}">
                         <div class="space-y-4">
-                            <div><label class="text-sm font-medium">ประเภท</label><select name="type" class="w-full mt-1 p-2 border rounded-md"><option value="food" ${isEdit && entry.type === 'food' ? 'selected' : ''}>🍔 อาหาร</option><option value="exercise" ${isEdit && entry.type === 'exercise' ? 'selected' : ''}>🏃 ออกกำลังกาย</option></select></div>
-                            <div><label class="text-sm font-medium">รายการ</label><input name="item_name" type="text" value="${isEdit ? entry.item_name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">แคลอรี่</label><input name="calories" type="number" value="${isEdit ? entry.calories : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ประเภท</label>
+                                <select name="type" class="w-full mt-1 p-2 border rounded-md">
+                                    <option value="food" ${isEdit && log.type === 'food' ? 'selected' : ''}>อาหาร</option>
+                                    <option value="exercise" ${isEdit && log.type === 'exercise' ? 'selected' : ''}>ออกกำลังกาย</option>
+                                </select>
+                            </div>
+                            <div><label class="text-sm font-medium">รายการ</label><input name="item_name" type="text" value="${isEdit ? log.item_name : ''}" required class="w-full mt-1 p-2 border rounded-md" placeholder="เช่น ข้าวมันไก่, วิ่ง 30 นาที"></div>
+                            <div><label class="text-sm font-medium">แคลอรี่</label><input name="calories" type="number" value="${isEdit ? log.calories : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
                             <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
@@ -1070,124 +982,641 @@
                         </div>
                     </form>
                 </div>`;
-            document.getElementById('health-log-form').addEventListener('submit', isEdit ? handleEditHealthLog : addHealthLogEntry);
+            document.getElementById('health-log-form').addEventListener('submit', (e) => handleFormSubmit(e, 'health_log', fetchAllData));
         }
-        async function addHealthLogEntry(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); healthData.log_date = getToday(); delete healthData.id; const { error } = await db.from('health_log').insert([healthData]); if (error) { console.error('Error adding health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function handleEditHealthLog(e) { e.preventDefault(); const form = e.target; const formData = new FormData(form); const healthData = Object.fromEntries(formData.entries()); const { error } = await db.from('health_log').update({ item_name: healthData.item_name, calories: healthData.calories, type: healthData.type }).eq('id', healthData.id); if (error) { console.error('Error updating health log:', error); } else { fetchHealthLog(); closeModal(); } }
-        async function fetchHealthLog() { const { data, error } = await db.from('health_log').select('*').eq('log_date', getToday()).order('created_at'); if (error) { console.error('Error fetching health log:', error); return; } renderHealthTracker(data); fetchDataForCalendar(); fetchDashboardOverview(); }
-        function renderHealthTracker(items) {
+        async function fetchHealthLogs() {
+            const { data, error } = await db.from('health_log').select('*');
+            if (error) { console.error('Error fetching health_log:', error); appState.health_log = []; return; }
+            appState.health_log = data || [];
+        }
+        function renderHealthTracker() {
             const container = document.getElementById('health-tracker-container');
-            const foodItems = items.filter(i => i.type === 'food');
-            const exerciseItems = items.filter(i => i.type === 'exercise');
-            const totalCaloriesIn = foodItems.reduce((sum, i) => sum + i.calories, 0);
-            const totalCaloriesOut = exerciseItems.reduce((sum, i) => sum + i.calories, 0);
-            const netCalories = totalCaloriesIn - totalCaloriesOut;
-            const remainingCalories = CALORIE_GOAL - netCalories;
+            if (!container) return;
+            
+            const todayStr = getToday();
+            const logsToday = appState.health_log.filter(log => log.log_date === todayStr);
+            const foodLogs = logsToday.filter(log => log.type === 'food');
+            const exerciseLogs = logsToday.filter(log => log.type === 'exercise');
+
+            const caloriesIn = foodLogs.reduce((sum, log) => sum + log.calories, 0);
+            const caloriesOut = exerciseLogs.reduce((sum, log) => sum + log.calories, 0);
+            const netCalories = caloriesIn - caloriesOut;
+            const calorieGoal = 1850;
+            const progress = Math.min((caloriesIn / calorieGoal) * 100, 100);
+
+            const renderLogList = (logs) => {
+                if (logs.length === 0) return '<p class="text-sm text-slate-400 px-2">ไม่มีรายการ</p>';
+                return logs.map(log => `
+                    <div class="flex justify-between items-center text-sm py-1">
+                        <span>${log.item_name}</span>
+                        <span>${formatNumber(log.calories)} kcal</span>
+                    </div>
+                `).join('');
+            };
 
             container.innerHTML = `
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 text-center">
-                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">เป้าหมาย</p><p class="text-xl font-bold text-blue-600">${CALORIE_GOAL.toLocaleString()} แคล</p></div>
-                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ</p><p class="text-xl font-bold text-green-600">${totalCaloriesIn.toLocaleString()} แคล</p></div>
-                    <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">เผาผลาญ</p><p class="text-xl font-bold text-orange-600">${totalCaloriesOut.toLocaleString()} แคล</p></div>
-                    <div class="${remainingCalories >= 0 ? 'bg-purple-100' : 'bg-red-200'} p-3 rounded-lg"><p class="text-sm ${remainingCalories >= 0 ? 'text-purple-800' : 'text-red-800'}">คงเหลือ</p><p class="text-xl font-bold ${remainingCalories >= 0 ? 'text-purple-600' : 'text-red-600'}">${remainingCalories.toLocaleString()} แคล</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ (kcal)</p><p class="text-xl font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
+                    <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">ใช้ไป (kcal)</p><p class="text-xl font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
+                    <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">สุทธิ (kcal)</p><p class="text-xl font-bold text-blue-600">${formatNumber(netCalories)}</p></div>
+                </div>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>เป้าหมายแคลอรี่วันนี้: ${formatNumber(caloriesIn)} / ${formatNumber(calorieGoal)}</span>
+                        <span>${Math.round(progress)}%</span>
+                    </div>
+                    <div class="progress-bar h-2 w-full">
+                        <div class="progress-bar-inner h-2 bg-green-500" style="width: ${progress}%;"></div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🍔 อาหารที่ทาน</h3>
-                        <div class="space-y-2">${foodItems.map(item => `
-                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
-                                <span>${item.item_name}</span>
-                                <div class="flex items-center space-x-3">
-                                    <span class="font-medium text-green-600">${item.calories.toLocaleString()} แคล</span>
-                                    <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการอาหาร</p>'}
-                        </div>
+                        <h4 class="font-semibold mb-2">อาหารที่กิน</h4>
+                        <div class="space-y-1">${renderLogList(foodLogs)}</div>
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-slate-700 mb-2">🏃 การออกกำลังกาย</h3>
-                         <div class="space-y-2">${exerciseItems.map(item => `
-                            <div class="flex justify-between items-center p-2 bg-slate-50 rounded-md">
-                                <span>${item.item_name}</span>
-                                <div class="flex items-center space-x-3">
-                                    <span class="font-medium text-orange-600">${item.calories.toLocaleString()} แคล</span>
-                                     <button onclick='openHealthLogModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs">✏️</button>
-                                    <button onclick="deleteHealthLog(${item.id})" class="text-red-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>`).join('') || '<p class="text-sm text-slate-400">ไม่มีรายการออกกำลังกาย</p>'}
-                        </div>
+                        <h4 class="font-semibold mb-2">การออกกำลังกาย</h4>
+                        <div class="space-y-1">${renderLogList(exerciseLogs)}</div>
                     </div>
                 </div>
             `;
         }
-        async function deleteHealthLog(id) { if (!confirm('คุณต้องการลบบันทึกนี้ใช่หรือไม่?')) return; const { error } = await db.from('health_log').delete().eq('id', id); if (error) console.error('Error deleting health log:', error); else fetchHealthLog(); }
 
-        // --- NEW SECTIONS ---
-
-        // 1. Dashboard Overview
-        async function fetchDashboardOverview() {
-            const today = getToday();
-            const { data: tasks, error: tasksError } = await db.from('tasks').select('*').eq('due_date', today).not('status', 'eq', 'Done').limit(3);
-            const { data: habits, error: habitsError } = await db.from('habits').select('*');
-            const { data: habitLogs, error: habitLogsError } = await db.from('habit_log').select('habit_id').eq('completed_date', today);
-            const { data: health, error: healthError } = await db.from('health_log').select('type, calories').eq('log_date', today);
-            const { data: schedule, error: scheduleError } = await db.from('schedule').select('*').gte('event_date', new Date().toISOString()).order('event_date').limit(1);
-
-            const container = document.getElementById('overview-container');
-            let html = '';
-
-            // Tasks Card
-            html += `<div class="bg-blue-50 p-4 rounded-lg"><h3 class="font-bold text-blue-800 mb-2">🎯 งานสำหรับวันนี้</h3><div class="space-y-1 text-sm">`;
-            if (tasks && tasks.length > 0) {
-                html += tasks.map(t => `<p>${t.title}</p>`).join('');
+        // --- MOOD ---
+        async function handleMoodSelect(mood) {
+            const todayStr = getToday();
+            const { data, error } = await db.from('mood_logs').upsert({ log_date: todayStr, mood: mood }, { onConflict: 'log_date' });
+            if (error) {
+                showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
             } else {
-                html += `<p class="text-slate-500">ไม่มีงานสำหรับวันนี้</p>`;
+                showToast('บันทึกอารมณ์แล้ว!', 'success'); fetchAllData();
             }
-            html += `</div></div>`;
-
-            // Habits Card
-            const loggedHabitIds = new Set((habitLogs || []).map(l => l.habit_id));
-            const habitsToday = (habits || []).filter(h => h.frequency === 'daily' || h.weekly_day == new Date().getDay());
-            const completedHabits = habitsToday.filter(h => loggedHabitIds.has(h.id)).length;
-            html += `<div class="bg-teal-50 p-4 rounded-lg"><h3 class="font-bold text-teal-800 mb-2">💪 กิจวัตร</h3><div class="text-center"><p class="text-3xl font-bold">${completedHabits}/${habitsToday.length}</p><p class="text-sm">ที่ทำสำเร็จแล้ว</p></div></div>`;
-            
-            // Health Card
-            const caloriesIn = (health || []).filter(h => h.type === 'food').reduce((sum, h) => sum + h.calories, 0);
-            const caloriesOut = (health || []).filter(h => h.type === 'exercise').reduce((sum, h) => sum + h.calories, 0);
-            const remaining = CALORIE_GOAL - (caloriesIn - caloriesOut);
-            html += `<div class="bg-red-50 p-4 rounded-lg"><h3 class="font-bold text-red-800 mb-2">❤️ สุขภาพ</h3><div class="text-center"><p class="text-3xl font-bold">${remaining.toLocaleString()}</p><p class="text-sm">แคลอรี่คงเหลือ</p></div></div>`;
-
-            // Schedule Card
-            html += `<div class="bg-cyan-50 p-4 rounded-lg"><h3 class="font-bold text-cyan-800 mb-2">🗓️ นัดหมายถัดไป</h3><div class="space-y-1 text-sm">`;
-            if (schedule && schedule.length > 0) {
-                const nextEvent = schedule[0];
-                html += `<p class="font-semibold">${nextEvent.title}</p><p class="text-xs">${formatDate(nextEvent.event_date)} ${formatTime(nextEvent.event_date)}</p>`;
-            } else {
-                html += `<p class="text-slate-500">ไม่มีนัดหมายเร็วๆ นี้</p>`;
-            }
-            html += `</div></div>`;
-
-            container.innerHTML = html;
+        }
+        async function fetchMoods() {
+            const { data, error } = await db.from('mood_logs').select('*');
+            if (error) { console.error('Error fetching mood_logs:', error); appState.mood_logs = []; return; }
+            appState.mood_logs = data || [];
+        }
+        function renderMoodTracker() {
+            const container = document.getElementById('mood-tracker-container');
+            if (!container) return;
+            const moods = [
+                { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
+                { mood: 'เฉยๆ', emoji: '😐' }, { mood: 'ไม่ค่อยดี', emoji: '😟' },
+                { mood: 'แย่', emoji: '😠' }
+            ];
+            const todayLog = appState.mood_logs.find(log => log.log_date === getToday());
+            container.innerHTML = `
+                <div class="flex justify-around items-center p-4 bg-slate-50 rounded-lg">
+                    ${moods.map(m => `
+                        <button class="mood-btn text-4xl p-2 rounded-full transition-transform duration-200 ${todayLog && todayLog.mood === m.mood ? 'selected' : ''}" 
+                                title="${m.mood}" 
+                                onclick="handleMoodSelect('${m.mood}')">
+                            ${m.emoji}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
         }
 
-        // 2. OKRs
-        async function fetchOkrs() { /* Implement */ }
-        function renderOkrs(data) { /* Implement */ }
-        function openOkrModal(okr = null) { /* Implement */ }
+        // --- MEDIA LOG ---
+        function openMediaLogModal(log = null) {
+            const isEdit = log !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="media-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขรายการ' : 'เพิ่มรายการใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ชื่อเรื่อง</label><input name="title" type="text" value="${isEdit ? log.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">ประเภท</label><select name="type" class="w-full mt-1 p-2 border rounded-md"><option value="Book" ${isEdit && log.type === 'Book' ? 'selected' : ''}>หนังสือ</option><option value="Movie" ${isEdit && log.type === 'Movie' ? 'selected' : ''}>ภาพยนตร์</option><option value="Series" ${isEdit && log.type === 'Series' ? 'selected' : ''}>ซีรีส์</option><option value="Article" ${isEdit && log.type === 'Article' ? 'selected' : ''}>บทความ</option><option value="Podcast" ${isEdit && log.type === 'Podcast' ? 'selected' : ''}>พอดแคสต์</option></select></div>
+                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option value="To Consume" ${isEdit && log.status === 'To Consume' ? 'selected' : ''}>จะดู/อ่าน</option><option value="Consuming" ${isEdit && log.status === 'Consuming' ? 'selected' : ''}>กำลังดู/อ่าน</option><option value="Consumed" ${isEdit && log.status === 'Consumed' ? 'selected' : ''}>ดู/อ่านแล้ว</option></select></div>
+                            <div><label class="text-sm font-medium">คะแนน (1-5)</label><input name="rating" type="number" min="1" max="5" value="${isEdit ? log.rating : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('media-log-form').addEventListener('submit', (e) => handleFormSubmit(e, 'media_logs', fetchAllData));
+        }
+        async function fetchMediaLogs() {
+            const { data, error } = await db.from('media_logs').select('*').order('created_at', { ascending: false });
+            if (error) { console.error('Error fetching media_logs:', error); appState.media_logs = []; return; }
+            appState.media_logs = data || [];
+        }
+        function renderMediaLog() {
+            const logs = appState.media_logs;
+            const container = document.getElementById('media-log-container');
+            if (!container) return;
+            if (logs.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีรายการ</p>`;
+                return;
+            }
+            const typeIcons = { Book: '📖', Movie: '🎬', Series: '📺', Article: '📰', Podcast: '🎙️' };
+            container.innerHTML = logs.map(log => `
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start">
+                           <h4 class="font-bold text-slate-800">${log.title}</h4>
+                           <span class="text-xl" title="${log.type}">${typeIcons[log.type] || '❓'}</span>
+                        </div>
+                        <div class="text-sm text-slate-500 mt-2">
+                            <p>สถานะ: ${log.status}</p>
+                            ${log.rating ? `<p>คะแนน: ${'⭐'.repeat(log.rating)}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="text-right mt-2">
+                        <button onclick='openMediaLogModal(${JSON.stringify(log)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('media_logs', ${log.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- EVENT LOG ---
+        function openEventLogModal(log = null) {
+            const isEdit = log !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">เหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md">${isEdit ? log.description : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? toYYYYMMDD(log.event_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลา</label><input name="event_time" type="time" value="${isEdit ? log.event_time : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('event-log-form').addEventListener('submit', (e) => handleFormSubmit(e, 'event_log', fetchAllData));
+        }
+        async function fetchEventLogs() {
+            const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false });
+            if (error) { console.error('Error fetching event_log:', error); appState.event_log = []; return; }
+            appState.event_log = data || [];
+        }
+        function renderEventLog() {
+            const logs = appState.event_log;
+            const container = document.getElementById('event-log-container');
+            if (!container) return;
+            if (logs.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500">ยังไม่มีเหตุการณ์</p>`;
+                return;
+            }
+            container.innerHTML = logs.map(log => `
+                <div class="flex items-start justify-between bg-white p-3 rounded-md border border-slate-200">
+                    <div>
+                        <p><span class="font-semibold text-orange-600">${formatDate(log.event_date)} ${log.event_time ? formatTime(log.event_time) : ''}:</span></p>
+                        <p class="mt-1">${log.description}</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <button onclick='openEventLogModal(${JSON.stringify(log)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('event_log', ${log.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- PERSONAL GROWTH ---
+        function openPersonalGrowthModal(item = null) {
+            const isEdit = item !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายพัฒนาตนเอง'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ทักษะ/เรื่องที่เรียนรู้</label><input name="skill" type="text" value="${isEdit ? item.skill : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">แหล่งข้อมูล (ลิงก์)</label><input name="resource_link" type="url" value="${isEdit ? item.resource_link : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option value="To Learn" ${isEdit && item.status === 'To Learn' ? 'selected' : ''}>จะเรียนรู้</option><option value="Learning" ${isEdit && item.status === 'Learning' ? 'selected' : ''}>กำลังเรียนรู้</option><option value="Learned" ${isEdit && item.status === 'Learned' ? 'selected' : ''}>เรียนรู้แล้ว</option></select></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('growth-form').addEventListener('submit', (e) => handleFormSubmit(e, 'personal_growth', fetchAllData));
+        }
+        async function fetchPersonalGrowthItems() {
+            const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false });
+            if (error) { console.error('Error fetching personal_growth:', error); appState.personal_growth = []; return; }
+            appState.personal_growth = data || [];
+        }
+        function renderPersonalGrowth() {
+            const items = appState.personal_growth;
+            const container = document.getElementById('personal-growth-container');
+            if (!container) return;
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีเป้าหมาย</p>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="bg-green-50 p-3 rounded-lg border border-green-200">
+                    <h4 class="font-bold text-green-800">${item.skill}</h4>
+                    <p class="text-sm text-green-700 mt-1">สถานะ: ${item.status}</p>
+                    ${item.resource_link ? `<a href="${item.resource_link}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ไปที่แหล่งข้อมูล</a>` : ''}
+                    <div class="text-right mt-2">
+                        <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('personal_growth', ${item.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- JOURNAL ---
+        function openJournalModal(entry = null) {
+            const isEdit = entry !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <form id="journal-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึก' : 'เพิ่มบันทึกใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">วันที่</label><input name="entry_date" type="date" value="${isEdit ? toYYYYMMDD(entry.entry_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เรื่องที่อยากขอบคุณ</label><textarea name="gratitude" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.gratitude || '' : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">เรื่องดีๆ ที่เกิดขึ้น</label><textarea name="small_wins" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.small_wins || '' : ''}</textarea></div>
+                            <div><label class="text-sm font-medium">สำรวจอารมณ์</label><textarea name="mood_check_in" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.mood_check_in || '' : ''}</textarea></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('journal-form').addEventListener('submit', (e) => handleFormSubmit(e, 'journal_entries', fetchAllData));
+        }
+        async function fetchJournalEntries() {
+            const { data, error } = await db.from('journal_entries').select('*').order('entry_date', { ascending: false });
+            if (error) { console.error('Error fetching journal_entries:', error); appState.journal_entries = []; return; }
+            appState.journal_entries = data || [];
+        }
+        function renderJournalEntries() {
+            const entries = appState.journal_entries;
+            const container = document.getElementById('journal-entries');
+            if (!container) return;
+            if (entries.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500">ยังไม่มีบันทึก</p>`;
+                return;
+            }
+            container.innerHTML = entries.map(entry => `
+                <div class="bg-white p-4 rounded-lg border border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="font-semibold text-purple-700">${formatDate(entry.entry_date)}</p>
+                        <div>
+                            <button onclick='openJournalModal(${JSON.stringify(entry)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                            <button onclick="confirmDelete('journal_entries', ${entry.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    ${entry.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${entry.gratitude}</p></div>` : ''}
+                    ${entry.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${entry.small_wins}</p></div>` : ''}
+                    ${entry.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${entry.mood_check_in}</p></div>` : ''}
+                </div>
+            `).join('');
+        }
         
-        // 3. Media Log
-        async function fetchMediaLogs() { /* Implement */ }
-        function renderMediaLogs(data) { /* Implement */ }
-        function openMediaLogModal(item = null) { /* Implement */ }
+        // --- KNOWLEDGE ---
+        function openKnowledgeModal(item = null) {
+            const isEdit = item !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="knowledge-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขความรู้' : 'เพิ่มความรู้ใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">หัวข้อ</label><input name="topic" type="text" value="${isEdit ? item.topic : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">สรุป</label><textarea name="summary" class="w-full mt-1 p-2 border rounded-md h-24">${isEdit ? item.summary || '' : ''}</textarea></div>
+                             <div><label class="text-sm font-medium">แท็ก (คั่นด้วยจุลภาค)</label><input name="tags" type="text" value="${isEdit && item.tags ? item.tags.join(', ') : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">แหล่งที่มา (URL)</label><input name="url" type="url" value="${isEdit ? item.url : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+             const transformKnowledgeData = (data) => {
+                if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
+                return data;
+            };
+            document.getElementById('knowledge-form').addEventListener('submit', (e) => handleFormSubmit(e, 'knowledge_base', fetchAllData, transformKnowledgeData));
+        }
+        async function fetchKnowledgeItems() {
+            const { data, error } = await db.from('knowledge_base').select('*').order('created_at', { ascending: false });
+            if (error) { console.error('Error fetching knowledge_base:', error); appState.knowledge_items = []; return; }
+            appState.knowledge_items = data || [];
+        }
+        function renderKnowledgeGallery() {
+            const items = appState.knowledge_items;
+            const container = document.getElementById('knowledge-gallery');
+            if (!container) return;
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีคลังความรู้</p>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                    <h4 class="font-bold text-indigo-800">${item.topic}</h4>
+                    <p class="text-sm text-indigo-700 mt-1">${item.summary || ''}</p>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        ${(item.tags || []).map(tag => `<span class="text-xs bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full">${tag}</span>`).join('')}
+                    </div>
+                    ${item.url ? `<a href="${item.url}" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 block">อ่านเพิ่มเติม</a>` : ''}
+                    <div class="text-right mt-2">
+                        <button onclick='openKnowledgeModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('knowledge_base', ${item.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-        // 4. Mood Tracker
-        async function fetchMoodLogs() { /* Implement */ }
-        function renderMoodTracker(data) { /* Implement */ }
-        async function logMood(mood) { /* Implement */ }
+        // --- WEEKLY AGENDA ---
+        function renderWeeklyAgenda() {
+            const container = document.getElementById('weekly-agenda-container');
+            if (!container) return;
 
+            const startOfWeek = new Date(weeklyAgendaDate);
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            
+            let content = `<div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-3">🗓️</span>
+                    <h2 class="text-xl font-semibold text-gray-900">แผนประจำสัปดาห์</h2>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="changeWeek(-1)" class="p-2 rounded-full hover:bg-slate-100 text-sm"><i class="fas fa-chevron-left"></i></button>
+                    <span class="text-sm font-medium">${formatDate(startOfWeek)} - ${formatDate(new Date(new Date(startOfWeek).setDate(startOfWeek.getDate() + 6)))}</span>
+                    <button onclick="changeWeek(1)" class="p-2 rounded-full hover:bg-slate-100 text-sm"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>`;
+
+            content += '<div class="grid grid-cols-1 md:grid-cols-7 gap-2">';
+            const dayNames = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(startOfWeek);
+                day.setDate(day.getDate() + i);
+                const dateStr = toYYYYMMDD(day);
+                
+                const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
+                const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
+
+                let itemsHtml = daySchedules.map(s => `<div class="text-xs p-1.5 bg-cyan-100 text-cyan-800 rounded" title="${s.title}">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('');
+                itemsHtml += dayTasks.map(t => `<div class="text-xs p-1.5 ${t.status === 'Done' ? 'bg-green-100 text-green-800 line-through' : 'bg-blue-100 text-blue-800'} rounded" title="${t.title}">${t.title}</div>`).join('');
+
+                content += `
+                    <div class="bg-slate-50 rounded-lg p-2 min-h-[120px]">
+                        <p class="font-bold text-sm">${dayNames[i]}</p>
+                        <p class="text-xs text-slate-500 mb-2">${day.getDate()}</p>
+                        <div class="space-y-1">${itemsHtml || '<p class="text-xs text-slate-400 p-2 text-center">ไม่มีแผน</p>'}</div>
+                    </div>`;
+            }
+            content += '</div>';
+            container.innerHTML = content;
+        }
+
+        function changeWeek(delta) {
+            weeklyAgendaDate.setDate(weeklyAgendaDate.getDate() + (delta * 7));
+            renderWeeklyAgenda();
+        }
+
+        // --- OVERVIEW ---
+        function renderDashboardOverview() {
+            const container = document.getElementById('overview-container');
+            if (!container) return;
+            
+            const todayStr = getToday();
+            const tasksToday = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === todayStr && t.status !== 'Done').length;
+            const eventsToday = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === todayStr).length;
+            const habitsDoneToday = appState.habit_log.filter(hl => toYYYYMMDD(hl.completed_date) === todayStr).length;
+            const totalHabits = appState.habits.length;
+            
+            container.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
+                    <p class="text-sm text-blue-700">งานที่ต้องทำวันนี้</p>
+                    <p class="text-3xl font-bold text-blue-800">${tasksToday}</p>
+                </div>
+                <div class="bg-cyan-50 border border-cyan-200 p-4 rounded-lg text-center">
+                    <p class="text-sm text-cyan-700">กิจกรรมวันนี้</p>
+                    <p class="text-3xl font-bold text-cyan-800">${eventsToday}</p>
+                </div>
+                <div class="bg-teal-50 border border-teal-200 p-4 rounded-lg text-center">
+                    <p class="text-sm text-teal-700">กิจวัตรที่ทำแล้ว</p>
+                    <p class="text-3xl font-bold text-teal-800">${habitsDoneToday} / ${totalHabits}</p>
+                </div>
+                <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-center">
+                    <p class="text-sm text-yellow-700">ไอเดียทั้งหมด</p>
+                    <p class="text-3xl font-bold text-yellow-800">${appState.ideas.length}</p>
+                </div>
+            `;
+        }
+
+        // --- DAILY VIEW MODAL ---
+        function openDailyViewModal(dateStr) {
+             const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
+             const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
+             const dayJournal = appState.journal_entries.find(j => toYYYYMMDD(j.entry_date) === dateStr);
+
+             let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
+             let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
+             let journalHtml = dayJournal ? `
+                ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
+                ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
+                ${dayJournal.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.mood_check_in}</p></div>` : ''}
+             ` : '<p class="text-sm text-slate-400">ไม่มีบันทึก</p>';
+
+
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl my-8 relative">
+                         <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800">&times;</button>
+                         <h3 class="text-xl font-semibold mb-4">สรุปประจำวันที่ ${formatDate(dateStr)}</h3>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto p-2">
+                            <div>
+                                <h4 class="font-semibold mb-2">🗓️ ตารางเวลา</h4>
+                                <div class="space-y-2">${scheduleHtml}</div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold mb-2">🗂️ งาน</h4>
+                                <div class="space-y-2">${taskHtml}</div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <h4 class="font-semibold mb-2">❤️ สุขภาพ</h4>
+                                <div id="daily-health-view"></div>
+                            </div>
+                             <div class="md:col-span-2">
+                                <h4 class="font-semibold mb-2">📓 บันทึก</h4>
+                                <div class="space-y-2">${journalHtml}</div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            `;
+            // Render health summary for the specific day inside the modal
+            renderHealthTrackerForDay(dateStr);
+        }
+
+        function renderHealthTrackerForDay(dateStr) {
+             const container = document.getElementById('daily-health-view');
+             if (!container) return;
+             // Logic is the same as renderHealthTracker, but filtered for dateStr
+             const logsToday = appState.health_log.filter(log => log.log_date === dateStr);
+             const foodLogs = logsToday.filter(log => log.type === 'food');
+             const exerciseLogs = logsToday.filter(log => log.type === 'exercise');
+             const caloriesIn = foodLogs.reduce((sum, log) => sum + log.calories, 0);
+             const caloriesOut = exerciseLogs.reduce((sum, log) => sum + log.calories, 0);
+             const netCalories = caloriesIn - caloriesOut;
+             
+             container.innerHTML = `
+                <div class="grid grid-cols-3 gap-2 text-center text-sm mb-2">
+                    <div class="bg-green-100 p-2 rounded-lg"><p class="text-xs text-green-800">ได้รับ</p><p class="font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
+                    <div class="bg-orange-100 p-2 rounded-lg"><p class="text-xs text-orange-800">ใช้ไป</p><p class="font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
+                    <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">สุทธิ</p><p class="font-bold text-blue-600">${formatNumber(netCalories)}</p></div>
+                </div>
+             `;
+        }
+        
+        // --- DRAG AND DROP FOR HABITS ---
+        function addDragDropListeners(container) {
+            container.addEventListener('dragstart', e => {
+                if (e.target.classList.contains('habit-item')) {
+                    e.target.classList.add('dragging');
+                }
+            });
+
+            container.addEventListener('dragend', e => {
+                if (e.target.classList.contains('habit-item')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = document.querySelector('.dragging');
+                if (draggable) {
+                    if (afterElement == null) {
+                        container.appendChild(draggable);
+                    } else {
+                        container.insertBefore(draggable, afterElement);
+                    }
+                }
+            });
+
+            container.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                const habitElements = [...container.querySelectorAll('.habit-item')];
+                const updates = habitElements.map((habitEl, index) => {
+                    return {
+                        id: parseInt(habitEl.dataset.id),
+                        sort_order: index
+                    };
+                });
+                
+                const { error } = await db.from('habits').upsert(updates);
+                if (error) {
+                    showToast('ไม่สามารถบันทึกลำดับได้', 'error');
+                    console.error(error);
+                } else {
+                    showToast('บันทึกลำดับใหม่แล้ว', 'success');
+                    fetchAllData(); // Refresh data to ensure consistency
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.habit-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+
+        // --- INITIALIZATION ---
+        async function fetchAllData() {
+            const tableNames = [
+                'tasks', 'budget', 'schedules', 'okrs', 'ideas', 'habits', 
+                'habit_log', 'health_log', 'mood_logs', 'media_logs', 'event_log', 
+                'personal_growth', 'journal_entries', 'knowledge_base'
+            ];
+            
+            const promises = tableNames.map(name => db.from(name).select('*'));
+            
+            const results = await Promise.all(promises);
+
+            results.forEach((res, index) => {
+                const tableName = tableNames[index];
+                if (res.error) {
+                    console.error(`Error fetching ${tableName}:`, res.error);
+                    appState[tableName] = [];
+                } else {
+                    appState[tableName] = res.data || [];
+                }
+            });
+            
+            // Rename knowledge_base to knowledge_items for consistency in the app
+            appState.knowledge_items = appState.knowledge_base;
+            
+            renderAllComponents();
+        }
+
+        function renderAllComponents() {
+            renderDashboardOverview();
+            renderWeeklyAgenda();
+            renderOkrs();
+            renderTaskBoard();
+            renderIdeaBoard();
+            renderCalendar();
+            renderHabitTracker();
+            renderHealthTracker();
+            renderMoodTracker();
+            renderMediaLog();
+            renderEventLog();
+            renderPersonalGrowth();
+            renderJournalEntries();
+            renderKnowledgeGallery();
+            renderBudget();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAllData();
+
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px", threshold: 0 });
+
+            sections.forEach(section => observer.observe(section));
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        });
 
     </script>
-
 </body>
 </html>
