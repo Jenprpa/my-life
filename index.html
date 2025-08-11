@@ -402,10 +402,9 @@
             const formData = new FormData(form);
             let data = Object.fromEntries(formData.entries());
 
-            // Specific validation for required fields before processing
             if (tableName === 'habits' && (!data.name || data.name.trim() === '')) {
                 showToast('กรุณาใส่ชื่อกิจวัตร', 'error');
-                return; // Stop the function if the name is missing
+                return;
             }
 
             const id = data.id;
@@ -418,9 +417,10 @@
                 data = transformData(data);
             }
             
+            // Allow empty strings to be saved as null for non-required fields
             for (const key in data) {
-                if (data[key] === '' || data[key] === null) {
-                    delete data[key];
+                 if (key !== 'id' && data[key] === '') {
+                    data[key] = null;
                 }
             }
             
@@ -455,7 +455,6 @@
         // --- TASK MANAGEMENT ---
         function openTaskModal(task = null) {
             const isEdit = task !== null;
-            // Removed idea linking to match new schema
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                     <form id="task-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
@@ -849,7 +848,7 @@
                         <input type="hidden" name="id" value="${isEdit ? habit.id : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">ชื่อกิจวัตร</label><input name="name" type="text" value="${isEdit ? habit.name : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เป้าหมาย/คำอธิบาย</label><input name="goal" type="text" value="${isEdit ? habit.goal : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เป้าหมาย/คำอธิบาย</label><input name="goal" type="text" value="${isEdit && habit.goal ? habit.goal : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
                             <div><label class="text-sm font-medium">ความถี่</label>
                                 <select name="frequency" id="frequency-select" class="w-full mt-1 p-2 border rounded-md">
                                     <option value="daily" ${isEdit && habit.frequency === 'daily' ? 'selected' : ''}>รายวัน</option>
