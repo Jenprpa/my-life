@@ -638,17 +638,17 @@
                 const dateStr = toYYYYMMDD(date);
                 const isToday = toYYYYMMDD(today) === dateStr;
 
+                const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
+                const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
                 const dayExpenses = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0);
-                const dayCaloriesIn = appState.health_log.filter(i => toYYYYMMDD(i.log_date) === dateStr && i.type === 'food').reduce((sum, i) => sum + i.calories, 0);
-                const dayCaloriesOut = appState.health_log.filter(i => toYYYYMMDD(i.log_date) === dateStr && i.type === 'exercise').reduce((sum, i) => sum + i.calories, 0);
                 
                 body += `
                     <div class="calendar-day border border-slate-200 rounded-md p-2 h-28 flex flex-col cursor-pointer ${isToday ? 'today' : ''}" onclick="openDailyViewModal('${dateStr}')">
                         <span class="font-bold">${day}</span>
                         <div class="text-xs mt-1 space-y-1 overflow-hidden">
-                            ${dayExpenses > 0 ? `<div class="flex items-center text-red-500" title="รายจ่าย"><i class="fa-solid fa-arrow-down w-4"></i> ${formatNumber(dayExpenses)}</div>` : ''}
-                            ${dayCaloriesIn > 0 ? `<div class="flex items-center text-green-500" title="แคลอรี่ที่ได้รับ"><i class="fa-solid fa-utensils w-4"></i> ${formatNumber(dayCaloriesIn)}</div>` : ''}
-                            ${dayCaloriesOut > 0 ? `<div class="flex items-center text-orange-500" title="แคลอรี่ที่ใช้ไป"><i class="fa-solid fa-person-running w-4"></i> ${formatNumber(dayCaloriesOut)}</div>` : ''}
+                            ${daySchedules.length > 0 ? `<div class="flex items-center text-cyan-600" title="กิจกรรม"><i class="fa-solid fa-calendar-day w-4"></i> ${daySchedules.length}</div>` : ''}
+                            ${dayTasks.length > 0 ? `<div class="flex items-center text-blue-600" title="งาน"><i class="fa-solid fa-check-square w-4"></i> ${dayTasks.length}</div>` : ''}
+                            ${dayExpenses > 0 ? `<div class="flex items-center text-red-500" title="รายจ่าย"><i class="fa-solid fa-coins w-4"></i> ${formatNumber(dayExpenses)}</div>` : ''}
                         </div>
                     </div>`;
             }
@@ -1422,9 +1422,14 @@
              const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
              const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
              const dayJournal = appState.journal_entries.find(j => toYYYYMMDD(j.entry_date) === dateStr);
+             const dayOfWeek = new Date(dateStr).getDay();
+             const weeklyHabitsForDay = appState.habits.filter(h => h.frequency === 'weekly' && h.weekly_day === dayOfWeek);
+             const dayExpensesList = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense');
 
              let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
              let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
+             let weeklyHabitHtml = weeklyHabitsForDay.length > 0 ? weeklyHabitsForDay.map(h => `<div class="text-sm p-2 bg-teal-50 rounded">${h.name}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจวัตรประจำสัปดาห์</p>';
+             let expenseHtml = dayExpensesList.length > 0 ? dayExpensesList.map(item => `<div class="text-sm p-2 bg-red-50 rounded flex justify-between"><span>${item.item}</span> <span>${formatCurrency(item.amount)}</span></div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีรายจ่าย</p>';
              let journalHtml = dayJournal ? `
                 ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
                 ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
@@ -1446,6 +1451,14 @@
                                 <h4 class="font-semibold mb-2">🗂️ งาน</h4>
                                 <div class="space-y-2">${taskHtml}</div>
                             </div>
+                             <div class="md:col-span-2">
+                                <h4 class="font-semibold mb-2">� กิจวัตรประจำสัปดาห์</h4>
+                                <div class="space-y-2">${weeklyHabitHtml}</div>
+                            </div>
+                             <div class="md:col-span-2">
+                                <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
+                                <div class="space-y-2">${expenseHtml}</div>
+                            </div>
                             <div class="md:col-span-2">
                                 <h4 class="font-semibold mb-2">❤️ สุขภาพ</h4>
                                 <div id="daily-health-view"></div>
@@ -1458,14 +1471,12 @@
                     </div>
                 </div>
             `;
-            // Render health summary for the specific day inside the modal
             renderHealthTrackerForDay(dateStr);
         }
 
         function renderHealthTrackerForDay(dateStr) {
              const container = document.getElementById('daily-health-view');
              if (!container) return;
-             // Logic is the same as renderHealthTracker, but filtered for dateStr
              const logsToday = appState.health_log.filter(log => log.log_date === dateStr);
              const foodLogs = logsToday.filter(log => log.type === 'food');
              const exerciseLogs = logsToday.filter(log => log.type === 'exercise');
@@ -1620,3 +1631,4 @@
     </script>
 </body>
 </html>
+�
