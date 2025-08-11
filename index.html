@@ -230,8 +230,8 @@
                             </div>
                             <button onclick="openPersonalGrowthModal()" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors">+ เพิ่มเป้าหมาย</button>
                         </div>
-                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1">
-                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        <div id="personal-growth-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4 md:col-span-2"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
                         </div>
                     </section>
 
@@ -1186,15 +1186,29 @@
         // --- PERSONAL GROWTH ---
         function openPersonalGrowthModal(item = null) {
             const isEdit = item !== null;
+            const tasks = isEdit && item.tasks ? item.tasks : [{ title: '', completed: false }];
+            let tasksHtml = tasks.map((task, index) => `
+                <div class="flex items-center space-x-2" id="pg-task-row-${index}">
+                    <input name="pg_task_completed_${index}" type="checkbox" ${task.completed ? 'checked' : ''} class="h-5 w-5 rounded text-green-500">
+                    <input name="pg_task_title_${index}" type="text" value="${task.title}" placeholder="สิ่งที่ต้องทำ ${index + 1}" class="w-full p-2 border rounded-md">
+                    <button type="button" onclick="document.getElementById('pg-task-row-${index}').remove()" class="text-red-500 hover:text-red-700">&times;</button>
+                </div>
+            `).join('');
+
             modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายพัฒนาตนเอง'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">ทักษะ/เรื่องที่เรียนรู้</label><input name="skill" type="text" value="${isEdit ? item.skill : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
                             <div><label class="text-sm font-medium">แหล่งข้อมูล (ลิงก์)</label><input name="resource_link" type="url" value="${isEdit ? item.resource_link : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
                             <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option value="To Learn" ${isEdit && item.status === 'To Learn' ? 'selected' : ''}>จะเรียนรู้</option><option value="Learning" ${isEdit && item.status === 'Learning' ? 'selected' : ''}>กำลังเรียนรู้</option><option value="Learned" ${isEdit && item.status === 'Learned' ? 'selected' : ''}>เรียนรู้แล้ว</option></select></div>
+                            <div>
+                                <label class="text-sm font-medium">Goal Tasks</label>
+                                <div id="pg-tasks-container" class="space-y-2 mt-1">${tasksHtml}</div>
+                                <button type="button" id="add-pg-task-btn" class="text-sm text-blue-600 mt-2">+ เพิ่ม Task</button>
+                            </div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
                             <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
@@ -1202,7 +1216,46 @@
                         </div>
                     </form>
                 </div>`;
-            document.getElementById('growth-form').addEventListener('submit', (e) => handleFormSubmit(e, 'personal_growth', fetchAllData));
+            
+            let taskIndex = tasks.length;
+            document.getElementById('add-pg-task-btn').onclick = () => {
+                const container = document.getElementById('pg-tasks-container');
+                const newRow = document.createElement('div');
+                newRow.className = 'flex items-center space-x-2';
+                newRow.id = `pg-task-row-${taskIndex}`;
+                newRow.innerHTML = `
+                    <input name="pg_task_completed_${taskIndex}" type="checkbox" class="h-5 w-5 rounded text-green-500">
+                    <input name="pg_task_title_${taskIndex}" type="text" placeholder="สิ่งที่ต้องทำ ${taskIndex + 1}" class="w-full p-2 border rounded-md">
+                    <button type="button" onclick="document.getElementById('pg-task-row-${taskIndex}').remove()" class="text-red-500 hover:text-red-700">&times;</button>
+                `;
+                container.appendChild(newRow);
+                taskIndex++;
+            };
+
+            const transformGrowthData = (data) => {
+                const tasks = [];
+                const formElements = document.getElementById('growth-form').elements;
+                for(let i=0; i < formElements.length; i++) {
+                    const el = formElements[i];
+                    if (el.name.startsWith('pg_task_title_')) {
+                        const index = el.name.split('_')[3];
+                        const title = el.value;
+                        const completed = document.querySelector(`[name="pg_task_completed_${index}"]`).checked;
+                        if (title) {
+                            tasks.push({ title, completed });
+                        }
+                    }
+                }
+                data.tasks = tasks;
+                // Clean up temporary form fields
+                Object.keys(data).forEach(key => {
+                    if (key.startsWith('pg_task_')) {
+                        delete data[key];
+                    }
+                });
+                return data;
+            };
+            document.getElementById('growth-form').addEventListener('submit', (e) => handleFormSubmit(e, 'personal_growth', fetchAllData, transformGrowthData));
         }
         async function fetchPersonalGrowthItems() {
             const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false });
@@ -1217,17 +1270,43 @@
                 container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีเป้าหมาย</p>`;
                 return;
             }
-            container.innerHTML = items.map(item => `
-                <div class="bg-green-50 p-3 rounded-lg border border-green-200">
-                    <h4 class="font-bold text-green-800">${item.skill}</h4>
-                    <p class="text-sm text-green-700 mt-1">สถานะ: ${item.status}</p>
-                    ${item.resource_link ? `<a href="${item.resource_link}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ไปที่แหล่งข้อมูล</a>` : ''}
-                    <div class="text-right mt-2">
-                        <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
-                        <button onclick="confirmDelete('personal_growth', ${item.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+            container.innerHTML = items.map(item => {
+                const tasks = item.tasks || [];
+                const completedCount = tasks.filter(t => t.completed).length;
+                const progress = tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0;
+
+                return `
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-green-800">${item.skill}</h4>
+                            <p class="text-sm text-green-700 mt-1">สถานะ: ${item.status}</p>
+                            ${item.resource_link ? `<a href="${item.resource_link}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ไปที่แหล่งข้อมูล</a>` : ''}
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                            <button onclick="confirmDelete('personal_growth', ${item.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                     <div class="mt-3">
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span>ความคืบหน้า</span>
+                            <span>${Math.round(progress)}%</span>
+                        </div>
+                        <div class="progress-bar h-2 w-full">
+                            <div class="progress-bar-inner h-2 bg-green-500" style="width: ${progress}%;"></div>
+                        </div>
+                    </div>
+                    <div class="mt-2 space-y-1">
+                        ${tasks.map(task => `
+                            <div class="flex items-center text-sm">
+                                <i class="fa-solid ${task.completed ? 'fa-circle-check text-green-500' : 'fa-circle-notch text-slate-400'} mr-2"></i>
+                                <span class="${task.completed ? 'line-through text-slate-500' : ''}">${task.title}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // --- JOURNAL ---
@@ -1452,7 +1531,7 @@
                                 <div class="space-y-2">${taskHtml}</div>
                             </div>
                              <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">� กิจวัตรประจำสัปดาห์</h4>
+                                <h4 class="font-semibold mb-2">🎯 กิจวัตรประจำสัปดาห์</h4>
                                 <div class="space-y-2">${weeklyHabitHtml}</div>
                             </div>
                              <div class="md:col-span-2">
@@ -1631,4 +1710,3 @@
     </script>
 </body>
 </html>
-�
