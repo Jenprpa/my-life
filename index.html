@@ -49,6 +49,7 @@
                 <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกการอ่าน/ดู/ฟัง</a>
                 <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
                 <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
+                <a href="#certificates" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏆</span> คลังเกียรติบัตร</a>
                 <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
                 <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
                 <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
@@ -147,11 +148,11 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                              <div class="flex items-center">
-                                  <span class="text-2xl mr-3">📅</span>
-                                  <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                              </div>
-                              <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
+                               <div class="flex items-center">
+                                   <span class="text-2xl mr-3">📅</span>
+                                   <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                               </div>
+                               <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
                          </div>
                         <div id="calendar-container">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลดปฏิทิน...</p></div>
@@ -211,11 +212,11 @@
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                              <div class="flex items-center">
-                                  <span class="text-2xl mr-3">📌</span>
-                                  <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                              </div>
-                              <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                               <div class="flex items-center">
+                                   <span class="text-2xl mr-3">📌</span>
+                                   <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                               </div>
+                               <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
                          </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -234,14 +235,28 @@
                              <div class="text-center p-4 md:col-span-2"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
                         </div>
                     </section>
+                    
+                    <!-- [NEW] Certificates Section -->
+                    <section id="certificates" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">🏆</span>
+                                <h2 class="text-xl font-semibold text-gray-900">คลังเกียรติบัตร</h2>
+                            </div>
+                            <button onclick="openCertificateModal()" class="bg-amber-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-amber-600 transition-colors">+ เพิ่มเกียรติบัตร</button>
+                        </div>
+                        <div id="certificates-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-1">
+                             <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
+                    </section>
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                              <div class="flex items-center">
-                                  <span class="text-2xl mr-3">📓</span>
-                                  <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                              </div>
-                              <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                               <div class="flex items-center">
+                                   <span class="text-2xl mr-3">📓</span>
+                                   <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                               </div>
+                               <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
                          </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto">
                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -251,8 +266,8 @@
                     <section id="knowledge" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
-                               <span class="text-2xl mr-3">📚</span>
-                               <h2 class="text-xl font-semibold text-gray-900">คลังความรู้</h2>
+                              <span class="text-2xl mr-3">📚</span>
+                              <h2 class="text-xl font-semibold text-gray-900">คลังความรู้</h2>
                             </div>
                             <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
                         </div>
@@ -326,6 +341,7 @@
             media_logs: [],
             event_log: [],
             personal_growth: [],
+            certificates: [], // [NEW]
             journal_entries: [],
             knowledge_items: [],
             budget: [],
@@ -362,7 +378,7 @@
             setTimeout(() => {
                 const el = document.getElementById(toastId);
                 if (el) el.remove();
-            }, 3000);
+            }, 5000); // Increased timeout for error messages
         };
 
         // --- MODAL & UI HANDLING ---
@@ -420,8 +436,8 @@
             // Allow empty strings to be saved as null for non-required fields
             for (const key in data) {
                  if (key !== 'id' && data[key] === '') {
-                    data[key] = null;
-                }
+                     data[key] = null;
+                 }
             }
             
             const { error } = id
@@ -1062,11 +1078,12 @@
             const moods = [
                 { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
                 { mood: 'เฉยๆ', emoji: '😐' }, { mood: 'ไม่ค่อยดี', emoji: '😟' },
-                { mood: 'แย่', emoji: '😠' }
+                { mood: 'แย่', emoji: '😠' }, { mood: 'ง่วง', emoji: '😴' },
+                { mood: 'ไม่สบาย', emoji: '🤒' }, { mood: 'ตกใจ', emoji: '😱' }
             ];
             const todayLog = appState.mood_logs.find(log => log.log_date === getToday());
             container.innerHTML = `
-                <div class="flex justify-around items-center p-4 bg-slate-50 rounded-lg">
+                <div class="flex justify-around items-center p-4 bg-slate-50 rounded-lg flex-wrap gap-2">
                     ${moods.map(m => `
                         <button class="mood-btn text-4xl p-2 rounded-full transition-transform duration-200 ${todayLog && todayLog.mood === m.mood ? 'selected' : ''}" 
                                 title="${m.mood}" 
@@ -1135,17 +1152,78 @@
         }
 
         // --- EVENT LOG ---
+        async function handleEventLogSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'กำลังบันทึก...';
+
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData.entries());
+            const imageFile = data.image_upload;
+            let imageUrl = data.existing_image_url || null;
+
+            if (imageFile && imageFile.size > 0) {
+                const filePath = `public/${Date.now()}-${imageFile.name}`;
+                const { error: uploadError } = await db.storage.from('event-images').upload(filePath, imageFile);
+
+                if (uploadError) {
+                    showToast('อัปโหลดรูปภาพไม่สำเร็จ', 'error');
+                    console.error('Upload Error:', uploadError);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'บันทึก';
+                    return;
+                }
+                const { data: urlData } = db.storage.from('event-images').getPublicUrl(filePath);
+                imageUrl = urlData.publicUrl;
+            }
+
+            const id = data.id;
+            const dbData = {
+                description: data.description,
+                event_date: data.event_date,
+                event_time: data.event_time || null,
+                image_url: imageUrl,
+            };
+
+            const { error } = id
+                ? await db.from('event_log').update(dbData).eq('id', id)
+                : await db.from('event_log').insert([dbData]);
+
+            if (error) {
+                console.error('Error saving event log:', error);
+                if (error.code === 'PGRST204' && error.message.includes('image_url')) {
+                     showToast('ข้อผิดพลาด: ไม่พบคอลัมน์ "image_url" ในตาราง event_log กรุณาเพิ่มใน Supabase', 'error');
+                } else {
+                    showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+                }
+            } else {
+                showToast('บันทึกเหตุการณ์สำเร็จ!', 'success');
+                closeModal();
+                fetchAllData();
+            }
+            submitButton.disabled = false;
+            submitButton.textContent = 'บันทึก';
+        }
+
         function openEventLogModal(log = null) {
             const isEdit = log !== null;
             modalContainer.innerHTML = `
-                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="event-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเหตุการณ์' : 'เพิ่มเหตุการณ์'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
+                        <input type="hidden" name="existing_image_url" value="${isEdit && log.image_url ? log.image_url : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">เหตุการณ์</label><textarea name="description" required class="w-full mt-1 p-2 border rounded-md">${isEdit ? log.description : ''}</textarea></div>
                             <div><label class="text-sm font-medium">วันที่</label><input name="event_date" type="date" value="${isEdit ? toYYYYMMDD(log.event_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">เวลา</label><input name="event_time" type="time" value="${isEdit ? log.event_time : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">เวลา</label><input name="event_time" type="time" value="${isEdit && log.event_time ? log.event_time : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div>
+                                <label class="text-sm font-medium">แนบรูปภาพ</label>
+                                <input name="image_upload" type="file" accept="image/*" class="w-full text-sm mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
+                                ${isEdit && log.image_url ? `<img src="${log.image_url}" alt="Preview" class="mt-2 rounded-md max-h-40 w-auto">` : ''}
+                            </div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
                             <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
@@ -1153,13 +1231,15 @@
                         </div>
                     </form>
                 </div>`;
-            document.getElementById('event-log-form').addEventListener('submit', (e) => handleFormSubmit(e, 'event_log', fetchAllData));
+            document.getElementById('event-log-form').addEventListener('submit', handleEventLogSubmit);
         }
+
         async function fetchEventLogs() {
             const { data, error } = await db.from('event_log').select('*').order('event_date', { ascending: false }).order('event_time', { ascending: false });
             if (error) { console.error('Error fetching event_log:', error); appState.event_log = []; return; }
             appState.event_log = data || [];
         }
+
         function renderEventLog() {
             const logs = appState.event_log;
             const container = document.getElementById('event-log-container');
@@ -1169,20 +1249,94 @@
                 return;
             }
             container.innerHTML = logs.map(log => `
-                <div class="flex items-start justify-between bg-white p-3 rounded-md border border-slate-200">
-                    <div>
-                        <p><span class="font-semibold text-orange-600">${formatDate(log.event_date)} ${log.event_time ? formatTime(log.event_time) : ''}:</span></p>
-                        <p class="mt-1">${log.description}</p>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <button onclick='openEventLogModal(${JSON.stringify(log)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
-                        <button onclick="confirmDelete('event_log', ${log.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                <div class="bg-white p-3 rounded-md border border-slate-200">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1 pr-4">
+                            <p><span class="font-semibold text-orange-600">${formatDate(log.event_date)} ${log.event_time ? formatTime(log.event_time) : ''}:</span></p>
+                            <p class="mt-1 whitespace-pre-wrap">${log.description}</p>
+                            ${log.image_url ? `<a href="${log.image_url}" target="_blank"><img src="${log.image_url}" alt="Event image" class="mt-2 rounded-lg max-h-48 w-auto shadow-sm"></a>` : ''}
+                        </div>
+                        <div class="flex-shrink-0">
+                            <button onclick='openEventLogModal(${JSON.stringify(log)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                            <button onclick="confirmDelete('event_log', ${log.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
+
         // --- PERSONAL GROWTH ---
+        async function handlePersonalGrowthSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'กำลังบันทึก...';
+
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData.entries());
+            const file = data.file_upload;
+            let fileUrl = data.existing_file_url || null;
+
+            if (file && file.size > 0) {
+                const filePath = `public/${Date.now()}-${file.name}`;
+                const { error: uploadError } = await db.storage.from('personal-growth-files').upload(filePath, file);
+
+                if (uploadError) {
+                    showToast('อัปโหลดไฟล์ไม่สำเร็จ', 'error');
+                    console.error('Upload Error:', uploadError);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'บันทึก';
+                    return;
+                }
+                const { data: urlData } = db.storage.from('personal-growth-files').getPublicUrl(filePath);
+                fileUrl = urlData.publicUrl;
+            }
+
+            const tasks = [];
+            const formElements = form.elements;
+            for(let i=0; i < formElements.length; i++) {
+                const el = formElements[i];
+                if (el.name && el.name.startsWith('pg_task_title_')) {
+                    const index = el.name.split('_')[3];
+                    const title = el.value;
+                    const completedEl = document.querySelector(`[name="pg_task_completed_${index}"]`);
+                    if (title && completedEl) {
+                        tasks.push({ title, completed: completedEl.checked });
+                    }
+                }
+            }
+
+            const id = data.id;
+            const dbData = {
+                skill: data.skill,
+                resource_link: data.resource_link,
+                status: data.status,
+                tasks: tasks,
+                file_url: fileUrl,
+            };
+
+            const { error } = id
+                ? await db.from('personal_growth').update(dbData).eq('id', id)
+                : await db.from('personal_growth').insert([dbData]);
+
+            if (error) {
+                console.error('Error saving personal growth item:', error);
+                if (error.code === 'PGRST204' && error.message.includes('file_url')) {
+                     showToast('ข้อผิดพลาด: ไม่พบคอลัมน์ "file_url" ในตาราง personal_growth กรุณาเพิ่มใน Supabase', 'error');
+                } else {
+                    showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+                }
+            } else {
+                showToast('บันทึกเป้าหมายสำเร็จ!', 'success');
+                closeModal();
+                fetchAllData();
+            }
+            submitButton.disabled = false;
+            submitButton.textContent = 'บันทึก';
+        }
+
         function openPersonalGrowthModal(item = null) {
             const isEdit = item !== null;
             const tasks = isEdit && item.tasks ? item.tasks : [{ title: '', completed: false }];
@@ -1199,10 +1353,23 @@
                     <form id="growth-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเป้าหมาย' : 'เพิ่มเป้าหมายพัฒนาตนเอง'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <input type="hidden" name="existing_file_url" value="${isEdit && item.file_url ? item.file_url : ''}">
                         <div class="space-y-4">
                             <div><label class="text-sm font-medium">ทักษะ/เรื่องที่เรียนรู้</label><input name="skill" type="text" value="${isEdit ? item.skill : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">แหล่งข้อมูล (ลิงก์)</label><input name="resource_link" type="url" value="${isEdit ? item.resource_link : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
-                            <div><label class="text-sm font-medium">สถานะ</label><select name="status" class="w-full mt-1 p-2 border rounded-md"><option value="To Learn" ${isEdit && item.status === 'To Learn' ? 'selected' : ''}>จะเรียนรู้</option><option value="Learning" ${isEdit && item.status === 'Learning' ? 'selected' : ''}>กำลังเรียนรู้</option><option value="Learned" ${isEdit && item.status === 'Learned' ? 'selected' : ''}>เรียนรู้แล้ว</option></select></div>
+                            <div><label class="text-sm font-medium">แหล่งข้อมูล (ลิงก์)</label><input name="resource_link" type="url" value="${isEdit ? item.resource_link || '' : ''}" class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div>
+                                <label class="text-sm font-medium">สถานะ</label>
+                                <select name="status" id="pg-status-select" class="w-full mt-1 p-2 border rounded-md">
+                                    <option value="To Learn" ${isEdit && item.status === 'To Learn' ? 'selected' : ''}>จะเรียนรู้</option>
+                                    <option value="Learning" ${isEdit && item.status === 'Learning' ? 'selected' : ''}>กำลังเรียนรู้</option>
+                                    <option value="Learned" ${isEdit && item.status === 'Learned' ? 'selected' : ''}>เรียนรู้แล้ว</option>
+                                </select>
+                            </div>
+                            <div id="pg-file-upload-container" class="${!isEdit || item.status !== 'Learning' ? 'hidden' : ''}">
+                                <label class="text-sm font-medium">แนบไฟล์ (รูปภาพ/PDF)</label>
+                                <input name="file_upload" type="file" accept="image/*,application/pdf" class="w-full text-sm mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                                ${isEdit && item.file_url ? `<a href="${item.file_url}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ดูไฟล์ที่แนบไว้</a>` : ''}
+                            </div>
                             <div>
                                 <label class="text-sm font-medium">Goal Tasks</label>
                                 <div id="pg-tasks-container" class="space-y-2 mt-1">${tasksHtml}</div>
@@ -1231,48 +1398,42 @@
                 taskIndex++;
             };
 
-            const transformGrowthData = (data) => {
-                const tasks = [];
-                const formElements = document.getElementById('growth-form').elements;
-                for(let i=0; i < formElements.length; i++) {
-                    const el = formElements[i];
-                    if (el.name.startsWith('pg_task_title_')) {
-                        const index = el.name.split('_')[3];
-                        const title = el.value;
-                        const completed = document.querySelector(`[name="pg_task_completed_${index}"]`).checked;
-                        if (title) {
-                            tasks.push({ title, completed });
-                        }
-                    }
+            const statusSelect = document.getElementById('pg-status-select');
+            const fileUploadContainer = document.getElementById('pg-file-upload-container');
+            statusSelect.addEventListener('change', () => {
+                if (statusSelect.value === 'Learning') {
+                    fileUploadContainer.classList.remove('hidden');
+                } else {
+                    fileUploadContainer.classList.add('hidden');
                 }
-                data.tasks = tasks;
-                // Clean up temporary form fields
-                Object.keys(data).forEach(key => {
-                    if (key.startsWith('pg_task_')) {
-                        delete data[key];
-                    }
-                });
-                return data;
-            };
-            document.getElementById('growth-form').addEventListener('submit', (e) => handleFormSubmit(e, 'personal_growth', fetchAllData, transformGrowthData));
+            });
+
+            document.getElementById('growth-form').addEventListener('submit', handlePersonalGrowthSubmit);
         }
+
         async function fetchPersonalGrowthItems() {
             const { data, error } = await db.from('personal_growth').select('*').order('created_at', { ascending: false });
             if (error) { console.error('Error fetching personal_growth:', error); appState.personal_growth = []; return; }
             appState.personal_growth = data || [];
         }
+        
         function renderPersonalGrowth() {
             const items = appState.personal_growth;
             const container = document.getElementById('personal-growth-container');
             if (!container) return;
             if (items.length === 0) {
-                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีเป้าหมาย</p>`;
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-2">ยังไม่มีเป้าหมาย</p>`;
                 return;
             }
             container.innerHTML = items.map(item => {
                 const tasks = item.tasks || [];
                 const completedCount = tasks.filter(t => t.completed).length;
                 const progress = tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0;
+                const fileHtml = item.file_url
+                    ? `<a href="${item.file_url}" target="_blank" class="flex items-center text-sm text-blue-600 hover:underline mt-2">
+                         <i class="fa-solid fa-paperclip mr-2"></i> ดูไฟล์แนบ
+                       </a>`
+                    : '';
 
                 return `
                 <div class="bg-green-50 p-4 rounded-lg border border-green-200">
@@ -1281,6 +1442,7 @@
                             <h4 class="font-bold text-green-800">${item.skill}</h4>
                             <p class="text-sm text-green-700 mt-1">สถานะ: ${item.status}</p>
                             ${item.resource_link ? `<a href="${item.resource_link}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ไปที่แหล่งข้อมูล</a>` : ''}
+                            ${fileHtml}
                         </div>
                         <div class="flex items-center space-x-2">
                             <button onclick='openPersonalGrowthModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
@@ -1307,6 +1469,134 @@
                 </div>
             `}).join('');
         }
+        
+        // --- [NEW] CERTIFICATES ---
+        async function handleCertificateSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'กำลังบันทึก...';
+
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData.entries());
+            const file = data.file_upload;
+            let fileUrl = data.existing_file_url || null;
+
+            if (!file && !fileUrl) {
+                 showToast('กรุณาแนบไฟล์เกียรติบัตร', 'error');
+                 submitButton.disabled = false;
+                 submitButton.textContent = 'บันทึก';
+                 return;
+            }
+
+            if (file && file.size > 0) {
+                const filePath = `public/${Date.now()}-${file.name}`;
+                const { error: uploadError } = await db.storage.from('certificates').upload(filePath, file);
+
+                if (uploadError) {
+                    showToast('อัปโหลดไฟล์ไม่สำเร็จ', 'error');
+                    console.error('Upload Error:', uploadError);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'บันทึก';
+                    return;
+                }
+                const { data: urlData } = db.storage.from('certificates').getPublicUrl(filePath);
+                fileUrl = urlData.publicUrl;
+            }
+
+            const id = data.id;
+            const dbData = {
+                title: data.title,
+                issuer: data.issuer,
+                issue_date: data.issue_date,
+                file_url: fileUrl,
+            };
+
+            const { error } = id
+                ? await db.from('certificates').update(dbData).eq('id', id)
+                : await db.from('certificates').insert([dbData]);
+
+            if (error) {
+                console.error('Error saving certificate:', error);
+                if (error.code === 'PGRST204') {
+                     showToast('ข้อผิดพลาด: ไม่พบคอลัมน์ในตาราง certificates กรุณาตรวจสอบใน Supabase', 'error');
+                } else {
+                    showToast(`เกิดข้อผิดพลาด: ${error.message}`, 'error');
+                }
+            } else {
+                showToast('บันทึกเกียรติบัตรสำเร็จ!', 'success');
+                closeModal();
+                fetchAllData();
+            }
+            submitButton.disabled = false;
+            submitButton.textContent = 'บันทึก';
+        }
+
+        function openCertificateModal(item = null) {
+            const isEdit = item !== null;
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <form id="certificate-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8">
+                        <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขเกียรติบัตร' : 'เพิ่มเกียรติบัตรใหม่'}</h3>
+                        <input type="hidden" name="id" value="${isEdit ? item.id : ''}">
+                        <input type="hidden" name="existing_file_url" value="${isEdit && item.file_url ? item.file_url : ''}">
+                        <div class="space-y-4">
+                            <div><label class="text-sm font-medium">ชื่อเกียรติบัตร/ใบรับรอง</label><input name="title" type="text" value="${isEdit ? item.title : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">หน่วยงานที่ออกให้</label><input name="issuer" type="text" value="${isEdit ? item.issuer : ''}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">วันที่ออกให้</label><input name="issue_date" type="date" value="${isEdit ? toYYYYMMDD(item.issue_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div>
+                                <label class="text-sm font-medium">ไฟล์ (รูปภาพ/PDF)</label>
+                                <input name="file_upload" type="file" accept="image/*,application/pdf" class="w-full text-sm mt-1 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100" ${!isEdit ? 'required' : ''}>
+                                ${isEdit && item.file_url ? `<a href="${item.file_url}" target="_blank" class="text-sm text-blue-600 hover:underline mt-1 block">ดูไฟล์ที่แนบไว้</a>` : ''}
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-2">
+                            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-200 rounded-md">ยกเลิก</button>
+                            <button type="submit" class="px-4 py-2 bg-amber-500 text-white rounded-md">บันทึก</button>
+                        </div>
+                    </form>
+                </div>`;
+            document.getElementById('certificate-form').addEventListener('submit', handleCertificateSubmit);
+        }
+
+        async function fetchCertificates() {
+            const { data, error } = await db.from('certificates').select('*').order('issue_date', { ascending: false });
+            if (error) { console.error('Error fetching certificates:', error); appState.certificates = []; return; }
+            appState.certificates = data || [];
+        }
+
+        function renderCertificates() {
+            const items = appState.certificates;
+            const container = document.getElementById('certificates-container');
+            if (!container) return;
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีเกียรติบัตร</p>`;
+                return;
+            }
+            container.innerHTML = items.map(item => {
+                const isImage = item.file_url && /\.(jpg|jpeg|png|gif)$/i.test(item.file_url);
+                return `
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <a href="${item.file_url}" target="_blank">
+                            ${isImage 
+                                ? `<img src="${item.file_url}" alt="${item.title}" class="w-full h-40 object-cover rounded-md mb-2 bg-slate-100">` 
+                                : `<div class="w-full h-40 rounded-md mb-2 bg-slate-100 flex items-center justify-center text-slate-400"><i class="fa-solid fa-file-pdf fa-3x"></i></div>`
+                            }
+                        </a>
+                        <h4 class="font-bold text-slate-800">${item.title}</h4>
+                        <p class="text-sm text-slate-600 mt-1">ออกให้โดย: ${item.issuer}</p>
+                        <p class="text-xs text-slate-500 mt-1">วันที่: ${formatDate(item.issue_date)}</p>
+                    </div>
+                    <div class="text-right mt-2">
+                        <button onclick='openCertificateModal(${JSON.stringify(item)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
+                        <button onclick="confirmDelete('certificates', ${item.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
 
         // --- JOURNAL ---
         function openJournalModal(entry = null) {
@@ -1380,9 +1670,9 @@
                     </form>
                 </div>`;
              const transformKnowledgeData = (data) => {
-                if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
-                return data;
-            };
+                 if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
+                 return data;
+             };
             document.getElementById('knowledge-form').addEventListener('submit', (e) => handleFormSubmit(e, 'knowledge_base', fetchAllData, transformKnowledgeData));
         }
         async function fetchKnowledgeItems() {
@@ -1517,9 +1807,9 @@
              let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
              let expenseHtml = dayExpensesList.length > 0 ? dayExpensesList.map(item => `<div class="text-sm p-2 bg-red-50 rounded flex justify-between"><span>${item.item}</span> <span>${formatCurrency(item.amount)}</span></div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีรายจ่าย</p>';
              let journalHtml = dayJournal ? `
-                ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
-                ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
-                ${dayJournal.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.mood_check_in}</p></div>` : ''}
+                 ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
+                 ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
+                 ${dayJournal.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.mood_check_in}</p></div>` : ''}
              ` : '<p class="text-sm text-slate-400">ไม่มีบันทึก</p>';
             let habitSummaryHtml = `
                 <div class="flex justify-between items-center text-sm mb-1">
@@ -1534,33 +1824,33 @@
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                     <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl my-8 relative">
-                         <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800">&times;</button>
+                         <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800 text-2xl">&times;</button>
                          <h3 class="text-xl font-semibold mb-4">สรุปประจำวันที่ ${formatDate(dateStr)}</h3>
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto p-2">
-                            <div>
-                                <h4 class="font-semibold mb-2">🗓️ ตารางเวลา</h4>
-                                <div class="space-y-2">${scheduleHtml}</div>
-                            </div>
                              <div>
-                                <h4 class="font-semibold mb-2">🗂️ งาน</h4>
-                                <div class="space-y-2">${taskHtml}</div>
-                            </div>
-                             <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">🎯 กิจวัตร</h4>
-                                <div class="space-y-2">${habitSummaryHtml}</div>
-                            </div>
-                             <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
-                                <div class="space-y-2">${expenseHtml}</div>
-                            </div>
-                            <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">❤️ สุขภาพ</h4>
-                                <div id="daily-health-view"></div>
-                            </div>
-                             <div class="md:col-span-2">
-                                <h4 class="font-semibold mb-2">📓 บันทึก</h4>
-                                <div class="space-y-2">${journalHtml}</div>
-                            </div>
+                                 <h4 class="font-semibold mb-2">🗓️ ตารางเวลา</h4>
+                                 <div class="space-y-2">${scheduleHtml}</div>
+                             </div>
+                              <div>
+                                 <h4 class="font-semibold mb-2">🗂️ งาน</h4>
+                                 <div class="space-y-2">${taskHtml}</div>
+                             </div>
+                              <div class="md:col-span-2">
+                                 <h4 class="font-semibold mb-2">🎯 กิจวัตร</h4>
+                                 <div class="space-y-2">${habitSummaryHtml}</div>
+                             </div>
+                              <div class="md:col-span-2">
+                                 <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
+                                 <div class="space-y-2">${expenseHtml}</div>
+                             </div>
+                              <div class="md:col-span-2">
+                                 <h4 class="font-semibold mb-2">❤️ สุขภาพ</h4>
+                                 <div id="daily-health-view"></div>
+                             </div>
+                              <div class="md:col-span-2">
+                                 <h4 class="font-semibold mb-2">📓 บันทึก</h4>
+                                 <div class="space-y-2">${journalHtml}</div>
+                             </div>
                          </div>
                     </div>
                 </div>
@@ -1580,11 +1870,11 @@
              const remainingCalories = calorieGoal - (caloriesIn - caloriesOut);
              
              container.innerHTML = `
-                <div class="grid grid-cols-3 gap-2 text-center text-sm mb-2">
-                    <div class="bg-green-100 p-2 rounded-lg"><p class="text-xs text-green-800">ได้รับ</p><p class="font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
-                    <div class="bg-orange-100 p-2 rounded-lg"><p class="text-xs text-orange-800">ใช้ไป</p><p class="font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
-                    <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">คงเหลือ</p><p class="font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
-                </div>
+                 <div class="grid grid-cols-3 gap-2 text-center text-sm mb-2">
+                     <div class="bg-green-100 p-2 rounded-lg"><p class="text-xs text-green-800">ได้รับ</p><p class="font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
+                     <div class="bg-orange-100 p-2 rounded-lg"><p class="text-xs text-orange-800">ใช้ไป</p><p class="font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
+                     <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">คงเหลือ</p><p class="font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
+                 </div>
              `;
         }
         
@@ -1650,13 +1940,49 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
+        // [NEW] Function to log yesterday's habits automatically
+        async function backlogYesterdayHabits() {
+            const YESTERDAY = '2025-08-11';
+            const HABIT_NAMES = ['ออกกำลังกาย', 'อ่านหนังสือ', 'ออกแบบปกหนังสือ 1 เล่ม', 'ออกแบบ activity book 1 หน้า'];
+
+            // 1. Get all habits and yesterday's logs
+            const { data: habits, error: habitsError } = await db.from('habits').select('id, name');
+            const { data: logs, error: logsError } = await db.from('habit_log').select('habit_id').eq('completed_date', YESTERDAY);
+
+            if (habitsError || logsError) {
+                console.error("Could not fetch data for backlogging habits", habitsError, logsError);
+                return;
+            }
+
+            const loggedHabitIds = new Set(logs.map(l => l.habit_id));
+            const habitsToLog = [];
+
+            for (const habitName of HABIT_NAMES) {
+                const habit = habits.find(h => h.name === habitName);
+                if (habit && !loggedHabitIds.has(habit.id)) {
+                    habitsToLog.push({ habit_id: habit.id, completed_date: YESTERDAY });
+                }
+            }
+
+            if (habitsToLog.length > 0) {
+                const { error } = await db.from('habit_log').insert(habitsToLog);
+                if (error) {
+                    console.error("Error backlogging habits:", error);
+                } else {
+                    console.log(`Successfully backlogged ${habitsToLog.length} habits for yesterday.`);
+                    // Re-fetch all data to ensure the state is up-to-date
+                    fetchAllData();
+                }
+            }
+        }
+
 
         // --- INITIALIZATION ---
         async function fetchAllData() {
             const tableNames = [
                 'tasks', 'budget', 'schedules', 'okrs', 'ideas', 'habits', 
                 'habit_log', 'health_log', 'mood_logs', 'media_logs', 'event_log', 
-                'personal_growth', 'journal_entries', 'knowledge_base'
+                'personal_growth', 'certificates', 'journal_entries', 'knowledge_base' // [MODIFIED]
             ];
             
             const promises = tableNames.map(name => db.from(name).select('*'));
@@ -1692,6 +2018,7 @@
             renderMediaLog();
             renderEventLog();
             renderPersonalGrowth();
+            renderCertificates(); // [NEW]
             renderJournalEntries();
             renderKnowledgeGallery();
             renderBudget();
@@ -1699,6 +2026,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchAllData();
+            backlogYesterdayHabits(); // [NEW] Call the function to log yesterday's habits
 
             const sections = document.querySelectorAll('main section');
             const navLinks = document.querySelectorAll('#sidebar-nav a');
@@ -1723,6 +2051,24 @@
             });
         });
 
+        /*
+        --- Supabase Storage RLS Policy Examples ---
+        
+        **หมายเหตุ:** คุณต้องไปที่ Supabase Dashboard > Storage > Policies เพื่อเพิ่ม Policy เหล่านี้
+        
+        -- Policy for 'event-images' bucket --
+        1. (SELECT): "Allow public read access" -> anon, authenticated -> true
+        2. (INSERT): "Allow authenticated users to upload" -> authenticated -> bucket_id = 'event-images'
+        
+        -- Policy for 'personal-growth-files' bucket --
+        1. (SELECT): "Allow public read access" -> anon, authenticated -> true
+        2. (INSERT): "Allow authenticated users to upload" -> authenticated -> bucket_id = 'personal-growth-files'
+
+        -- [NEW] Policy for 'certificates' bucket --
+        1. (SELECT): "Allow public read access" -> anon, authenticated -> true
+        2. (INSERT): "Allow authenticated users to upload" -> authenticated -> bucket_id = 'certificates'
+
+        */
     </script>
 </body>
 </html>
