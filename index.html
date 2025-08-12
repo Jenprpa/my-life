@@ -56,29 +56,29 @@
 
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside id="sidebar" class="themed-bg-800 themed-text-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 flex flex-col">
-            <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
-            <nav id="sidebar-nav" class="flex-1 flex flex-col space-y-1">
-                <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
-                <a href="#analytics" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📊</span> สรุปและวิเคราะห์</a>
+        <aside id="sidebar" class="themed-bg-800 themed-text-200 w-52 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 flex flex-col">
+            <h2 class="px-4 text-xl font-bold text-white mb-4">เมนูนำทาง</h2>
+            <nav id="sidebar-nav" class="flex-1 flex flex-col text-sm">
+                <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวม</a>
+                <a href="#analytics" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📊</span> วิเคราะห์</a>
                 <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
-                <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
-                <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย (OKRs)</a>
-                <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> การจัดการงาน</a>
-                <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
+                <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนสัปดาห์</a>
+                <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย</a>
+                <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> จัดการงาน</a>
+                <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> ไอเดีย</a>
                 <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
                 <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
-                <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
-                <a href="#mood-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">😊</span> บันทึกอารมณ์</a>
-                <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกการอ่าน/ดู/ฟัง</a>
-                <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
-                <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
-                <a href="#certificates" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏆</span> คลังเกียรติบัตร</a>
-                <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
+                <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> สุขภาพ</a>
+                <a href="#mood-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">😊</span> อารมณ์</a>
+                <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกสื่อ</a>
+                <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> เหตุการณ์</a>
+                <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> พัฒนาตนเอง</a>
+                <a href="#certificates" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏆</span> เกียรติบัตร</a>
+                <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึก</a>
                 <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
-                <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
-                <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> ระบบบันทึกการเงิน</a>
-                <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> ประมาณการเงิน (Excel)</a>
+                <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> งบประมาณ</a>
+                <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> การเงิน</a>
+                <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> Excel</a>
             </nav>
             <!-- [NEW] Theme Switcher -->
             <div class="px-4 pt-4 mt-4 border-t border-slate-700">
@@ -95,7 +95,7 @@
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
         <!-- Main Content -->
-        <div class="flex-1 lg:ml-64">
+        <div class="flex-1 lg:ml-52">
             <header class="bg-white shadow-sm sticky top-0 z-30">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
                     <button id="menu-btn" class="lg:hidden mr-4 p-2 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100" onclick="toggleSidebar()">
@@ -2198,6 +2198,104 @@
                     console.log(`Successfully backlogged ${habitsToLog.length} habits for yesterday.`);
                     fetchAllData();
                 }
+            }
+        }
+
+        // --- [NEW] ANALYTICS ---
+        function renderAnalytics() {
+            Object.values(chartInstances).forEach(chart => chart.destroy());
+
+            // 1. Mood Chart
+            const moodCtx = document.getElementById('moodChart');
+            if (moodCtx) {
+                const moodLabels = [];
+                const moodData = [];
+                const moodMapping = { 'ยอดเยี่ยม': 5, 'ดี': 4, 'เฉยๆ': 3, 'ไม่ค่อยดี': 2, 'แย่': 1, 'ง่วง': 2, 'ไม่สบาย': 1, 'ตกใจ': 3 };
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const dateStr = toYYYYMMDD(date);
+                    const dayLog = appState.mood_logs.find(log => log.log_date === dateStr);
+                    moodLabels.push(date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
+                    moodData.push(dayLog ? moodMapping[dayLog.mood] || 0 : null);
+                }
+
+                chartInstances.moodChart = new Chart(moodCtx, {
+                    type: 'line',
+                    data: {
+                        labels: moodLabels,
+                        datasets: [{
+                            label: 'ระดับอารมณ์',
+                            data: moodData,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                            spanGaps: true
+                        }]
+                    },
+                    options: { scales: { y: { beginAtZero: true, max: 5, ticks: { callback: (value) => ['','แย่', 'ไม่ค่อยดี', 'เฉยๆ', 'ดี', 'ยอดเยี่ยม'][value] || '' } } } }
+                });
+            }
+
+            // 2. Expense Chart
+            const expenseCtx = document.getElementById('expenseChart');
+            if (expenseCtx) {
+                const expenseByCategory = appState.budget
+                    .filter(item => item.transaction_type === 'Expense')
+                    .reduce((acc, item) => {
+                        acc[item.category] = (acc[item.category] || 0) + item.amount;
+                        return acc;
+                    }, {});
+
+                chartInstances.expenseChart = new Chart(expenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(expenseByCategory),
+                        datasets: [{
+                            label: 'รายจ่าย',
+                            data: Object.values(expenseByCategory),
+                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                        }]
+                    }
+                });
+            }
+            
+            // 3. Habit Chart
+            const habitCtx = document.getElementById('habitChart');
+            if (habitCtx) {
+                const habitLabels = [];
+                const habitData = [];
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const dateStr = toYYYYMMDD(date);
+                    const dayOfWeek = date.getDay();
+                    
+                    const applicableHabits = appState.habits.filter(h => h.frequency === 'daily' || (h.frequency === 'weekly' && h.weekly_day === dayOfWeek));
+                    const completedHabits = appState.habit_log.filter(log => log.completed_date === dateStr);
+                    const completionRate = applicableHabits.length > 0 ? (completedHabits.length / applicableHabits.length) * 100 : 0;
+                        
+                    habitLabels.push(date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
+                    habitData.push(completionRate);
+                }
+
+                chartInstances.habitChart = new Chart(habitCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: habitLabels,
+                        datasets: [{
+                            label: '% ความสำเร็จของกิจวัตร',
+                            data: habitData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { scales: { y: { beginAtZero: true, max: 100, ticks: { callback: value => `${value}%` } } } }
+                });
             }
         }
 
