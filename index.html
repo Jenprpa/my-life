@@ -8,8 +8,6 @@
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- [NEW] Chart.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
         
@@ -60,7 +58,6 @@
             <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
             <nav id="sidebar-nav" class="flex-1 flex flex-col space-y-1">
                 <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
-                <a href="#analytics" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📊</span> สรุปและวิเคราะห์</a>
                 <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
                 <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
                 <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย (OKRs)</a>
@@ -118,30 +115,6 @@
                         </div>
                         <div id="overview-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลด...</p></div>
-                        </div>
-                    </section>
-                    
-                    <!-- [NEW] Analytics Section -->
-                    <section id="analytics" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <span class="text-2xl mr-3">📊</span>
-                                <h2 class="text-xl font-semibold text-gray-900">สรุปและวิเคราะห์</h2>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div>
-                                <h3 class="font-semibold mb-2">กราฟอารมณ์ (30 วันล่าสุด)</h3>
-                                <canvas id="moodChart"></canvas>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold mb-2">สรุปรายจ่ายตามหมวดหมู่</h3>
-                                <canvas id="expenseChart"></canvas>
-                            </div>
-                            <div class="lg:col-span-2">
-                                <h3 class="font-semibold mb-2">ความสำเร็จของกิจวัตร (30 วันล่าสุด)</h3>
-                                <canvas id="habitChart"></canvas>
-                            </div>
                         </div>
                     </section>
 
@@ -416,7 +389,6 @@
                 knowledge: ''
             }
         };
-        let chartInstances = {}; // [NEW] To hold chart objects
         let currentViewDate = new Date();
         let weeklyAgendaDate = new Date();
 
@@ -2268,166 +2240,6 @@
             }
         }
 
-        // --- [NEW] ANALYTICS / CHARTS ---
-        function renderAnalytics() {
-            // Destroy existing charts to prevent duplicates
-            Object.values(chartInstances).forEach(chart => chart.destroy());
-
-            // --- Mood Chart (Line Chart) ---
-            const moodCtx = document.getElementById('moodChart');
-            if (moodCtx) {
-                const moodLogs = appState.mood_logs;
-                const moodMap = { 'ยอดเยี่ยม': 5, 'ดี': 4, 'เฉยๆ': 3, 'ไม่ค่อยดี': 2, 'แย่': 1, 'ง่วง': 2, 'ไม่สบาย': 1, 'ตกใจ': 3 };
-                const labels = [];
-                const data = [];
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-                const recentLogs = moodLogs
-                    .filter(log => new Date(log.log_date) >= thirtyDaysAgo)
-                    .sort((a, b) => new Date(a.log_date) - new Date(b.log_date));
-
-                const logsByDate = recentLogs.reduce((acc, log) => {
-                    acc[log.log_date] = moodMap[log.mood] || 0;
-                    return acc;
-                }, {});
-
-                for (let i = 29; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    const dateStr = toYYYYMMDD(date);
-                    labels.push(date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
-                    data.push(logsByDate[dateStr] || null); // Use null for missing data points
-                }
-
-                chartInstances.moodChart = new Chart(moodCtx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'ระดับอารมณ์',
-                            data: data,
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            tension: 0.3,
-                            fill: true,
-                            spanGaps: true, // Connect lines over null data points
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 5,
-                                ticks: {
-                                    stepSize: 1,
-                                    callback: function(value) {
-                                        const moodLabels = { 1: 'แย่', 2: 'ไม่ดี', 3: 'เฉยๆ', 4: 'ดี', 5: 'ยอดเยี่ยม' };
-                                        return moodLabels[value] || '';
-                                    }
-                                }
-                            }
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                    }
-                });
-            }
-
-            // --- Expense Chart (Doughnut Chart) ---
-            const expenseCtx = document.getElementById('expenseChart');
-            if (expenseCtx) {
-                const expenses = appState.budget.filter(item => item.transaction_type === 'Expense');
-                const expenseByCategory = expenses.reduce((acc, item) => {
-                    acc[item.category] = (acc[item.category] || 0) + item.amount;
-                    return acc;
-                }, {});
-
-                const labels = Object.keys(expenseByCategory);
-                const data = Object.values(expenseByCategory);
-
-                chartInstances.expenseChart = new Chart(expenseCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'รายจ่าย',
-                            data: data,
-                            backgroundColor: [
-                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-                                '#9966FF', '#FF9F40', '#C9CBCF', '#E7E9ED'
-                            ],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            }
-                        }
-                    }
-                });
-            }
-
-            // --- Habit Completion Chart (Bar Chart) ---
-            const habitCtx = document.getElementById('habitChart');
-            if (habitCtx) {
-                const habitLogs = appState.habit_log;
-                const habits = appState.habits;
-                const labels = [];
-                const data = [];
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-                for (let i = 29; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    const dateStr = toYYYYMMDD(date);
-                    const dayOfWeek = date.getDay();
-
-                    const applicableHabits = habits.filter(h => h.frequency === 'daily' || (h.frequency === 'weekly' && h.weekly_day === dayOfWeek)).length;
-                    const completedHabits = habitLogs.filter(log => log.completed_date === dateStr).length;
-                    
-                    const completionRate = applicableHabits > 0 ? (completedHabits / applicableHabits) * 100 : 0;
-                    
-                    labels.push(date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }));
-                    data.push(completionRate);
-                }
-
-                chartInstances.habitChart = new Chart(habitCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: '% ความสำเร็จ',
-                            data: data,
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 100,
-                                ticks: {
-                                    callback: function(value) {
-                                        return value + '%'
-                                    }
-                                }
-                            }
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                    }
-                });
-            }
-        }
-
-
         // --- INITIALIZATION ---
         async function fetchAllData() {
             const tableNames = [
@@ -2457,7 +2269,6 @@
 
         function renderAllComponents() {
             renderDashboardOverview();
-            renderAnalytics();
             renderWeeklyAgenda();
             renderOkrs();
             renderTaskBoard();
@@ -2544,3 +2355,17 @@
     </script>
 </body>
 </html>
+"
+I have selected the code between  and  in the most up-to-date Canvas "My Life Dashboard (Updated)" document above and am asking a query about/based on this code below.
+Instructions to follow:
+  * Don't output/edit the document if the query is Direct/Simple. For example, if the query asks for a simple explanation, output a direct answer.
+  * Make sure to **edit** the document if the query shows the intent of editing the document, in which case output the entire edited document, **not just that section or the edits**.
+    * Don't output the same document/empty document and say that you have edited it.
+    * Don't change unrelated code in the document.
+  * Don't output  and  in your final response.
+  * Any references like "this" or "selected code" refers to the code between  and  tags.
+  * Just acknowledge my request in the introduction.
+  * Make sure to refer to the document as "Canvas" in your response.
+
+(actual user query begins now)
+เอาส่วนสรุปแล้ววิเคราะออกทั้ง
