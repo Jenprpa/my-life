@@ -657,9 +657,22 @@
                 const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
                 const dayExpenses = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0);
                 
+                // [MODIFIED] Fetch mood for the day
+                const dayMoodLog = appState.mood_logs.find(log => toYYYYMMDD(log.log_date) === dateStr);
+                const moods = [
+                    { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
+                    { mood: 'เฉยๆ', emoji: '😐' }, { mood: 'ไม่ค่อยดี', emoji: '😟' },
+                    { mood: 'แย่', emoji: '😠' }, { mood: 'ง่วง', emoji: '😴' },
+                    { mood: 'ไม่สบาย', emoji: '🤒' }, { mood: 'ตกใจ', emoji: '😱' }
+                ];
+                const dayMood = dayMoodLog ? moods.find(m => m.mood === dayMoodLog.mood) : null;
+
                 body += `
                     <div class="calendar-day border border-slate-200 rounded-md p-2 h-28 flex flex-col cursor-pointer ${isToday ? 'today' : ''}" onclick="openDailyViewModal('${dateStr}')">
-                        <span class="font-bold">${day}</span>
+                        <div class="flex justify-between items-start">
+                           <span class="font-bold">${day}</span>
+                           ${dayMood ? `<span title="${dayMood.mood}">${dayMood.emoji}</span>` : ''}
+                        </div>
                         <div class="text-xs mt-1 space-y-1 overflow-hidden">
                             ${daySchedules.length > 0 ? `<div class="flex items-center text-cyan-600" title="กิจกรรม"><i class="fa-solid fa-calendar-day w-4"></i> ${daySchedules.length}</div>` : ''}
                             ${dayTasks.length > 0 ? `<div class="flex items-center text-blue-600" title="งาน"><i class="fa-solid fa-check-square w-4"></i> ${dayTasks.length}</div>` : ''}
@@ -1802,6 +1815,16 @@
              const completedHabitsForDay = appState.habit_log.filter(log => log.completed_date === dateStr);
              const habitProgress = allHabitsForDay.length > 0 ? (completedHabitsForDay.length / allHabitsForDay.length) * 100 : 0;
 
+            // [MODIFIED] Fetch mood for the day
+            const dayMoodLog = appState.mood_logs.find(log => toYYYYMMDD(log.log_date) === dateStr);
+            const moods = [
+                { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
+                { mood: 'เฉยๆ', emoji: '😐' }, { mood: 'ไม่ค่อยดี', emoji: '😟' },
+                { mood: 'แย่', emoji: '😠' }, { mood: 'ง่วง', emoji: '😴' },
+                { mood: 'ไม่สบาย', emoji: '🤒' }, { mood: 'ตกใจ', emoji: '😱' }
+            ];
+            const dayMood = dayMoodLog ? moods.find(m => m.mood === dayMoodLog.mood) : null;
+
 
              let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
              let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
@@ -1820,6 +1843,8 @@
                     <div class="progress-bar-inner h-2 bg-teal-500" style="width: ${habitProgress}%;"></div>
                 </div>
             `;
+            // [MODIFIED] Add mood html to the modal
+            let moodHtml = dayMood ? `<div class="text-sm p-2 bg-yellow-50 rounded flex items-center"><span class="text-2xl mr-2">${dayMood.emoji}</span> ${dayMood.mood}</div>` : '<p class="text-sm text-slate-400">ไม่มีบันทึกอารมณ์</p>';
 
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
@@ -1838,6 +1863,10 @@
                               <div class="md:col-span-2">
                                  <h4 class="font-semibold mb-2">🎯 กิจวัตร</h4>
                                  <div class="space-y-2">${habitSummaryHtml}</div>
+                             </div>
+                             <div class="md:col-span-2">
+                                 <h4 class="font-semibold mb-2">😊 อารมณ์</h4>
+                                 <div class="space-y-2">${moodHtml}</div>
                              </div>
                               <div class="md:col-span-2">
                                  <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
