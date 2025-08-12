@@ -1109,6 +1109,67 @@
         }
 
         // --- MEDIA LOG ---
+        // [NEW] Handle submitting a new comment
+        async function handleCommentSubmit(e, logId) {
+            e.preventDefault();
+            const form = e.target;
+            const input = form.querySelector('input[name="comment"]');
+            const commentText = input.value.trim();
+            if (!commentText) return;
+
+            const log = appState.media_logs.find(l => l.id === logId);
+            if (!log) return;
+
+            const existingComments = log.comments || [];
+            const newComment = {
+                text: commentText,
+                timestamp: new Date().toISOString()
+            };
+            const updatedComments = [...existingComments, newComment];
+
+            const { error } = await db.from('media_logs').update({ comments: updatedComments }).eq('id', logId);
+
+            if (error) {
+                showToast('ไม่สามารถเพิ่มคอมเมนต์ได้', 'error');
+                console.error("Error adding comment:", error);
+            } else {
+                input.value = '';
+                await fetchAllData();
+                // Re-open the modal with updated comments
+                const updatedLog = appState.media_logs.find(l => l.id === logId);
+                openMediaLogCommentsModal(updatedLog);
+            }
+        }
+
+        // [NEW] Modal for viewing and adding comments
+        function openMediaLogCommentsModal(log) {
+            const comments = log.comments || [];
+            const commentsHtml = comments.length > 0
+                ? comments.map(comment => `
+                    <div class="bg-slate-100 p-2 rounded-md">
+                        <p class="text-sm text-slate-800">${comment.text}</p>
+                        <p class="text-xs text-slate-500 text-right mt-1">${formatDate(comment.timestamp)}</p>
+                    </div>
+                `).join('')
+                : '<p class="text-sm text-slate-500 text-center">ยังไม่มีคอมเมนต์</p>';
+
+            modalContainer.innerHTML = `
+                <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md my-8 flex flex-col">
+                        <div class="flex justify-between items-start">
+                           <h3 class="text-lg font-semibold mb-4">คอมเมนต์สำหรับ: <br><span class="font-normal">${log.title}</span></h3>
+                           <button onclick="closeModal()" class="text-2xl text-slate-500 hover:text-slate-800">&times;</button>
+                        </div>
+                        <div class="space-y-2 mb-4 flex-1 overflow-y-auto max-h-64 pr-2">${commentsHtml}</div>
+                        <form id="comment-form">
+                            <input name="comment" type="text" required class="w-full p-2 border rounded-md" placeholder="เพิ่มคอมเมนต์...">
+                            <button type="submit" class="w-full mt-2 px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800">ส่ง</button>
+                        </form>
+                    </div>
+                </div>`;
+            document.getElementById('comment-form').addEventListener('submit', (e) => handleCommentSubmit(e, log.id));
+        }
+
         function openMediaLogModal(log = null) {
             const isEdit = log !== null;
             modalContainer.innerHTML = `
@@ -1144,7 +1205,9 @@
                 return;
             }
             const typeIcons = { Book: '📖', Movie: '🎬', Series: '📺', Article: '📰', Podcast: '🎙️' };
-            container.innerHTML = logs.map(log => `
+            container.innerHTML = logs.map(log => {
+                const commentCount = log.comments?.length || 0;
+                return `
                 <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start">
@@ -1156,12 +1219,15 @@
                             ${log.rating ? `<p>คะแนน: ${'⭐'.repeat(log.rating)}</p>` : ''}
                         </div>
                     </div>
-                    <div class="text-right mt-2">
+                    <div class="text-right mt-2 flex justify-end items-center space-x-2">
+                        <button onclick='openMediaLogCommentsModal(${JSON.stringify(log)})' class="text-slate-500 hover:text-slate-700 text-xs p-1 flex items-center">
+                           <i class="fa-solid fa-comments mr-1"></i> ${commentCount}
+                        </button>
                         <button onclick='openMediaLogModal(${JSON.stringify(log)})' class="text-blue-400 hover:text-blue-600 text-xs p-1">✏️</button>
                         <button onclick="confirmDelete('media_logs', ${log.id}, fetchAllData)" class="text-red-400 hover:text-red-600 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // --- EVENT LOG ---
