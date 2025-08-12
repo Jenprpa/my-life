@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="theme-slate"> <!-- [NEW] Default theme class -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +8,27 @@
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- [NEW] Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        
+        /* [NEW] CSS Variables for Theming */
+        :root.theme-slate {
+            --color-primary-50: #f8fafc; --color-primary-100: #f1f5f9; --color-primary-200: #e2e8f0;
+            --color-primary-700: #334155; --color-primary-800: #1e293b; --color-primary-900: #0f172a;
+        }
+        :root.theme-sky {
+            --color-primary-50: #f0f9ff; --color-primary-100: #e0f2fe; --color-primary-200: #bae6fd;
+            --color-primary-700: #0369a1; --color-primary-800: #075985; --color-primary-900: #0c4a6e;
+        }
+        :root.theme-emerald {
+            --color-primary-50: #ecfdf5; --color-primary-100: #d1fae5; --color-primary-200: #a7f3d0;
+            --color-primary-700: #047857; --color-primary-800: #065f46; --color-primary-900: #064e3b;
+        }
+
         html { scroll-behavior: smooth; }
-        body { font-family: 'Sarabun', sans-serif; }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--color-primary-100); }
         .modal { display: none; }
         .modal.is-open { display: flex; }
         .priority-High { background-color: #fed7d7; color: #c53030; }
@@ -27,35 +44,51 @@
         .habit-item.dragging { opacity: 0.5; background: #f0f8ff; }
         .drag-handle { cursor: grab; }
         .drag-handle:active { cursor: grabbing; }
+
+        /* [NEW] Themed elements */
+        .themed-bg-800 { background-color: var(--color-primary-800); }
+        .themed-bg-700-hover:hover { background-color: var(--color-primary-700); }
+        .themed-bg-100 { background-color: var(--color-primary-100); }
+        .themed-text-200 { color: var(--color-primary-200); }
     </style>
 </head>
-<body class="bg-slate-100">
+<body class="themed-bg-100">
 
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-slate-800 text-slate-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+        <aside id="sidebar" class="themed-bg-800 themed-text-200 w-64 space-y-2 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 flex flex-col">
             <h2 class="px-4 text-2xl font-bold text-white mb-4">เมนูนำทาง</h2>
-            <nav id="sidebar-nav" class="flex flex-col space-y-1">
-                <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
-                <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
-                <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
-                <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย (OKRs)</a>
-                <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> การจัดการงาน</a>
-                <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
-                <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
-                <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
-                <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
-                <a href="#mood-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">😊</span> บันทึกอารมณ์</a>
-                <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกการอ่าน/ดู/ฟัง</a>
-                <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
-                <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
-                <a href="#certificates" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏆</span> คลังเกียรติบัตร</a>
-                <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
-                <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
-                <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
-                <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> ระบบบันทึกการเงิน</a>
-                <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700 border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> ประมาณการเงิน (Excel)</a>
+            <nav id="sidebar-nav" class="flex-1 flex flex-col space-y-1">
+                <a href="#overview" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
+                <a href="#analytics" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📊</span> สรุปและวิเคราะห์</a>
+                <a href="#website" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
+                <a href="#weekly-agenda" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗓️</span> แผนประจำสัปดาห์</a>
+                <a href="#okrs" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🚀</span> เป้าหมาย (OKRs)</a>
+                <a href="#tasks" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🗂️</span> การจัดการงาน</a>
+                <a href="#ideas" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💡</span> กระดานไอเดีย</a>
+                <a href="#planner" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📅</span> ตารางชีวิต</a>
+                <a href="#habits" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎯</span> กิจวัตร</a>
+                <a href="#health-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">❤️</span> บันทึกสุขภาพ</a>
+                <a href="#mood-tracker" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">😊</span> บันทึกอารมณ์</a>
+                <a href="#media-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🎬</span> บันทึกการอ่าน/ดู/ฟัง</a>
+                <a href="#event-log" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📌</span> บันทึกเหตุการณ์</a>
+                <a href="#personal-growth" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌱</span> การพัฒนาตนเอง</a>
+                <a href="#certificates" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏆</span> คลังเกียรติบัตร</a>
+                <a href="#journal" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📓</span> บันทึกประจำวัน</a>
+                <a href="#knowledge" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📚</span> คลังความรู้</a>
+                <a href="#budget" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💰</span> การจัดการงบประมาณ</a>
+                <a href="#finance-app" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">💸</span> ระบบบันทึกการเงิน</a>
+                <a href="https://onedrive.live.com/personal/fca2ac859c324518/_layouts/15/Doc.aspx?sourcedoc=%7B3498F185-D898-44D1-942D-DB81947347D7%7D&file=%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%A1%E0%B8%B2%E0%B8%93%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B9%8C2568.xlsx&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer" class="sidebar-link flex items-center py-2.5 px-4 rounded transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">📈</span> ประมาณการเงิน (Excel)</a>
             </nav>
+            <!-- [NEW] Theme Switcher -->
+            <div class="px-4 pt-4 mt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-white mb-2">เลือกธีม</p>
+                <div class="flex space-x-2">
+                    <button onclick="setTheme('slate')" class="w-6 h-6 rounded-full bg-slate-500 ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent focus:ring-white"></button>
+                    <button onclick="setTheme('sky')" class="w-6 h-6 rounded-full bg-sky-500 ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent focus:ring-white"></button>
+                    <button onclick="setTheme('emerald')" class="w-6 h-6 rounded-full bg-emerald-500 ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent focus:ring-white"></button>
+                </div>
+            </div>
         </aside>
         
         <!-- Overlay for mobile -->
@@ -88,6 +121,30 @@
                         </div>
                     </section>
                     
+                    <!-- [NEW] Analytics Section -->
+                    <section id="analytics" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-3">📊</span>
+                                <h2 class="text-xl font-semibold text-gray-900">สรุปและวิเคราะห์</h2>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="font-semibold mb-2">กราฟอารมณ์ (30 วันล่าสุด)</h3>
+                                <canvas id="moodChart"></canvas>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">สรุปรายจ่ายตามหมวดหมู่</h3>
+                                <canvas id="expenseChart"></canvas>
+                            </div>
+                            <div class="lg:col-span-2">
+                                <h3 class="font-semibold mb-2">ความสำเร็จของกิจวัตร (30 วันล่าสุด)</h3>
+                                <canvas id="habitChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
                     <section id="website" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
@@ -139,7 +196,10 @@
                                 <span class="text-2xl mr-3">💡</span>
                                 <h2 class="text-xl font-semibold text-gray-900">กระดานไอเดีย</h2>
                             </div>
-                            <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
+                            <div class="flex items-center space-x-2">
+                                <input type="search" id="idea-search" placeholder="ค้นหาไอเดีย..." class="px-2 py-1 border rounded-md text-sm">
+                                <button onclick="openIdeaModal()" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition-colors">+ เพิ่มไอเดีย</button>
+                            </div>
                         </div>
                         <div id="idea-board-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-1">
                              <div class="text-center p-4 md:col-span-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -216,7 +276,10 @@
                                    <span class="text-2xl mr-3">📌</span>
                                    <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
                                </div>
-                               <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                               <div class="flex items-center space-x-2">
+                                  <input type="search" id="event-search" placeholder="ค้นหาเหตุการณ์..." class="px-2 py-1 border rounded-md text-sm">
+                                  <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                               </div>
                          </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -236,7 +299,6 @@
                         </div>
                     </section>
                     
-                    <!-- [NEW] Certificates Section -->
                     <section id="certificates" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
@@ -269,7 +331,10 @@
                               <span class="text-2xl mr-3">📚</span>
                               <h2 class="text-xl font-semibold text-gray-900">คลังความรู้</h2>
                             </div>
-                            <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
+                            <div class="flex items-center space-x-2">
+                                <input type="search" id="knowledge-search" placeholder="ค้นหาความรู้..." class="px-2 py-1 border rounded-md text-sm">
+                                <button onclick="openKnowledgeModal()" class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-indigo-700 transition-colors">+ เพิ่มความรู้</button>
+                            </div>
                         </div>
                         <div id="knowledge-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
                              <div class="text-center p-4 md:col-span-3"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -341,11 +406,17 @@
             media_logs: [],
             event_log: [],
             personal_growth: [],
-            certificates: [], // [NEW]
+            certificates: [],
             journal_entries: [],
             knowledge_items: [],
             budget: [],
+            filters: { // [NEW] For search functionality
+                idea: '',
+                event: '',
+                knowledge: ''
+            }
         };
+        let chartInstances = {}; // [NEW] To hold chart objects
         let currentViewDate = new Date();
         let weeklyAgendaDate = new Date();
 
@@ -410,6 +481,14 @@
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         };
+
+        // --- [NEW] THEME SWITCHER ---
+        function setTheme(themeName) {
+            const html = document.documentElement;
+            html.classList.remove('theme-slate', 'theme-sky', 'theme-emerald');
+            html.classList.add(`theme-${themeName}`);
+            localStorage.setItem('dashboard-theme', themeName);
+        }
 
         // --- GENERIC FORM HANDLER ---
         async function handleFormSubmit(e, tableName, onComplete, transformData = null) {
@@ -657,7 +736,6 @@
                 const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
                 const dayExpenses = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense').reduce((sum, i) => sum + i.amount, 0);
                 
-                // [MODIFIED] Fetch mood for the day
                 const dayMoodLog = appState.mood_logs.find(log => toYYYYMMDD(log.log_date) === dateStr);
                 const moods = [
                     { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
@@ -704,6 +782,9 @@
                 </div>
             `).join('');
 
+            const tasksOptions = appState.tasks.map(t => `<option value="${t.id}" ${okr?.linked_task_ids?.includes(t.id) ? 'selected' : ''}>${t.title}</option>`).join('');
+            const growthOptions = appState.personal_growth.map(g => `<option value="${g.id}" ${okr?.linked_growth_ids?.includes(g.id) ? 'selected' : ''}>${g.skill}</option>`).join('');
+
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                     <form id="okr-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg my-8">
@@ -716,6 +797,14 @@
                                 <label class="text-sm font-medium">Key Results</label>
                                 <div id="key-results-container" class="space-y-2 mt-1">${keyResultsHtml}</div>
                                 <button type="button" id="add-kr-btn" class="text-sm text-blue-600 mt-2">+ เพิ่ม Key Result</button>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium">งานที่เกี่ยวข้อง</label>
+                                <select name="linked_task_ids" multiple class="w-full mt-1 p-2 border rounded-md h-24">${tasksOptions}</select>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium">เป้าหมายพัฒนาตนเองที่เกี่ยวข้อง</label>
+                                <select name="linked_growth_ids" multiple class="w-full mt-1 p-2 border rounded-md h-24">${growthOptions}</select>
                             </div>
                         </div>
                         <div class="mt-6 flex justify-end space-x-2">
@@ -745,16 +834,26 @@
             const transformOkrData = (data) => {
                 const key_results = [];
                 for (let i = 0; i < krIndex; i++) {
-                    if (data[`kr_title_${i}`]) {
-                        key_results.push({
-                            title: data[`kr_title_${i}`],
-                            status: data[`kr_status_${i}`]
+                    const titleEl = document.querySelector(`[name="kr_title_${i}"]`);
+                    if (titleEl && titleEl.value) {
+                         key_results.push({
+                            title: titleEl.value,
+                            status: document.querySelector(`[name="kr_status_${i}"]`).value
                         });
                     }
-                    delete data[`kr_title_${i}`];
-                    delete data[`kr_status_${i}`];
                 }
                 data.key_results = key_results;
+                
+                const form = document.getElementById('okr-form');
+                data.linked_task_ids = [...form.querySelectorAll('select[name="linked_task_ids"] option:checked')].map(opt => parseInt(opt.value));
+                data.linked_growth_ids = [...form.querySelectorAll('select[name="linked_growth_ids"] option:checked')].map(opt => parseInt(opt.value));
+                
+                Object.keys(data).forEach(key => {
+                    if (key.startsWith('kr_title_') || key.startsWith('kr_status_')) {
+                        delete data[key];
+                    }
+                });
+
                 return data;
             };
 
@@ -777,6 +876,26 @@
                 const krs = okr.key_results || [];
                 const doneCount = krs.filter(kr => kr.status === 'Done').length;
                 const progress = krs.length > 0 ? (doneCount / krs.length) * 100 : 0;
+                
+                const linkedTasks = (okr.linked_task_ids || []).map(id => appState.tasks.find(t => t.id === id)).filter(Boolean);
+                const linkedGrowth = (okr.linked_growth_ids || []).map(id => appState.personal_growth.find(g => g.id === id)).filter(Boolean);
+
+                const linkedTasksHtml = linkedTasks.length > 0 ? `
+                    <div class="mt-2">
+                        <p class="text-xs font-semibold text-slate-600">งานที่เกี่ยวข้อง:</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${linkedTasks.map(t => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${t.title}</span>`).join('')}
+                        </div>
+                    </div>` : '';
+                
+                const linkedGrowthHtml = linkedGrowth.length > 0 ? `
+                    <div class="mt-2">
+                        <p class="text-xs font-semibold text-slate-600">เป้าหมายพัฒนาตนเอง:</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${linkedGrowth.map(g => `<span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">${g.skill}</span>`).join('')}
+                        </div>
+                    </div>` : '';
+
                 return `
                 <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
                     <div class="flex justify-between items-start">
@@ -806,6 +925,8 @@
                             </div>
                         `).join('')}
                     </div>
+                    ${linkedTasksHtml}
+                    ${linkedGrowthHtml}
                 </div>
             `}).join('');
         }
@@ -843,11 +964,16 @@
             appState.ideas = data || [];
         }
         function renderIdeaBoard() {
-            const ideas = appState.ideas;
+            const searchTerm = appState.filters.idea.toLowerCase();
+            const ideas = appState.ideas.filter(idea => 
+                idea.title.toLowerCase().includes(searchTerm) ||
+                (idea.description && idea.description.toLowerCase().includes(searchTerm)) ||
+                (idea.tags && idea.tags.join(' ').toLowerCase().includes(searchTerm))
+            );
             const container = document.getElementById('idea-board-container');
             if (!container) return;
             if (ideas.length === 0) {
-                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-4">ยังไม่มีไอเดีย</p>`;
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-4">ไม่พบไอเดีย</p>`;
                 return;
             }
             container.innerHTML = ideas.map(idea => `
@@ -1320,11 +1446,14 @@
         }
 
         function renderEventLog() {
-            const logs = appState.event_log;
+            const searchTerm = appState.filters.event.toLowerCase();
+            const logs = appState.event_log.filter(log => 
+                log.description.toLowerCase().includes(searchTerm)
+            );
             const container = document.getElementById('event-log-container');
             if (!container) return;
             if (logs.length === 0) {
-                container.innerHTML = `<p class="text-center text-slate-500">ยังไม่มีเหตุการณ์</p>`;
+                container.innerHTML = `<p class="text-center text-slate-500">ไม่พบเหตุการณ์</p>`;
                 return;
             }
             container.innerHTML = logs.map(log => `
@@ -1760,11 +1889,16 @@
             appState.knowledge_items = data || [];
         }
         function renderKnowledgeGallery() {
-            const items = appState.knowledge_items;
+            const searchTerm = appState.filters.knowledge.toLowerCase();
+            const items = appState.knowledge_items.filter(item => 
+                item.topic.toLowerCase().includes(searchTerm) ||
+                (item.summary && item.summary.toLowerCase().includes(searchTerm)) ||
+                (item.tags && item.tags.join(' ').toLowerCase().includes(searchTerm))
+            );
             const container = document.getElementById('knowledge-gallery');
             if (!container) return;
             if (items.length === 0) {
-                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ยังไม่มีคลังความรู้</p>`;
+                container.innerHTML = `<p class="text-center text-slate-500 md:col-span-3">ไม่พบข้อมูล</p>`;
                 return;
             }
             container.innerHTML = items.map(item => `
@@ -1881,7 +2015,6 @@
              const completedHabitsForDay = appState.habit_log.filter(log => log.completed_date === dateStr);
              const habitProgress = allHabitsForDay.length > 0 ? (completedHabitsForDay.length / allHabitsForDay.length) * 100 : 0;
 
-            // [MODIFIED] Fetch mood for the day
             const dayMoodLog = appState.mood_logs.find(log => toYYYYMMDD(log.log_date) === dateStr);
             const moods = [
                 { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
@@ -1909,7 +2042,6 @@
                     <div class="progress-bar-inner h-2 bg-teal-500" style="width: ${habitProgress}%;"></div>
                 </div>
             `;
-            // [MODIFIED] Add mood html to the modal
             let moodHtml = dayMood ? `<div class="text-sm p-2 bg-yellow-50 rounded flex items-center"><span class="text-2xl mr-2">${dayMood.emoji}</span> ${dayMood.mood}</div>` : '<p class="text-sm text-slate-400">ไม่มีบันทึกอารมณ์</p>';
 
             modalContainer.innerHTML = `
@@ -2035,12 +2167,11 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        // [NEW] Function to log yesterday's habits automatically
+        // --- BACKLOG HABITS ---
         async function backlogYesterdayHabits() {
             const YESTERDAY = '2025-08-11';
             const HABIT_NAMES = ['ออกกำลังกาย', 'อ่านหนังสือ', 'ออกแบบปกหนังสือ 1 เล่ม', 'ออกแบบ activity book 1 หน้า'];
 
-            // 1. Get all habits and yesterday's logs
             const { data: habits, error: habitsError } = await db.from('habits').select('id, name');
             const { data: logs, error: logsError } = await db.from('habit_log').select('habit_id').eq('completed_date', YESTERDAY);
 
@@ -2065,7 +2196,6 @@
                     console.error("Error backlogging habits:", error);
                 } else {
                     console.log(`Successfully backlogged ${habitsToLog.length} habits for yesterday.`);
-                    // Re-fetch all data to ensure the state is up-to-date
                     fetchAllData();
                 }
             }
@@ -2077,7 +2207,7 @@
             const tableNames = [
                 'tasks', 'budget', 'schedules', 'okrs', 'ideas', 'habits', 
                 'habit_log', 'health_log', 'mood_logs', 'media_logs', 'event_log', 
-                'personal_growth', 'certificates', 'journal_entries', 'knowledge_base' // [MODIFIED]
+                'personal_growth', 'certificates', 'journal_entries', 'knowledge_base'
             ];
             
             const promises = tableNames.map(name => db.from(name).select('*'));
@@ -2094,7 +2224,6 @@
                 }
             });
             
-            // Rename knowledge_base to knowledge_items for consistency in the app
             appState.knowledge_items = appState.knowledge_base;
             
             renderAllComponents();
@@ -2102,6 +2231,7 @@
 
         function renderAllComponents() {
             renderDashboardOverview();
+            renderAnalytics();
             renderWeeklyAgenda();
             renderOkrs();
             renderTaskBoard();
@@ -2113,15 +2243,32 @@
             renderMediaLog();
             renderEventLog();
             renderPersonalGrowth();
-            renderCertificates(); // [NEW]
+            renderCertificates();
             renderJournalEntries();
             renderKnowledgeGallery();
             renderBudget();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('dashboard-theme') || 'slate';
+            setTheme(savedTheme);
+
             fetchAllData();
-            backlogYesterdayHabits(); // [NEW] Call the function to log yesterday's habits
+            backlogYesterdayHabits();
+
+            document.getElementById('idea-search').addEventListener('input', (e) => {
+                appState.filters.idea = e.target.value;
+                renderIdeaBoard();
+            });
+            document.getElementById('event-search').addEventListener('input', (e) => {
+                appState.filters.event = e.target.value;
+                renderEventLog();
+            });
+            document.getElementById('knowledge-search').addEventListener('input', (e) => {
+                appState.filters.knowledge = e.target.value;
+                renderKnowledgeGallery();
+            });
+
 
             const sections = document.querySelectorAll('main section');
             const navLinks = document.querySelectorAll('#sidebar-nav a');
@@ -2159,7 +2306,7 @@
         1. (SELECT): "Allow public read access" -> anon, authenticated -> true
         2. (INSERT): "Allow authenticated users to upload" -> authenticated -> bucket_id = 'personal-growth-files'
 
-        -- [NEW] Policy for 'certificates' bucket --
+        -- Policy for 'certificates' bucket --
         1. (SELECT): "Allow public read access" -> anon, authenticated -> true
         2. (INSERT): "Allow authenticated users to upload" -> authenticated -> bucket_id = 'certificates'
 
