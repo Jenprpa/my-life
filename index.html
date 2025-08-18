@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Life Dashboard - แดชบอร์ดจัดการชีวิต</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -56,14 +55,12 @@
 <body class="themed-bg-100">
 
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <aside id="sidebar" class="themed-bg-800 themed-text-200 w-64 py-4 fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 flex flex-col">
             <h2 class="px-4 text-2xl font-bold text-white mb-2">เมนูนำทาง</h2>
             <nav id="sidebar-nav" class="flex-1 flex flex-col overflow-y-auto">
                 <a href="#overview" class="sidebar-link flex items-center py-2 px-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🏠</span> ภาพรวมวันนี้</a>
                 <a href="#website" class="sidebar-link flex items-center py-2 px-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent"><span class="w-6 mr-2 text-center">🌐</span> เว็บไซต์</a>
                 
-                <!-- Planner Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">🗓️</span>แผน & ตารางเวลา</span>
@@ -75,7 +72,6 @@
                     </div>
                 </div>
 
-                <!-- Goals & Growth Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">🚀</span>เป้าหมาย & การเติบโต</span>
@@ -88,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- Management Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">🗂️</span>การจัดการ</span>
@@ -101,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- Journals & Logs Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">📓</span>บันทึก</span>
@@ -116,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- Library Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">📚</span>คลังข้อมูล</span>
@@ -128,7 +121,6 @@
                     </div>
                 </div>
 
-                <!-- Finance Group -->
                 <div>
                     <button class="menu-toggle w-full flex items-center justify-between py-2 px-4 text-left themed-bg-700-hover">
                         <span class="font-semibold"><span class="w-6 mr-2 text-center">💰</span>การเงิน</span>
@@ -141,7 +133,6 @@
                     </div>
                 </div>
             </nav>
-            <!-- Theme Switcher -->
             <div class="px-4 pt-2 mt-2 border-t border-slate-700">
                 <p class="text-sm font-semibold text-white mb-2">เลือกธีม</p>
                 <div class="flex space-x-2">
@@ -152,10 +143,8 @@
             </div>
         </aside>
         
-        <!-- Overlay for mobile -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-        <!-- Main Content -->
         <div class="flex-1 lg:ml-64">
             <header class="bg-white shadow-sm sticky top-0 z-30">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center">
@@ -180,7 +169,6 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="overview-container">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลด...</p></div>
                         </div>
-                        <!-- Today's Focus Section -->
                         <div id="todays-focus-container" class="mt-6 pt-6 border-t border-slate-200">
                             <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
                         </div>
@@ -249,11 +237,11 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                 <div class="flex items-center">
-                                     <span class="text-2xl mr-3">📅</span>
-                                     <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                                 </div>
-                                 <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
+                                  <div class="flex items-center">
+                                      <span class="text-2xl mr-3">📅</span>
+                                      <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                                  </div>
+                                  <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
                          </div>
                         <div id="calendar-container">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลดปฏิทิน...</p></div>
@@ -264,7 +252,7 @@
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center">
                                 <span class="text-2xl mr-3">🎯</span>
-                                <h2 class="text-xl font-semibold text-gray-900">กิจวัตร</h2>
+                                <h2 class="text-xl font-semibold text-gray-900">กิจวัตร (สำหรับวันนี้)</h2>
                             </div>
                             <button onclick="openHabitModal()" class="bg-teal-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-teal-700 transition-colors">+ เพิ่มกิจวัตร</button>
                         </div>
@@ -279,7 +267,7 @@
                                 <span class="text-2xl mr-3">❤️</span>
                                 <h2 class="text-xl font-semibold text-gray-900">บันทึกสุขภาพ (วันนี้)</h2>
                             </div>
-                             <button onclick="openHealthLogModal()" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
+                             <button onclick="openHealthLogModal(null, getToday())" class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors">+ เพิ่มบันทึก</button>
                         </div>
                         <div id="health-tracker-container" class="p-1">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -313,15 +301,15 @@
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                 <div class="flex items-center">
-                                     <span class="text-2xl mr-3">📌</span>
-                                     <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                                 </div>
-                                 <div class="flex items-center space-x-2">
-                                   <input type="search" id="event-search" placeholder="ค้นหาเหตุการณ์..." class="px-2 py-1 border rounded-md text-sm">
-                                   <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
-                                 </div>
-                        </div>
+                                  <div class="flex items-center">
+                                      <span class="text-2xl mr-3">📌</span>
+                                      <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                                  </div>
+                                  <div class="flex items-center space-x-2">
+                                     <input type="search" id="event-search" placeholder="ค้นหาเหตุการณ์..." class="px-2 py-1 border rounded-md text-sm">
+                                     <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                                  </div>
+                         </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
                         </div>
@@ -368,12 +356,12 @@
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                 <div class="flex items-center">
-                                     <span class="text-2xl mr-3">📓</span>
-                                     <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                                 </div>
-                                 <button onclick="openJournalModal()" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
-                        </div>
+                                  <div class="flex items-center">
+                                      <span class="text-2xl mr-3">📓</span>
+                                      <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                                  </div>
+                                  <button onclick="openJournalModal(null, getToday())" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                         </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto">
                            <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
                         </div>
@@ -436,7 +424,6 @@
         </div>
     </div>
     
-    <!-- Modals Container -->
     <div id="modal-container"></div>
 
     <script>
@@ -575,7 +562,7 @@
             
             for (const key in data) {
                  if (data[key] === '') {
-                      data[key] = null;
+                     data[key] = null;
                  }
             }
             
@@ -1162,7 +1149,7 @@
                     <div class="habit-item flex items-center justify-between bg-white p-3 rounded-md border border-slate-200 mb-2" draggable="true" data-id="${habit.id}">
                         <div class="flex items-center">
                             <i class="fas fa-grip-vertical drag-handle text-slate-400 mr-3"></i>
-                            <input type="checkbox" id="habit-${habit.id}" class="habit-checkbox h-5 w-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300 mr-3" ${isDone ? 'checked' : ''} onchange="logHabit(${habit.id}, this.checked)">
+                            <input type="checkbox" id="habit-${habit.id}" class="habit-checkbox h-5 w-5 rounded text-teal-600 focus:ring-teal-500 border-gray-300 mr-3" ${isDone ? 'checked' : ''} onchange="logHabit(${habit.id}, this.checked, getToday())">
                             <label for="habit-${habit.id}" class="text-slate-800 flex items-center">
                                 ${habit.icon ? `<i class="${habit.icon} w-5 text-center mr-2 text-teal-600"></i>` : ''}
                                 <span class="font-medium">${habit.name}</span>
@@ -1190,31 +1177,41 @@
             const dailyList = document.getElementById('daily-habit-list');
             if(dailyList) addDragDropListeners(dailyList);
         }
-        async function logHabit(habitId, isChecked) {
-            const todayStr = getToday();
+        
+        // CHANGE: Modified logHabit to accept a date string
+        async function logHabit(habitId, isChecked, dateStr) {
             if (isChecked) {
-                const { error } = await db.from('habit_log').insert({ habit_id: habitId, completed_date: todayStr });
-                if (error && error.code !== '23505') { 
+                const { error } = await db.from('habit_log').insert({ habit_id: habitId, completed_date: dateStr });
+                if (error && error.code !== '23505') { // Ignore duplicate errors
                     showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
-                } else { fetchAllData(); }
+                } else { await fetchAllData(); }
             } else {
-                const { error } = await db.from('habit_log').delete().match({ habit_id: habitId, completed_date: todayStr });
+                const { error } = await db.from('habit_log').delete().match({ habit_id: habitId, completed_date: dateStr });
                 if (error) {
                     showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
-                } else { fetchAllData(); }
+                } else { await fetchAllData(); }
+            }
+            // If the daily view modal is open, refresh its content
+            if (document.getElementById('daily-view-modal-content')) {
+                openDailyViewModal(dateStr);
             }
         }
         
         // --- HEALTH ---
-        function openHealthLogModal(log = null) {
+        // CHANGE: Modified openHealthLogModal to accept a date string
+        function openHealthLogModal(log = null, date = null) {
             const isEdit = log !== null;
+            const logDate = isEdit ? toYYYYMMDD(log.log_date) : (date || getToday());
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <form id="health-log-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึกสุขภาพ' : 'เพิ่มบันทึกสุขภาพ'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
-                        <input type="hidden" name="log_date" value="${getToday()}">
                         <div class="space-y-4">
+                             <div>
+                                <label class="text-sm font-medium">วันที่</label>
+                                <input name="log_date" type="date" value="${logDate}" required class="w-full mt-1 p-2 border rounded-md">
+                            </div>
                             <div><label class="text-sm font-medium">ประเภท</label>
                                 <select name="type" class="w-full mt-1 p-2 border rounded-md">
                                     <option value="food" ${isEdit && log.type === 'food' ? 'selected' : ''}>อาหาร</option>
@@ -1232,7 +1229,7 @@
                 </div>`;
             document.getElementById('health-log-form').addEventListener('submit', (e) => handleFormSubmit(e, 'health_log', fetchAllData));
         }
-       
+        
         function renderHealthTracker() {
             const container = document.getElementById('health-tracker-container');
             if (!container) return;
@@ -1266,10 +1263,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                          <div class="grid grid-cols-3 gap-2 text-center mb-4">
-                             <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ (kcal)</p><p class="text-xl font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
-                             <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">ใช้ไป (kcal)</p><p class="text-xl font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
-                             <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือ (kcal)</p><p class="text-xl font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
-                        </div>
+                              <div class="bg-green-100 p-3 rounded-lg"><p class="text-sm text-green-800">ได้รับ (kcal)</p><p class="text-xl font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
+                              <div class="bg-orange-100 p-3 rounded-lg"><p class="text-sm text-orange-800">ใช้ไป (kcal)</p><p class="text-xl font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
+                              <div class="bg-blue-100 p-3 rounded-lg"><p class="text-sm text-blue-800">คงเหลือ (kcal)</p><p class="text-xl font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
+                         </div>
                         <div class="mb-4">
                             <div class="flex justify-between text-sm mb-1">
                                 <span>เป้าหมายแคลอรี่วันนี้: ${formatNumber(caloriesIn)} / ${formatNumber(calorieGoal)}</span>
@@ -1327,19 +1324,24 @@
 
 
         // --- MOOD ---
-        async function handleMoodSelect(mood) {
-            const todayStr = getToday();
-            // Use upsert with onConflict to either insert or update the mood for the day.
-            const { error } = await db.from('mood_logs').upsert({ log_date: todayStr, mood: mood }, { onConflict: 'log_date' });
+        // CHANGE: Modified handleMoodSelect to accept a date string
+        async function handleMoodSelect(mood, dateStr) {
+            const { error } = await db.from('mood_logs').upsert({ log_date: dateStr, mood: mood }, { onConflict: 'log_date' });
             if (error) {
                 showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
             } else {
-                showToast('บันทึกอารมณ์แล้ว!', 'success'); fetchAllData();
+                showToast('บันทึกอารมณ์แล้ว!', 'success'); 
+                await fetchAllData();
+                // If the daily view modal is open, refresh its content
+                if (document.getElementById('daily-view-modal-content')) {
+                    openDailyViewModal(dateStr);
+                }
             }
         }
         
-        function renderMoodTracker() {
-            const container = document.getElementById('mood-tracker-container');
+        // CHANGE: Created a reusable function to render the mood selector
+        function renderMoodSelector(targetContainerId, dateStr) {
+            const container = document.getElementById(targetContainerId);
             if (!container) return;
             const moods = [
                 { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
@@ -1347,19 +1349,24 @@
                 { mood: 'แย่', emoji: '😠' }, { mood: 'ง่วง', emoji: '😴' },
                 { mood: 'ไม่สบาย', emoji: '🤒' }, { mood: 'ตกใจ', emoji: '😱' }
             ];
-            const todayLog = appState.mood_logs.find(log => log.log_date === getToday());
+            const dayLog = appState.mood_logs.find(log => log.log_date === dateStr);
             container.innerHTML = `
                 <div class="flex justify-around items-center p-4 bg-slate-50 rounded-lg flex-wrap gap-2">
                     ${moods.map(m => `
-                        <button class="mood-btn text-4xl p-2 rounded-full transition-transform duration-200 ${todayLog && todayLog.mood === m.mood ? 'selected' : ''}" 
+                        <button class="mood-btn text-4xl p-2 rounded-full transition-transform duration-200 ${dayLog && dayLog.mood === m.mood ? 'selected' : ''}" 
                                 title="${m.mood}" 
-                                onclick="handleMoodSelect('${m.mood}')">
+                                onclick="handleMoodSelect('${m.mood}', '${dateStr}')">
                             ${m.emoji}
                         </button>
                     `).join('')}
-                </div>
-            `;
+                </div>`;
         }
+
+        function renderMoodTracker() {
+            // This function now just calls the reusable selector for today's date
+            renderMoodSelector('mood-tracker-container', getToday());
+        }
+
 
         // --- MEDIA LOG ---
         async function handleCommentSubmit(e, logId) {
@@ -1897,15 +1904,17 @@
 
 
         // --- JOURNAL ---
-        function openJournalModal(entry = null) {
+        // CHANGE: Modified openJournalModal to accept a date string for pre-filling
+        function openJournalModal(entry = null, date = null) {
             const isEdit = entry !== null;
+            const entryDate = isEdit ? toYYYYMMDD(entry.entry_date) : (date || getToday());
             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <form id="journal-form" class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
                         <h3 class="text-lg font-semibold mb-4">${isEdit ? 'แก้ไขบันทึก' : 'เพิ่มบันทึกใหม่'}</h3>
                         <input type="hidden" name="id" value="${isEdit ? entry.id : ''}">
                         <div class="space-y-4">
-                            <div><label class="text-sm font-medium">วันที่</label><input name="entry_date" type="date" value="${isEdit ? toYYYYMMDD(entry.entry_date) : getToday()}" required class="w-full mt-1 p-2 border rounded-md"></div>
+                            <div><label class="text-sm font-medium">วันที่</label><input name="entry_date" type="date" value="${entryDate}" required class="w-full mt-1 p-2 border rounded-md"></div>
                             <div><label class="text-sm font-medium">เรื่องที่อยากขอบคุณ</label><textarea name="gratitude" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.gratitude || '' : ''}</textarea></div>
                             <div><label class="text-sm font-medium">เรื่องดีๆ ที่เกิดขึ้น</label><textarea name="small_wins" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.small_wins || '' : ''}</textarea></div>
                             <div><label class="text-sm font-medium">สำรวจอารมณ์</label><textarea name="mood_check_in" class="w-full mt-1 p-2 border rounded-md h-20">${isEdit ? entry.mood_check_in || '' : ''}</textarea></div>
@@ -1964,12 +1973,12 @@
                     </form>
                 </div>`;
                  const transformKnowledgeData = (data) => {
-                       if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
-                       return data;
+                      if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
+                      return data;
                  };
             document.getElementById('knowledge-form').addEventListener('submit', (e) => handleFormSubmit(e, 'knowledge_base', fetchAllData, transformKnowledgeData));
         }
-       
+        
         function renderKnowledgeGallery() {
             const searchTerm = appState.filters.knowledge.toLowerCase();
             const items = appState.knowledge_base.filter(item => 
@@ -2165,86 +2174,80 @@
 
 
         // --- DAILY VIEW MODAL ---
+        // CHANGE: Heavily modified this function to be the central hub for backdating
         function openDailyViewModal(dateStr) {
-             const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
+             const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr).sort((a,b) => (a.start_time || '').localeCompare(b.start_time || ''));
              const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
              const dayJournal = appState.journal_entries.find(j => toYYYYMMDD(j.entry_date) === dateStr);
-             const dayOfWeek = new Date(dateStr).getDay();
+             const dayOfWeek = new Date(dateStr+'T00:00:00').getDay();
              const dailyHabitsForDay = appState.habits.filter(h => h.frequency === 'daily');
              const weeklyHabitsForDay = appState.habits.filter(h => h.frequency === 'weekly' && h.weekly_day === dayOfWeek);
              const allHabitsForDay = [...dailyHabitsForDay, ...weeklyHabitsForDay];
              const dayExpensesList = appState.budget.filter(i => toYYYYMMDD(i.transaction_date) === dateStr && i.transaction_type === 'Expense');
              const completedHabitsForDay = appState.habit_log.filter(log => log.completed_date === dateStr);
-             const habitProgress = allHabitsForDay.length > 0 ? (completedHabitsForDay.length / allHabitsForDay.length) * 100 : 0;
 
-            const dayMoodLog = appState.mood_logs.find(log => toYYYYMMDD(log.log_date) === dateStr);
-            const moods = [
-                { mood: 'ยอดเยี่ยม', emoji: '😁' }, { mood: 'ดี', emoji: '😊' },
-                { mood: 'เฉยๆ', emoji: '😐' }, { mood: 'ไม่ค่อยดี', emoji: '😟' },
-                { mood: 'แย่', emoji: '😠' }, { mood: 'ง่วง', emoji: '😴' },
-                { mood: 'ไม่สบาย', emoji: '🤒' }, { mood: 'ตกใจ', emoji: '😱' }
-            ];
-            const dayMood = dayMoodLog ? moods.find(m => m.mood === dayMoodLog.mood) : null;
+            let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
+            let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
+            let expenseHtml = dayExpensesList.length > 0 ? dayExpensesList.map(item => `<div class="text-sm p-2 bg-red-50 rounded flex justify-between"><span>${item.item}</span> <span>${formatCurrency(item.amount)}</span></div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีรายจ่าย</p>';
+            
+            let habitHtml = allHabitsForDay.length > 0 ? allHabitsForDay.map(habit => {
+                const isDone = completedHabitsForDay.some(log => log.habit_id === habit.id);
+                return `
+                    <div class="flex items-center">
+                        <input type="checkbox" id="daily-view-habit-${habit.id}" class="h-4 w-4 rounded text-teal-600 focus:ring-teal-500 border-gray-300 mr-2" ${isDone ? 'checked' : ''} onchange="logHabit(${habit.id}, this.checked, '${dateStr}')">
+                        <label for="daily-view-habit-${habit.id}" class="text-sm ${isDone ? 'line-through text-slate-400' : ''}">${habit.name}</label>
+                    </div>`;
+            }).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจวัตรสำหรับวันนี้</p>';
 
+            let journalHtml = dayJournal ? `
+                 ${dayJournal.gratitude ? `<div class="mt-1"><strong class="text-xs text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-sm text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
+                 ${dayJournal.small_wins ? `<div class="mt-1"><strong class="text-xs text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-sm text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
+                 <button onclick="openJournalModal(${JSON.stringify(dayJournal)})" class="text-xs text-blue-600 hover:underline mt-2">แก้ไขบันทึก</button>
+            ` : `<button onclick="openJournalModal(null, '${dateStr}')" class="text-sm text-blue-600 hover:underline">เพิ่มบันทึกสำหรับวันนี้</button>`;
 
-             let scheduleHtml = daySchedules.length > 0 ? daySchedules.map(s => `<div class="text-sm p-2 bg-cyan-50 rounded">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีกิจกรรม</p>';
-             let taskHtml = dayTasks.length > 0 ? dayTasks.map(t => `<div class="text-sm p-2 bg-blue-50 rounded ${t.status === 'Done' ? 'line-through' : ''}">${t.title}</div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีงาน</p>';
-             let expenseHtml = dayExpensesList.length > 0 ? dayExpensesList.map(item => `<div class="text-sm p-2 bg-red-50 rounded flex justify-between"><span>${item.item}</span> <span>${formatCurrency(item.amount)}</span></div>`).join('') : '<p class="text-sm text-slate-400">ไม่มีรายจ่าย</p>';
-             let journalHtml = dayJournal ? `
-                  ${dayJournal.gratitude ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องที่อยากขอบคุณ:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.gratitude}</p></div>` : ''}
-                  ${dayJournal.small_wins ? `<div class="mt-2"><strong class="text-sm text-slate-600">เรื่องดีๆ ที่เกิดขึ้น:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.small_wins}</p></div>` : ''}
-                  ${dayJournal.mood_check_in ? `<div class="mt-2"><strong class="text-sm text-slate-600">สำรวจอารมณ์:</strong><p class="text-slate-700 whitespace-pre-wrap">${dayJournal.mood_check_in}</p></div>` : ''}
-             ` : '<p class="text-sm text-slate-400">ไม่มีบันทึก</p>';
-            let habitSummaryHtml = `
-                 <div class="flex justify-between items-center text-sm mb-1">
-                     <span>ความสำเร็จของกิจวัตร</span>
-                     <span>${completedHabitsForDay.length}/${allHabitsForDay.length} (${Math.round(habitProgress)}%)</span>
-                 </div>
-                 <div class="progress-bar h-2 w-full">
-                     <div class="progress-bar-inner h-2 bg-teal-500" style="width: ${habitProgress}%;"></div>
-                 </div>
-            `;
-            let moodHtml = dayMood ? `<div class="text-sm p-2 bg-yellow-50 rounded flex items-center"><span class="text-2xl mr-2">${dayMood.emoji}</span> ${dayMood.mood}</div>` : '<p class="text-sm text-slate-400">ไม่มีบันทึกอารมณ์</p>';
-
-            modalContainer.innerHTML = `
+             modalContainer.innerHTML = `
                 <div class="modal is-open fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                     <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl my-8 relative">
                          <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800 text-2xl">&times;</button>
                          <h3 class="text-xl font-semibold mb-4">สรุปประจำวันที่ ${formatDate(dateStr)}</h3>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto p-2">
-                               <div>
-                                   <h4 class="font-semibold mb-2">🗓️ ตารางเวลา</h4>
-                                   <div class="space-y-2">${scheduleHtml}</div>
-                               </div>
+                         <div id="daily-view-modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 max-h-[70vh] overflow-y-auto p-2">
                               <div>
-                                   <h4 class="font-semibold mb-2">🗂️ งาน</h4>
-                                   <div class="space-y-2">${taskHtml}</div>
-                               </div>
-                               <div class="md:col-span-2">
-                                   <h4 class="font-semibold mb-2">🎯 กิจวัตร</h4>
-                                   <div class="space-y-2">${habitSummaryHtml}</div>
-                               </div>
+                                  <h4 class="font-semibold mb-2">🗓️ ตารางเวลา</h4>
+                                  <div class="space-y-2">${scheduleHtml}</div>
+                              </div>
+                             <div>
+                                  <h4 class="font-semibold mb-2">🗂️ งาน</h4>
+                                  <div class="space-y-2">${taskHtml}</div>
+                             </div>
+                             <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold">🎯 กิจวัตร</h4>
+                                </div>
+                                <div class="space-y-2">${habitHtml}</div>
+                             </div>
+                             <div>
+                                <div class="flex items-center justify-between mb-2">
+                                   <h4 class="font-semibold">😊 อารมณ์</h4>
+                                </div>
+                                <div id="daily-view-mood-selector"></div>
+                             </div>
                               <div class="md:col-span-2">
-                                   <h4 class="font-semibold mb-2">😊 อารมณ์</h4>
-                                   <div class="space-y-2">${moodHtml}</div>
-                               </div>
-                              <div class="md:col-span-2">
-                                   <h4 class="font-semibold mb-2">💰 รายจ่าย</h4>
-                                   <div class="space-y-2">${expenseHtml}</div>
-                               </div>
-                               <div class="md:col-span-2">
-                                   <h4 class="font-semibold mb-2">❤️ สุขภาพ</h4>
-                                   <div id="daily-health-view"></div>
-                               </div>
-                               <div class="md:col-span-2">
-                                   <h4 class="font-semibold mb-2">📓 บันทึก</h4>
-                                   <div class="space-y-2">${journalHtml}</div>
-                               </div>
+                                <div class="flex items-center justify-between mb-2">
+                                  <h4 class="font-semibold">❤️ สุขภาพ</h4>
+                                  <button onclick="openHealthLogModal(null, '${dateStr}')" class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full hover:bg-red-200">+ เพิ่ม</button>
+                                </div>
+                                <div id="daily-health-view"></div>
+                              </div>
+                             <div class="md:col-span-2">
+                                  <h4 class="font-semibold mb-2">📓 บันทึก</h4>
+                                  <div class="space-y-2 bg-slate-50 p-3 rounded-md">${journalHtml}</div>
+                             </div>
                          </div>
                     </div>
                 </div>
             `;
             renderHealthTrackerForDay(dateStr);
+            renderMoodSelector('daily-view-mood-selector', dateStr);
         }
 
         function renderHealthTrackerForDay(dateStr) {
@@ -2255,14 +2258,21 @@
              const exerciseLogs = logsToday.filter(log => log.type === 'exercise');
              const caloriesIn = foodLogs.reduce((sum, log) => sum + log.calories, 0);
              const caloriesOut = exerciseLogs.reduce((sum, log) => sum + log.calories, 0);
-             const calorieGoal = 1850;
-             const remainingCalories = calorieGoal - (caloriesIn - caloriesOut);
              
              container.innerHTML = `
-                  <div class="grid grid-cols-3 gap-2 text-center text-sm mb-2">
-                       <div class="bg-green-100 p-2 rounded-lg"><p class="text-xs text-green-800">ได้รับ</p><p class="font-bold text-green-600">${formatNumber(caloriesIn)}</p></div>
-                       <div class="bg-orange-100 p-2 rounded-lg"><p class="text-xs text-orange-800">ใช้ไป</p><p class="font-bold text-orange-600">${formatNumber(caloriesOut)}</p></div>
-                       <div class="bg-blue-100 p-2 rounded-lg"><p class="text-xs text-blue-800">คงเหลือ</p><p class="font-bold text-blue-600">${formatNumber(remainingCalories)}</p></div>
+                  <div class="grid grid-cols-2 gap-2 text-sm">
+                       <div>
+                           <p class="text-xs font-semibold text-green-700">อาหาร (${formatNumber(caloriesIn)} kcal)</p>
+                           <ul class="list-disc list-inside mt-1">
+                               ${foodLogs.length > 0 ? foodLogs.map(f => `<li>${f.item_name}</li>`).join('') : '<li class="text-slate-400">ไม่มี</li>'}
+                           </ul>
+                       </div>
+                       <div>
+                           <p class="text-xs font-semibold text-orange-700">ออกกำลังกาย (${formatNumber(caloriesOut)} kcal)</p>
+                           <ul class="list-disc list-inside mt-1">
+                               ${exerciseLogs.length > 0 ? exerciseLogs.map(e => `<li>${e.item_name}</li>`).join('') : '<li class="text-slate-400">ไม่มี</li>'}
+                           </ul>
+                       </div>
                   </div>
              `;
         }
