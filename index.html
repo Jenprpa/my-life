@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js library added -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
         
@@ -93,6 +95,7 @@
                         <a href="#tasks" class="sidebar-link flex items-center py-1.5 pl-12 pr-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent">การจัดการงาน</a>
                         <a href="#ideas" class="sidebar-link flex items-center py-1.5 pl-12 pr-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent">กระดานไอเดีย</a>
                         <a href="#habits" class="sidebar-link flex items-center py-1.5 pl-12 pr-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent">กิจวัตร</a>
+                        <a href="#habit-progress" class="sidebar-link flex items-center py-1.5 pl-12 pr-4 rounded-none transition duration-200 themed-bg-700-hover border-l-4 border-transparent">สถิติกิจวัตร</a>
                     </div>
                 </div>
 
@@ -237,11 +240,11 @@
 
                     <section id="planner" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                  <div class="flex items-center">
-                                      <span class="text-2xl mr-3">📅</span>
-                                      <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
-                                  </div>
-                                  <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-3">📅</span>
+                                    <h2 class="text-xl font-semibold text-gray-900">ตารางชีวิต</h2>
+                                </div>
+                                <button onclick="openScheduleModal(null, getToday())" class="bg-cyan-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-cyan-700 transition-colors">+ เพิ่มกิจกรรม</button>
                          </div>
                         <div id="calendar-container">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลดปฏิทิน...</p></div>
@@ -258,6 +261,13 @@
                         </div>
                         <div id="habit-tracker-container" class="max-h-96 overflow-y-auto p-1">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
+                        </div>
+                    </section>
+
+                    <!-- New section for the habit progress chart -->
+                    <section id="habit-progress" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
+                        <div id="habit-progress-container">
+                            <div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-2x text-slate-400"></i><p>กำลังโหลดสถิติ...</p></div>
                         </div>
                     </section>
 
@@ -301,14 +311,14 @@
 
                     <section id="event-log" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                  <div class="flex items-center">
-                                      <span class="text-2xl mr-3">📌</span>
-                                      <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
-                                  </div>
-                                  <div class="flex items-center space-x-2">
-                                     <input type="search" id="event-search" placeholder="ค้นหาเหตุการณ์..." class="px-2 py-1 border rounded-md text-sm">
-                                     <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
-                                  </div>
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-3">📌</span>
+                                    <h2 class="text-xl font-semibold text-gray-900">บันทึกเหตุการณ์</h2>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                   <input type="search" id="event-search" placeholder="ค้นหาเหตุการณ์..." class="px-2 py-1 border rounded-md text-sm">
+                                   <button onclick="openEventLogModal()" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-600 transition-colors">+ เพิ่มเหตุการณ์</button>
+                                </div>
                          </div>
                         <div id="event-log-container" class="space-y-3 max-h-96 overflow-y-auto">
                              <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -356,11 +366,11 @@
 
                     <section id="journal" class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-6 scroll-mt-20">
                          <div class="flex items-center justify-between mb-4">
-                                  <div class="flex items-center">
-                                      <span class="text-2xl mr-3">📓</span>
-                                      <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
-                                  </div>
-                                  <button onclick="openJournalModal(null, getToday())" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-3">📓</span>
+                                    <h2 class="text-xl font-semibold text-gray-900">บันทึกประจำวัน</h2>
+                                </div>
+                                <button onclick="openJournalModal(null, getToday())" class="bg-purple-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-purple-700 transition-colors">+ เพิ่มบันทึก</button>
                          </div>
                         <div id="journal-entries" class="space-y-3 max-h-96 overflow-y-auto">
                            <div class="text-center p-4"><i class="fas fa-spinner fa-spin text-slate-400"></i></div>
@@ -428,7 +438,6 @@
 
     <script>
         // --- SUPABASE SETUP ---
-        // !!! PLEASE REPLACE WITH YOUR SUPABASE URL AND ANON KEY !!!
         const SUPABASE_URL = 'https://aajlqfearyhlpwjcqjom.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhamxxZmVhcnlobHB3amNxam9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5NjI0MzgsImV4cCI6MjA2OTUzODQzOH0.v9JRorJeSvGdAdZbvr1QHdAw9DaewpySUJ-ZiWr14nY';
 
@@ -463,6 +472,8 @@
         };
         let currentViewDate = new Date();
         let weeklyAgendaDate = new Date();
+        let habitChartDate = new Date(); // State for the habit chart month
+        let habitChartInstance = null; // To hold the chart instance
 
         // --- UTILITY FUNCTIONS ---
         const formatCurrency = (amount) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount || 0);
@@ -1006,7 +1017,6 @@
             const file = data.file_upload;
             let fileUrl = data.existing_file_url || null;
 
-            // 1. Handle file upload if a new file is provided
             if (file && file.size > 0) {
                 const filePath = `public/${Date.now()}-${file.name}`;
                 const { error: uploadError } = await db.storage.from('idea-files').upload(filePath, file);
@@ -1022,7 +1032,6 @@
                 fileUrl = urlData.publicUrl;
             }
 
-            // 2. Prepare data for the database
             const id = data.id;
             const dbData = {
                 title: data.title,
@@ -1032,7 +1041,6 @@
                 file_url: fileUrl,
             };
 
-            // 3. Upsert data into the 'ideas' table
             const { error } = id
                 ? await db.from('ideas').update(dbData).eq('id', id)
                 : await db.from('ideas').insert([dbData]);
@@ -1178,7 +1186,6 @@
             if(dailyList) addDragDropListeners(dailyList);
         }
         
-        // CHANGE: Modified logHabit to accept a date string
         async function logHabit(habitId, isChecked, dateStr) {
             if (isChecked) {
                 const { error } = await db.from('habit_log').insert({ habit_id: habitId, completed_date: dateStr });
@@ -1191,14 +1198,12 @@
                     showToast('เกิดข้อผิดพลาด', 'error'); console.error(error);
                 } else { await fetchAllData(); }
             }
-            // If the daily view modal is open, refresh its content
             if (document.getElementById('daily-view-modal-content')) {
                 openDailyViewModal(dateStr);
             }
         }
         
         // --- HEALTH ---
-        // CHANGE: Modified openHealthLogModal to accept a date string
         function openHealthLogModal(log = null, date = null) {
             const isEdit = log !== null;
             const logDate = isEdit ? toYYYYMMDD(log.log_date) : (date || getToday());
@@ -1209,9 +1214,9 @@
                         <input type="hidden" name="id" value="${isEdit ? log.id : ''}">
                         <div class="space-y-4">
                              <div>
-                                <label class="text-sm font-medium">วันที่</label>
-                                <input name="log_date" type="date" value="${logDate}" required class="w-full mt-1 p-2 border rounded-md">
-                            </div>
+                                 <label class="text-sm font-medium">วันที่</label>
+                                 <input name="log_date" type="date" value="${logDate}" required class="w-full mt-1 p-2 border rounded-md">
+                             </div>
                             <div><label class="text-sm font-medium">ประเภท</label>
                                 <select name="type" class="w-full mt-1 p-2 border rounded-md">
                                     <option value="food" ${isEdit && log.type === 'food' ? 'selected' : ''}>อาหาร</option>
@@ -1324,7 +1329,6 @@
 
 
         // --- MOOD ---
-        // CHANGE: Modified handleMoodSelect to accept a date string
         async function handleMoodSelect(mood, dateStr) {
             const { error } = await db.from('mood_logs').upsert({ log_date: dateStr, mood: mood }, { onConflict: 'log_date' });
             if (error) {
@@ -1332,14 +1336,12 @@
             } else {
                 showToast('บันทึกอารมณ์แล้ว!', 'success'); 
                 await fetchAllData();
-                // If the daily view modal is open, refresh its content
                 if (document.getElementById('daily-view-modal-content')) {
                     openDailyViewModal(dateStr);
                 }
             }
         }
         
-        // CHANGE: Created a reusable function to render the mood selector
         function renderMoodSelector(targetContainerId, dateStr) {
             const container = document.getElementById(targetContainerId);
             if (!container) return;
@@ -1363,7 +1365,6 @@
         }
 
         function renderMoodTracker() {
-            // This function now just calls the reusable selector for today's date
             renderMoodSelector('mood-tracker-container', getToday());
         }
 
@@ -1904,7 +1905,6 @@
 
 
         // --- JOURNAL ---
-        // CHANGE: Modified openJournalModal to accept a date string for pre-filling
         function openJournalModal(entry = null, date = null) {
             const isEdit = entry !== null;
             const entryDate = isEdit ? toYYYYMMDD(entry.entry_date) : (date || getToday());
@@ -1973,8 +1973,8 @@
                     </form>
                 </div>`;
                  const transformKnowledgeData = (data) => {
-                      if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
-                      return data;
+                     if (data.tags) { data.tags = data.tags.split(',').map(tag => tag.trim()).filter(Boolean); }
+                     return data;
                  };
             document.getElementById('knowledge-form').addEventListener('submit', (e) => handleFormSubmit(e, 'knowledge_base', fetchAllData, transformKnowledgeData));
         }
@@ -2174,7 +2174,6 @@
 
 
         // --- DAILY VIEW MODAL ---
-        // CHANGE: Heavily modified this function to be the central hub for backdating
         function openDailyViewModal(dateStr) {
              const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr).sort((a,b) => (a.start_time || '').localeCompare(b.start_time || ''));
              const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
@@ -2220,23 +2219,23 @@
                                   <div class="space-y-2">${taskHtml}</div>
                              </div>
                              <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-semibold">🎯 กิจวัตร</h4>
-                                </div>
-                                <div class="space-y-2">${habitHtml}</div>
+                                 <div class="flex items-center justify-between mb-2">
+                                     <h4 class="font-semibold">🎯 กิจวัตร</h4>
+                                 </div>
+                                 <div class="space-y-2">${habitHtml}</div>
                              </div>
                              <div>
-                                <div class="flex items-center justify-between mb-2">
-                                   <h4 class="font-semibold">😊 อารมณ์</h4>
-                                </div>
-                                <div id="daily-view-mood-selector"></div>
+                                 <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold">😊 อารมณ์</h4>
+                                 </div>
+                                 <div id="daily-view-mood-selector"></div>
                              </div>
                               <div class="md:col-span-2">
-                                <div class="flex items-center justify-between mb-2">
-                                  <h4 class="font-semibold">❤️ สุขภาพ</h4>
-                                  <button onclick="openHealthLogModal(null, '${dateStr}')" class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full hover:bg-red-200">+ เพิ่ม</button>
-                                </div>
-                                <div id="daily-health-view"></div>
+                                 <div class="flex items-center justify-between mb-2">
+                                   <h4 class="font-semibold">❤️ สุขภาพ</h4>
+                                   <button onclick="openHealthLogModal(null, '${dateStr}')" class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full hover:bg-red-200">+ เพิ่ม</button>
+                                 </div>
+                                 <div id="daily-health-view"></div>
                               </div>
                              <div class="md:col-span-2">
                                   <h4 class="font-semibold mb-2">📓 บันทึก</h4>
@@ -2320,7 +2319,7 @@
                     console.error(error);
                 } else {
                     showToast('บันทึกลำดับใหม่แล้ว', 'success');
-                    fetchAllData(); // Refresh data to ensure consistency
+                    fetchAllData();
                 }
             });
         }
@@ -2406,6 +2405,105 @@
             `}).join('');
         }
 
+        // --- HABIT PROGRESS CHART (NEW) ---
+        function changeHabitChartMonth(delta) {
+            habitChartDate.setMonth(habitChartDate.getMonth() + delta);
+            renderHabitProgressChart();
+        }
+
+        function renderHabitProgressChart() {
+            const container = document.getElementById('habit-progress-container');
+            if (!container) return;
+
+            const year = habitChartDate.getFullYear();
+            const month = habitChartDate.getMonth();
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            
+            container.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">📊</span>
+                        <h2 class="text-xl font-semibold text-gray-900">สถิติกิจวัตรประจำเดือน</h2>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="changeHabitChartMonth(-1)" class="p-2 rounded-full hover:bg-slate-100 text-sm"><i class="fas fa-chevron-left"></i></button>
+                        <span class="text-sm font-medium">${monthNames[month]} ${year + 543}</span>
+                        <button onclick="changeHabitChartMonth(1)" class="p-2 rounded-full hover:bg-slate-100 text-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <canvas id="habit-chart"></canvas>
+                </div>
+            `;
+            
+            const labels = [];
+            const data = [];
+
+            const today = new Date();
+            const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+            const daysToCheck = (year === today.getFullYear() && month === today.getMonth()) ? today.getDate() : lastDayOfMonth;
+
+            appState.habits.forEach(habit => {
+                let applicableDays = 0;
+                let completedCount = 0;
+
+                for (let d = 1; d <= daysToCheck; d++) {
+                    const currentDate = new Date(year, month, d);
+                    const dayOfWeek = currentDate.getDay();
+                    const dateStr = toYYYYMMDD(currentDate);
+
+                    const isApplicable = (habit.frequency === 'daily') || (habit.frequency === 'weekly' && habit.weekly_day === dayOfWeek);
+
+                    if (isApplicable) {
+                        applicableDays++;
+                        const isCompleted = appState.habit_log.some(log => log.habit_id === habit.id && log.completed_date === dateStr);
+                        if (isCompleted) {
+                            completedCount++;
+                        }
+                    }
+                }
+                const percentage = applicableDays > 0 ? (completedCount / applicableDays) * 100 : 0;
+                labels.push(habit.name);
+                data.push(percentage);
+            });
+
+            const ctx = document.getElementById('habit-chart').getContext('2d');
+            if(habitChartInstance) {
+                habitChartInstance.destroy();
+            }
+            habitChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '% ความสำเร็จ',
+                        data: data,
+                        backgroundColor: 'rgba(22, 163, 74, 0.6)', // emerald-600 with opacity
+                        borderColor: 'rgba(22, 163, 74, 1)', // emerald-600
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
         // --- INITIALIZATION ---
         async function fetchAllData() {
             const tableNames = [
@@ -2415,7 +2513,6 @@
                 'learning_logs'
             ];
             
-            // Add sorting to habits
             const habitsPromise = db.from('habits').select('*').order('sort_order', { ascending: true });
             const otherPromises = tableNames.filter(name => name !== 'habits').map(name => db.from(name).select('*'));
             
@@ -2449,6 +2546,7 @@
             renderIdeaBoard();
             renderCalendar();
             renderHabitTracker();
+            renderHabitProgressChart(); // Render the new chart
             renderHealthTracker();
             renderMoodTracker();
             renderMediaLog();
@@ -2502,7 +2600,6 @@
                 });
             });
 
-            // Submenu toggles
             document.querySelectorAll('.menu-toggle').forEach(button => {
                 button.addEventListener('click', () => {
                     const submenu = button.nextElementSibling;
