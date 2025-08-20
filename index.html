@@ -2031,12 +2031,17 @@
                 const day = new Date(startOfWeek);
                 day.setDate(day.getDate() + i);
                 const dateStr = toYYYYMMDD(day);
+                const dayOfWeek = day.getDay();
                 
                 const daySchedules = appState.schedules.filter(s => toYYYYMMDD(s.event_date) === dateStr);
                 const dayTasks = appState.tasks.filter(t => toYYYYMMDD(t.due_date) === dateStr);
+                const dailyHabitsForDay = appState.habits.filter(h => h.frequency === 'daily');
+                const weeklyHabitsForDay = appState.habits.filter(h => h.frequency === 'weekly' && h.weekly_day === dayOfWeek);
+                const allHabitsForDay = [...dailyHabitsForDay, ...weeklyHabitsForDay];
 
                 let itemsHtml = daySchedules.map(s => `<div class="text-xs p-1.5 bg-cyan-100 text-cyan-800 rounded" title="${s.title}">${s.start_time ? `<b>${formatTime(s.start_time)}</b> ` : ''}${s.title}</div>`).join('');
                 itemsHtml += dayTasks.map(t => `<div class="text-xs p-1.5 ${t.status === 'Done' ? 'bg-green-100 text-green-800 line-through' : 'bg-blue-100 text-blue-800'} rounded" title="${t.title}">${t.title}</div>`).join('');
+                itemsHtml += allHabitsForDay.map(h => `<div class="text-xs p-1.5 bg-teal-100 text-teal-800 rounded" title="Habit: ${h.name}"><i class="fa-solid fa-check-double mr-1"></i>${h.name}</div>`).join('');
 
                 content += `
                     <div class="bg-slate-50 rounded-lg p-2 min-h-[120px]">
@@ -2526,3 +2531,5 @@
     </script>
 </body>
 </html>
+" and want to make a change to it. I will provide the full code and my requested change. I expect you to send me back the full code with the change.
+I'm not asking a question, I'm asking you to make a change to the co
